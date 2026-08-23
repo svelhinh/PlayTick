@@ -1,0 +1,23 @@
+---
+description: Pragmatic architecture and state boundaries for PlayTick
+alwaysApply: true
+---
+
+# Architecture
+
+- Use feature-first organization under `lib/app`, `lib/core`, and `lib/features`; create structure only when real code needs it.
+- Keep `core` for genuinely cross-cutting code. Feature-specific models, providers, repositories, and widgets stay with their feature.
+- Separate presentation, domain, and data where the boundary is useful. Presentation depends on domain-facing APIs; data implements them.
+- Domain code must not depend on Flutter widgets, Drift tables, HTTP clients, JSON payloads, or IGDB DTOs.
+- Keep domain models, persistence records, and external DTOs distinct when their responsibilities differ. Never expose raw DTOs or database rows to widgets.
+- Use focused repository abstractions at real local or remote data boundaries and express business operations, not SQL or transport details.
+- Use Riverpod for state and dependency injection. Keep providers near their features, prefer immutable state, and represent loading, data, empty, and errors deliberately.
+- Maintain one source of truth: Drift for persistent user data, a persisted `startedAt` for the active session, Riverpod for temporary UI state, and saved sessions for derived playtime.
+- Use GoRouter for application routes. Keep sheets and dialogs as overlays unless routing provides a concrete benefit.
+- Prefer Drift for structured local persistence unless an established repository decision justifies another choice; preserve user data with migrations.
+- Isolate IGDB networking and authentication behind data/repository boundaries. Inject credentials through non-versioned build configuration and never leak transport failures into local access.
+- Local and remote search form one experience: return local results promptly, debounce remote work when needed, merge sources, and remove duplicates.
+- Distinguish validation, local persistence, and remote failures. Never replace usable local content with a full-screen IGDB error.
+- Add a service or use-case class only for meaningful rules, coordination, or reuse—not as a one-line repository forwarding layer.
+- Do not add generic repositories, base use cases, mapper frameworks, event buses, CQRS, a second service locator, or speculative factories.
+- Dependencies must remove meaningful complexity, be maintained, and make the code easier to explain.

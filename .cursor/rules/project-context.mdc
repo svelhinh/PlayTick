@@ -1,0 +1,23 @@
+---
+description: PlayTick product scope and non-negotiable V1 behavior
+alwaysApply: true
+---
+
+# PlayTick Project Context
+
+- The product is **PlayTick**. Never add the former name "Game Progress" to new code, identifiers, strings, or documentation.
+- This is a deliberate, reviewable Flutter/Dart portfolio app: favor clear production-quality code over prototypes or enterprise ceremony.
+- V1 targets Android and Light Mode. Do not add iOS-specific work or Dark Mode unless explicitly requested.
+- Support English and French from the start with Flutter localization. Keep both translations together, use English as fallback, and never hard-code user-facing widget text.
+- Keep source identifiers, domain types, and file names in English.
+- The core loop is: search IGDB, add to the local library, choose a status, record sessions, derive playtime, then complete or drop the game.
+- Main destinations are Home and Library. Game Details is secondary navigation; simple workflows stay in sheets or dialogs.
+- Library data is local-first. Existing games, details, notes, and sessions must remain usable when IGDB is unavailable.
+- Persist enough IGDB metadata when adding a game to render its local experience offline.
+- Valid statuses are `wantToPlay`, `playing`, `completed`, and `dropped`; a new game defaults to `wantToPlay`.
+- Prevent duplicate library entries by IGDB ID. A timed session requires `playing`, and only one timed session may be active globally.
+- Persist an active session's `startedAt`; derive elapsed time from the current local time rather than storing ticking counters.
+- Saved sessions are the sole source of total and weekly playtime. Game notes and session notes are separate concepts.
+- Deleting a game must confirm and remove its sessions and notes without orphans.
+- Figma is the visual source of truth; written requirements define behavior. Report contradictions instead of guessing.
+- Do not add unrequested accounts, cloud/social features, imports, recommendations, advanced dashboards, progress percentages, backend services, or other speculative V1 features.
