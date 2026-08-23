@@ -1,0 +1,22 @@
+---
+description: Git, GitHub, CI, and repository hygiene conventions
+alwaysApply: true
+---
+
+# Git and CI
+
+- Use `main` plus short-lived branches, one coherent objective per branch; do not introduce a permanent `develop` or release branch.
+- Use lowercase branch names such as `feat/gp-12-active-session`; reference the canonical Notion task ID such as `GP-12` in PR metadata.
+- Before branch or history operations, inspect the current branch, status, and existing changes. Never silently stash, reset, clean, restore, or overwrite user work.
+- Make atomic, reviewable commits with `type(scope): concise imperative description`; useful types include `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`, `build`, and `perf`.
+- Do not commit, push, merge, rebase, squash, tag, delete branches, or rewrite history unless the developer explicitly requests that operation.
+- Never force-push `main`, discard unrelated changes, or combine features with unrelated formatting, upgrades, or refactors.
+- Review staged and unstaged diffs before a requested commit. Include only files belonging to that logical change and never include likely secrets.
+- Keep application `pubspec.lock` versioned. Do not commit build output, IDE-local state, caches, credentials, signing files, or debug artifacts.
+- Keep dependency changes intentional and scoped; do not upgrade unrelated packages during feature work.
+- Use focused PRs for meaningful features, migrations, integrations, architecture, and CI changes. Summarize what changed, why, validation, and related `GP-XX`.
+- Prefer a clean history; any squash or merge strategy remains an explicit developer decision.
+- GitHub Actions CI should validate PRs to `main` and useful pushes to `main` with dependency resolution, formatting checks, `flutter analyze`, and `flutter test`.
+- CI validates rather than modifies source, uses least-privilege permissions, and must not require live IGDB calls or expose secrets.
+- Keep `main` stable and treat failing format, analyzer, or test checks as not ready to merge.
+- Add release/CD automation, Android signing, tags, dependency bots, or public visibility only when explicitly needed and requested.

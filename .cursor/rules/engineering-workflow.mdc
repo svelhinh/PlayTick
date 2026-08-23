@@ -1,0 +1,23 @@
+---
+description: Scoped implementation, validation, testing, and safety workflow
+alwaysApply: true
+---
+
+# Engineering Workflow
+
+1. Understand the requested behavior and inspect relevant code, routes, providers, repositories, models, tests, and existing patterns before editing.
+2. Preserve correct existing work and all unrelated user changes. Do not use a narrow task to perform a broad rewrite or cleanup.
+3. For non-trivial work, state a short proportional plan, including affected areas and any meaningful trade-off.
+4. Implement the smallest coherent solution that satisfies the current requirement; prefer clear domain language and straightforward control flow.
+5. Keep widgets focused on rendering state and forwarding intent. Put persistence, networking, validation, and business invariants outside build methods.
+6. Add every new user-facing string to English and French localization together. Inspect Figma before implementing an available design.
+7. Handle relevant loading, success, empty, and error states. Keep local data usable during remote failures and never swallow exceptions.
+8. Enforce business rules in domain/state logic, not only with hidden or disabled UI controls.
+9. Never present fake repositories, no-op controls, empty catches, fake delays, or TODO-backed behavior as complete.
+10. Test behavior with material regression risk: time calculations and boundaries, session invariants and recovery, duplicate prevention, filtering/search merging, repository persistence, and deletion cascades.
+11. Make time-dependent logic deterministic in tests by supplying a known current time; do not add a large clock framework without need.
+12. Use isolated data stores and fake/mock IGDB boundaries in tests. Never make tests depend on live APIs, secrets, real user data, or arbitrary delays.
+13. Run the narrowest useful checks while iterating, then proportionally run `dart format .`, `flutter analyze`, and relevant `flutter test` commands.
+14. Review the final diff for scope, duplication, unused code, debug artifacts, secrets, missing localization, error states, tests, and accidental dependency changes.
+15. Never commit credentials, tokens, environment secret files, signing material, or real personal data. Do not log secrets.
+16. Report what changed, important decisions, validation performed, and anything intentionally left out.
