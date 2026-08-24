@@ -1,0 +1,13 @@
+{
+    "@@locale": "en",
+    "homeTitle": "Home",
+    "@homeTitle": {
+        "type": "text",
+        "description": "The title of the home screen"
+    },
+    "libraryTitle": "Library",
+    "@libraryTitle": {
+        "type": "text",
+        "description": "The title of the library screen"
+    }
+}

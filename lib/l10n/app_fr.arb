@@ -1,0 +1,13 @@
+{
+    "@@locale": "fr",
+    "homeTitle": "Accueil",
+    "@homeTitle": {
+        "type": "text",
+        "description": "Le titre de l'écran d'accueil"
+    },
+    "libraryTitle": "Bibliothèque",
+    "@libraryTitle": {
+        "type": "text",
+        "description": "Le titre de l'écran de la bibliothèque"
+    }
+}
