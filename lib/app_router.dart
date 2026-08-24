@@ -35,9 +35,7 @@ GoRouter appRouter(Ref ref) {
     ],
   );
 
-  ref.onDispose(() {
-    router.dispose();
-  });
+  ref.onDispose(router.dispose);
 
   return router;
 }

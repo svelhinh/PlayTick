@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'app.g.dart';
 
 @riverpod
-String appTitle(Ref ref) => "PlayTick";
+String appTitle(Ref ref) => 'PlayTick';
 
 class PlayTick extends ConsumerWidget {
   const PlayTick({super.key});
@@ -19,7 +19,7 @@ class PlayTick extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
-      localizationsDelegates: [
+      localizationsDelegates: const [
         AppLocalizations.delegate,
         ...GlobalMaterialLocalizations.delegates,
       ],

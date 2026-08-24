@@ -7,7 +7,7 @@ import 'package:playtick/features/library/presentation/library_screen.dart';
 
 void main() {
   testWidgets('initial launch renders the home screen', (tester) async {
-    await tester.pumpWidget(ProviderScope(child: const PlayTick()));
+    await tester.pumpWidget(const ProviderScope(child: PlayTick()));
 
     await tester.pumpAndSettle();
 
@@ -18,11 +18,11 @@ void main() {
   testWidgets('tapping the library tab navigates to the library screen', (
     tester,
   ) async {
-    await tester.pumpWidget(ProviderScope(child: const PlayTick()));
+    await tester.pumpWidget(const ProviderScope(child: PlayTick()));
 
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text("Library"));
+    await tester.tap(find.text('Library'));
     await tester.pumpAndSettle();
 
     final libraryScreen = tester.widget<LibraryScreen>(
@@ -31,7 +31,7 @@ void main() {
     expect(libraryScreen, isNotNull);
   });
 
-  testWidgets("French locale shows French labels", (tester) async {
+  testWidgets('French locale shows French labels', (tester) async {
     tester.binding.platformDispatcher.localesTestValue = const [Locale('fr')];
     addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
 

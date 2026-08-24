@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 class AppShell extends StatelessWidget {
-  const AppShell({super.key, required this.navigationShell});
+  const AppShell({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
 
@@ -14,14 +14,14 @@ class AppShell extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) => navigationShell.goBranch(index),
+        onDestinationSelected: navigationShell.goBranch,
         destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home),
+            icon: const Icon(Icons.home),
             label: appLoc.homeTitle,
           ),
           NavigationDestination(
-            icon: Icon(Icons.library_books),
+            icon: const Icon(Icons.library_books),
             label: appLoc.libraryTitle,
           ),
         ],

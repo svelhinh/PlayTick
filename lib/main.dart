@@ -3,5 +3,5 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:playtick/app.dart';
 
 void main() {
-  runApp(ProviderScope(child: const PlayTick()));
+  runApp(const ProviderScope(child: PlayTick()));
 }

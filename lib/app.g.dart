@@ -47,4 +47,4 @@ final class AppTitleProvider extends $FunctionalProvider<String, String, String>
   }
 }
 
-String _$appTitleHash() => r'c8ec5a9ffb43c2e65120d1778d065516d56420f8';
+String _$appTitleHash() => r'8f7a2af6f3b8fd841db3e651585588d4c3296edf';
