@@ -15,22 +15,6 @@ void main() {
     expect(homeScreen, isNotNull);
   });
 
-  testWidgets('tapping the library tab navigates to the library screen', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const ProviderScope(child: PlayTick()));
-
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byIcon(Icons.library_books));
-    await tester.pumpAndSettle();
-
-    final libraryScreen = tester.widget<LibraryScreen>(
-      find.byType(LibraryScreen),
-    );
-    expect(libraryScreen, isNotNull);
-  });
-
   testWidgets('French locale shows French labels', (tester) async {
     tester.binding.platformDispatcher.localesTestValue = const [Locale('fr')];
     addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
@@ -41,4 +25,34 @@ void main() {
     expect(find.text('Accueil'), findsWidgets);
     expect(find.text('Bibliothèque'), findsWidgets);
   });
+
+  testWidgets(
+    'Back and forth navigation between home and library screens',
+    (tester) async {
+      NavigationBar navigationBar() {
+        return tester.widget<NavigationBar>(
+          find.byType(NavigationBar),
+        );
+      }
+
+      await tester.pumpWidget(const ProviderScope(child: PlayTick()));
+      await tester.pumpAndSettle();
+
+      expect(navigationBar().selectedIndex, 0);
+
+      await tester.tap(
+        find.byType(NavigationDestination).at(1),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LibraryScreen), findsOneWidget);
+      expect(navigationBar().selectedIndex, 1);
+
+      await tester.tap(find.byType(NavigationDestination).at(0));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(HomeScreen), findsOneWidget);
+      expect(navigationBar().selectedIndex, 0);
+    },
+  );
 }

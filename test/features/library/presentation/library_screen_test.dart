@@ -10,7 +10,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: PlayTick()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.library_books));
+    await tester.tap(find.byType(NavigationDestination).at(1));
     await tester.pumpAndSettle();
 
     expect(find.byType(LibraryScreen), findsOneWidget);
