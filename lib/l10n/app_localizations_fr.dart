@@ -10,8 +10,34 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get homeTitle => 'Accueil';
+  String get appName => 'Play Tick';
+
+  @override
+  String get navigationLabelHome => 'Accueil';
+
+  @override
+  String get navigationLabelLibrary => 'Bibliothèque';
+
+  @override
+  String get homeEmptyCardTitle => 'Aucun jeu en cours';
+
+  @override
+  String get homeEmptyCardDescription =>
+      'Ajoutez un jeu à votre bibliothèque pour commencer à suivre vos sessions.';
+
+  @override
+  String get homeEmptyCardButtonText => 'Aller à la bibliothèque';
 
   @override
   String get libraryTitle => 'Bibliothèque';
+
+  @override
+  String get librarySubtitle => 'Votre collection de jeux';
+
+  @override
+  String get libraryEmptyStateTitle => 'Votre bibliothèque est vide';
+
+  @override
+  String get libraryEmptyStateDescription =>
+      'Ajoutez votre premier jeu pour commencer à suivre votre progression.';
 }

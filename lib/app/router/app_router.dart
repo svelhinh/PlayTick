@@ -1,10 +1,15 @@
 import 'package:go_router/go_router.dart';
-import 'package:playtick/app_shell.dart';
+import 'package:playtick/app/router/app_shell.dart';
 import 'package:playtick/features/home/presentation/home_screen.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
+
+class AppRoutes {
+  static const home = '/';
+  static const library = '/library';
+}
 
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
@@ -17,7 +22,7 @@ GoRouter appRouter(Ref ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/',
+                path: AppRoutes.home,
                 builder: (context, state) => const HomeScreen(),
               ),
             ],
@@ -25,7 +30,7 @@ GoRouter appRouter(Ref ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/library',
+                path: AppRoutes.library,
                 builder: (context, state) => const LibraryScreen(),
               ),
             ],

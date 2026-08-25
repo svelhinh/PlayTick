@@ -1,13 +1,53 @@
 {
     "@@locale": "en",
-    "homeTitle": "Home",
-    "@homeTitle": {
+    "appName": "Play Tick",
+    "@appName": {
         "type": "text",
-        "description": "The title of the home screen"
+        "description": "The name of the app"
+    },
+    "navigationLabelHome": "Home",
+    "@navigationLabelHome": {
+        "type": "text",
+        "description": "The label of the home navigation item"
+    },
+    "navigationLabelLibrary": "Library",
+    "@navigationLabelLibrary": {
+        "type": "text",
+        "description": "The label of the library navigation item"
+    },
+    "homeEmptyCardTitle": "No game in progress",
+    "@homeEmptyCardTitle": {
+        "type": "text",
+        "description": "The title of the empty card in the home screen"
+    },
+    "homeEmptyCardDescription": "Add a game to your library to start tracking your sessions.",
+    "@homeEmptyCardDescription": {
+        "type": "text",
+        "description": "The description of the empty card in the home screen"
+    },
+    "homeEmptyCardButtonText": "Go to library",
+    "@homeEmptyCardButtonText": {
+        "type": "text",
+        "description": "The text of the button in the empty card in the home screen"
     },
     "libraryTitle": "Library",
     "@libraryTitle": {
         "type": "text",
         "description": "The title of the library screen"
+    },
+    "librarySubtitle": "Your game collection",
+    "@librarySubtitle": {
+        "type": "text",
+        "description": "The subtitle of the library screen"
+    },
+    "libraryEmptyStateTitle": "Your library is empty",
+    "@libraryEmptyStateTitle": {
+        "type": "text",
+        "description": "The title of the empty card in the library screen"
+    },
+    "libraryEmptyStateDescription": "Add your first game to start tracking your progress.",
+    "@libraryEmptyStateDescription": {
+        "type": "text",
+        "description": "The description of the empty card in the library screen"
     }
 }

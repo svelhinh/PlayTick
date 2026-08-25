@@ -98,17 +98,65 @@ abstract class AppLocalizations {
     Locale('fr'),
   ];
 
-  /// The title of the home screen
+  /// The name of the app
+  ///
+  /// In en, this message translates to:
+  /// **'Play Tick'**
+  String get appName;
+
+  /// The label of the home navigation item
   ///
   /// In en, this message translates to:
   /// **'Home'**
-  String get homeTitle;
+  String get navigationLabelHome;
+
+  /// The label of the library navigation item
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get navigationLabelLibrary;
+
+  /// The title of the empty card in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'No game in progress'**
+  String get homeEmptyCardTitle;
+
+  /// The description of the empty card in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Add a game to your library to start tracking your sessions.'**
+  String get homeEmptyCardDescription;
+
+  /// The text of the button in the empty card in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Go to library'**
+  String get homeEmptyCardButtonText;
 
   /// The title of the library screen
   ///
   /// In en, this message translates to:
   /// **'Library'**
   String get libraryTitle;
+
+  /// The subtitle of the library screen
+  ///
+  /// In en, this message translates to:
+  /// **'Your game collection'**
+  String get librarySubtitle;
+
+  /// The title of the empty card in the library screen
+  ///
+  /// In en, this message translates to:
+  /// **'Your library is empty'**
+  String get libraryEmptyStateTitle;
+
+  /// The description of the empty card in the library screen
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first game to start tracking your progress.'**
+  String get libraryEmptyStateDescription;
 }
 
 class _AppLocalizationsDelegate

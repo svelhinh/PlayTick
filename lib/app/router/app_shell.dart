@@ -17,12 +17,14 @@ class AppShell extends StatelessWidget {
         onDestinationSelected: navigationShell.goBranch,
         destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.home),
-            label: appLoc.homeTitle,
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: appLoc.navigationLabelHome,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.library_books),
-            label: appLoc.libraryTitle,
+            icon: const Icon(Icons.library_books_outlined),
+            selectedIcon: const Icon(Icons.library_books),
+            label: appLoc.navigationLabelLibrary,
           ),
         ],
       ),
