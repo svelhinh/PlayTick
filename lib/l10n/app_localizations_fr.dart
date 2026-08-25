@@ -40,4 +40,33 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get libraryEmptyStateDescription =>
       'Ajoutez votre premier jeu pour commencer à suivre votre progression.';
+
+  @override
+  String get gameStatusWantToPlay => 'À jouer';
+
+  @override
+  String get gameStatusPlaying => 'En cours';
+
+  @override
+  String get gameStatusCompleted => 'Terminé';
+
+  @override
+  String get gameStatusDropped => 'Abandonné';
+
+  @override
+  String gamePlaytime(int hours, String minutes) {
+    return '$hours h $minutes';
+  }
+
+  @override
+  String libraryGamesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jeux',
+      one: '1 jeu',
+      zero: 'Aucun jeu',
+    );
+    return '$_temp0';
+  }
 }

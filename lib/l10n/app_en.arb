@@ -49,5 +49,48 @@
     "@libraryEmptyStateDescription": {
         "type": "text",
         "description": "The description of the empty card in the library screen"
+    },
+    "gameStatusWantToPlay": "Want to play",
+    "@gameStatusWantToPlay": {
+        "type": "text",
+        "description": "The status of the game 'Want to play'"
+    },
+    "gameStatusPlaying": "Playing",
+    "@gameStatusPlaying": {
+        "type": "text",
+        "description": "The status of the game 'Playing'"
+    },
+    "gameStatusCompleted": "Completed",
+    "@gameStatusCompleted": {
+        "type": "text",
+        "description": "The status of the game 'Completed'"
+    },
+    "gameStatusDropped": "Dropped",
+    "@gameStatusDropped": {
+        "type": "text",
+        "description": "The status of the game 'Dropped'"
+    },
+    "gamePlaytime": "{hours} h {minutes}",
+    "@gamePlaytime": {
+        "type": "text",
+        "description": "The playtime of the game",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "libraryGamesCount": "{count, plural, =0{No games} =1{1 game} other{{count} games}}",
+    "@libraryGamesCount": {
+        "type": "text",
+        "description": "Number of games in the library",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
     }
 }
