@@ -1,13 +1,53 @@
 {
     "@@locale": "fr",
-    "homeTitle": "Accueil",
-    "@homeTitle": {
+    "appName": "Play Tick",
+    "@appName": {
         "type": "text",
-        "description": "Le titre de l'écran d'accueil"
+        "description": "Le nom de l'application"
+    },
+    "navigationLabelHome": "Accueil",
+    "@navigationLabelHome": {
+        "type": "text",
+        "description": "Le label de l'élément de navigation de l'accueil"
+    },
+    "navigationLabelLibrary": "Bibliothèque",
+    "@navigationLabelLibrary": {
+        "type": "text",
+        "description": "Le label de l'élément de navigation de la bibliothèque"
+    },
+    "homeEmptyCardTitle": "Aucun jeu en cours",
+    "@homeEmptyCardTitle": {
+        "type": "text",
+        "description": "Le titre de la carte vide dans l'écran d'accueil"
+    },
+    "homeEmptyCardDescription": "Ajoutez un jeu à votre bibliothèque pour commencer à suivre vos sessions.",
+    "@homeEmptyCardDescription": {
+        "type": "text",
+        "description": "La description de la carte vide dans l'écran d'accueil"
+    },
+    "homeEmptyCardButtonText": "Aller à la bibliothèque",
+    "@homeEmptyCardButtonText": {
+        "type": "text",
+        "description": "Le texte du bouton de la carte vide dans l'écran d'accueil"
     },
     "libraryTitle": "Bibliothèque",
     "@libraryTitle": {
         "type": "text",
         "description": "Le titre de l'écran de la bibliothèque"
+    },
+    "librarySubtitle": "Votre collection de jeux",
+    "@librarySubtitle": {
+        "type": "text",
+        "description": "Le sous-titre de l'écran de la bibliothèque"
+    },
+    "libraryEmptyStateTitle": "Votre bibliothèque est vide",
+    "@libraryEmptyStateTitle": {
+        "type": "text",
+        "description": "Le titre de la carte vide dans l'écran de la bibliothèque"
+    },
+    "libraryEmptyStateDescription": "Ajoutez votre premier jeu pour commencer à suivre votre progression.",
+    "@libraryEmptyStateDescription": {
+        "type": "text",
+        "description": "La description de la carte vide dans l'écran de la bibliothèque"
     }
 }

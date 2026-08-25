@@ -6,6 +6,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
 
+class AppRoutes {
+  static const home = '/';
+  static const library = '/library';
+}
+
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
   final router = GoRouter(
@@ -17,7 +22,7 @@ GoRouter appRouter(Ref ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/',
+                path: AppRoutes.home,
                 builder: (context, state) => const HomeScreen(),
               ),
             ],
@@ -25,7 +30,7 @@ GoRouter appRouter(Ref ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/library',
+                path: AppRoutes.library,
                 builder: (context, state) => const LibraryScreen(),
               ),
             ],

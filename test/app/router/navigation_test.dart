@@ -22,7 +22,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Library'));
+    await tester.tap(find.byIcon(Icons.library_books));
     await tester.pumpAndSettle();
 
     final libraryScreen = tester.widget<LibraryScreen>(

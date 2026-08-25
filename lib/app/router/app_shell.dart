@@ -18,11 +18,11 @@ class AppShell extends StatelessWidget {
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.home),
-            label: appLoc.homeTitle,
+            label: appLoc.navigationLabelHome,
           ),
           NavigationDestination(
             icon: const Icon(Icons.library_books),
-            label: appLoc.libraryTitle,
+            label: appLoc.navigationLabelLibrary,
           ),
         ],
       ),
