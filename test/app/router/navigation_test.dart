@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:playtick/app.dart';
+import 'package:playtick/app/app.dart';
 import 'package:playtick/features/home/presentation/home_screen.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 
