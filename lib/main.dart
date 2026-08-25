@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:playtick/app.dart';
 
 void main() {
-  runApp(const PlayTick());
+  runApp(const ProviderScope(child: PlayTick()));
 }
