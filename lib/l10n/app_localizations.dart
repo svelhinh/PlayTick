@@ -157,6 +157,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add your first game to start tracking your progress.'**
   String get libraryEmptyStateDescription;
+
+  /// The status of the game 'Want to play'
+  ///
+  /// In en, this message translates to:
+  /// **'Want to play'**
+  String get gameStatusWantToPlay;
+
+  /// The status of the game 'Playing'
+  ///
+  /// In en, this message translates to:
+  /// **'Playing'**
+  String get gameStatusPlaying;
+
+  /// The status of the game 'Completed'
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get gameStatusCompleted;
+
+  /// The status of the game 'Dropped'
+  ///
+  /// In en, this message translates to:
+  /// **'Dropped'**
+  String get gameStatusDropped;
+
+  /// The playtime of the game
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h {minutes}'**
+  String gamePlaytime(int hours, String minutes);
+
+  /// Number of games in the library
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No games} =1{1 game} other{{count} games}}'**
+  String libraryGamesCount(int count);
 }
 
 class _AppLocalizationsDelegate

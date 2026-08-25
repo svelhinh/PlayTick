@@ -25,7 +25,6 @@ class PlayTick extends ConsumerWidget {
         ...GlobalMaterialLocalizations.delegates,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('fr'),
       title: title,
       debugShowCheckedModeBanner: false,
       routerConfig: router,

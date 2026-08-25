@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
+import 'package:playtick/features/library/presentation/providers/temporary_library_games_provider.dart';
+import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
-class LibraryScreen extends StatelessWidget {
+class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+
+    final games = ref.watch(temporaryLibraryGamesProvider);
 
     return SafeArea(
       child: Padding(
@@ -24,12 +29,36 @@ class LibraryScreen extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    EmptyStateCard(
-                      icon: Icons.library_books_outlined,
-                      title: appLoc.libraryEmptyStateTitle,
-                      description: appLoc.libraryEmptyStateDescription,
-                    ),
+                    if (games.isEmpty)
+                      EmptyStateCard(
+                        icon: Icons.library_books_outlined,
+                        title: appLoc.libraryEmptyStateTitle,
+                        description: appLoc.libraryEmptyStateDescription,
+                      )
+                    else ...[
+                      Text(
+                        appLoc.libraryGamesCount(games.length),
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      Card(
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(12),
+                          separatorBuilder: (context, index) => const Divider(),
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: LibraryGameCard(
+                              game: games[index],
+                            ),
+                          ),
+                          itemCount: games.length,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

@@ -49,5 +49,48 @@
     "@libraryEmptyStateDescription": {
         "type": "text",
         "description": "La description de la carte vide dans l'écran de la bibliothèque"
+    },
+    "gameStatusWantToPlay": "À jouer",
+    "@gameStatusWantToPlay": {
+        "type": "text",
+        "description": "Le statut de jeu 'À jouer'"
+    },
+    "gameStatusPlaying": "En cours",
+    "@gameStatusPlaying": {
+        "type": "text",
+        "description": "Le statut de jeu 'En cours'"
+    },
+    "gameStatusCompleted": "Terminé",
+    "@gameStatusCompleted": {
+        "type": "text",
+        "description": "Le statut de jeu 'Terminé'"
+    },
+    "gameStatusDropped": "Abandonné",
+    "@gameStatusDropped": {
+        "type": "text",
+        "description": "Le statut de jeu 'Abandonné'"
+    },
+    "gamePlaytime": "{hours} h {minutes}",
+    "@gamePlaytime": {
+        "type": "text",
+        "description": "Le temps de jeu du jeu",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "libraryGamesCount": "{count, plural, =0{Aucun jeu} =1{1 jeu} other{{count} jeux}}",
+    "@libraryGamesCount": {
+        "type": "text",
+        "description": "Nombre de jeux dans la bibliothèque",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
     }
 }

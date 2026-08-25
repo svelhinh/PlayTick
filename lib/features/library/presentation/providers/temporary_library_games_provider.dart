@@ -15,19 +15,19 @@ List<LibraryGame> temporaryLibraryGames(Ref ref) {
       igdbId: 124,
       title: 'Final Fantasy VII',
       status: GameStatus.playing,
-      totalPlaytime: const Duration(hours: 20),
+      totalPlaytime: Duration(hours: 20),
     ),
     LibraryGame(
       igdbId: 125,
       title: 'The Legend of Zelda: Breath of the Wild',
       status: GameStatus.completed,
-      totalPlaytime: const Duration(hours: 30),
+      totalPlaytime: Duration(hours: 30, minutes: 15),
     ),
     LibraryGame(
       igdbId: 126,
       title: 'The Last of Us II',
       status: GameStatus.dropped,
-      totalPlaytime: const Duration(hours: 5),
+      totalPlaytime: Duration(hours: 5),
     ),
   ];
 }

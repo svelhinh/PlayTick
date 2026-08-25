@@ -8,6 +8,10 @@ abstract final class AppTheme {
   static const textSecondary = Color(0xFF667085);
   static const outline = Color(0xFFD9DEE8);
 
+  static const warning = Color(0xFFF97316);
+  static const success = Color(0xFF16A36A);
+  static const danger = Color(0xFFDC3545);
+
   static ThemeData get light {
     final colorScheme =
         ColorScheme.fromSeed(
