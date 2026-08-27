@@ -12,9 +12,9 @@ class Games extends Table {
   TextColumn get platforms => text().map(const StringListConverter())();
   TextColumn get developer => text().nullable()();
   TextColumn get publisher => text().nullable()();
-  RealColumn get estimatedPlaytimesStory => real().nullable()();
-  RealColumn get estimatedPlaytimesMain => real().nullable()();
-  RealColumn get estimatedPlaytimesCompletion => real().nullable()();
+  IntColumn get estimatedPlaytimesStory => integer().nullable()();
+  IntColumn get estimatedPlaytimesMain => integer().nullable()();
+  IntColumn get estimatedPlaytimesCompletion => integer().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

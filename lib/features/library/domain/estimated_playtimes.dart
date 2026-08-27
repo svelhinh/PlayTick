@@ -5,7 +5,7 @@ final class EstimatedPlaytimes {
     this.completion,
   });
 
-  final double? story;
-  final double? main;
-  final double? completion;
+  final Duration? story;
+  final Duration? main;
+  final Duration? completion;
 }

@@ -63,10 +63,14 @@ class DriftLibraryRepository implements LibraryRepository {
               platforms: game.platforms,
               developer: Value(game.developer),
               publisher: Value(game.publisher),
-              estimatedPlaytimesStory: Value(game.estimatedPlaytimes?.story),
-              estimatedPlaytimesMain: Value(game.estimatedPlaytimes?.main),
+              estimatedPlaytimesStory: Value(
+                game.estimatedPlaytimes?.story?.inSeconds,
+              ),
+              estimatedPlaytimesMain: Value(
+                game.estimatedPlaytimes?.main?.inSeconds,
+              ),
               estimatedPlaytimesCompletion: Value(
-                game.estimatedPlaytimes?.completion,
+                game.estimatedPlaytimes?.completion?.inSeconds,
               ),
             ),
           );

@@ -102,34 +102,33 @@ class $GamesTable extends Games with TableInfo<$GamesTable, GameRow> {
   static const VerificationMeta _estimatedPlaytimesStoryMeta =
       const VerificationMeta('estimatedPlaytimesStory');
   @override
-  late final GeneratedColumn<double> estimatedPlaytimesStory =
-      GeneratedColumn<double>(
+  late final GeneratedColumn<int> estimatedPlaytimesStory =
+      GeneratedColumn<int>(
         'estimated_playtimes_story',
         aliasedName,
         true,
-        type: DriftSqlType.double,
+        type: DriftSqlType.int,
         requiredDuringInsert: false,
       );
   static const VerificationMeta _estimatedPlaytimesMainMeta =
       const VerificationMeta('estimatedPlaytimesMain');
   @override
-  late final GeneratedColumn<double> estimatedPlaytimesMain =
-      GeneratedColumn<double>(
-        'estimated_playtimes_main',
-        aliasedName,
-        true,
-        type: DriftSqlType.double,
-        requiredDuringInsert: false,
-      );
+  late final GeneratedColumn<int> estimatedPlaytimesMain = GeneratedColumn<int>(
+    'estimated_playtimes_main',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _estimatedPlaytimesCompletionMeta =
       const VerificationMeta('estimatedPlaytimesCompletion');
   @override
-  late final GeneratedColumn<double> estimatedPlaytimesCompletion =
-      GeneratedColumn<double>(
+  late final GeneratedColumn<int> estimatedPlaytimesCompletion =
+      GeneratedColumn<int>(
         'estimated_playtimes_completion',
         aliasedName,
         true,
-        type: DriftSqlType.double,
+        type: DriftSqlType.int,
         requiredDuringInsert: false,
       );
   @override
@@ -280,15 +279,15 @@ class $GamesTable extends Games with TableInfo<$GamesTable, GameRow> {
         data['${effectivePrefix}publisher'],
       ),
       estimatedPlaytimesStory: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
+        DriftSqlType.int,
         data['${effectivePrefix}estimated_playtimes_story'],
       ),
       estimatedPlaytimesMain: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
+        DriftSqlType.int,
         data['${effectivePrefix}estimated_playtimes_main'],
       ),
       estimatedPlaytimesCompletion: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
+        DriftSqlType.int,
         data['${effectivePrefix}estimated_playtimes_completion'],
       ),
     );
@@ -315,9 +314,9 @@ class GameRow extends DataClass implements Insertable<GameRow> {
   final List<String> platforms;
   final String? developer;
   final String? publisher;
-  final double? estimatedPlaytimesStory;
-  final double? estimatedPlaytimesMain;
-  final double? estimatedPlaytimesCompletion;
+  final int? estimatedPlaytimesStory;
+  final int? estimatedPlaytimesMain;
+  final int? estimatedPlaytimesCompletion;
   const GameRow({
     required this.id,
     required this.name,
@@ -363,17 +362,13 @@ class GameRow extends DataClass implements Insertable<GameRow> {
       map['publisher'] = Variable<String>(publisher);
     }
     if (!nullToAbsent || estimatedPlaytimesStory != null) {
-      map['estimated_playtimes_story'] = Variable<double>(
-        estimatedPlaytimesStory,
-      );
+      map['estimated_playtimes_story'] = Variable<int>(estimatedPlaytimesStory);
     }
     if (!nullToAbsent || estimatedPlaytimesMain != null) {
-      map['estimated_playtimes_main'] = Variable<double>(
-        estimatedPlaytimesMain,
-      );
+      map['estimated_playtimes_main'] = Variable<int>(estimatedPlaytimesMain);
     }
     if (!nullToAbsent || estimatedPlaytimesCompletion != null) {
-      map['estimated_playtimes_completion'] = Variable<double>(
+      map['estimated_playtimes_completion'] = Variable<int>(
         estimatedPlaytimesCompletion,
       );
     }
@@ -429,13 +424,13 @@ class GameRow extends DataClass implements Insertable<GameRow> {
       platforms: serializer.fromJson<List<String>>(json['platforms']),
       developer: serializer.fromJson<String?>(json['developer']),
       publisher: serializer.fromJson<String?>(json['publisher']),
-      estimatedPlaytimesStory: serializer.fromJson<double?>(
+      estimatedPlaytimesStory: serializer.fromJson<int?>(
         json['estimatedPlaytimesStory'],
       ),
-      estimatedPlaytimesMain: serializer.fromJson<double?>(
+      estimatedPlaytimesMain: serializer.fromJson<int?>(
         json['estimatedPlaytimesMain'],
       ),
-      estimatedPlaytimesCompletion: serializer.fromJson<double?>(
+      estimatedPlaytimesCompletion: serializer.fromJson<int?>(
         json['estimatedPlaytimesCompletion'],
       ),
     );
@@ -453,13 +448,11 @@ class GameRow extends DataClass implements Insertable<GameRow> {
       'platforms': serializer.toJson<List<String>>(platforms),
       'developer': serializer.toJson<String?>(developer),
       'publisher': serializer.toJson<String?>(publisher),
-      'estimatedPlaytimesStory': serializer.toJson<double?>(
+      'estimatedPlaytimesStory': serializer.toJson<int?>(
         estimatedPlaytimesStory,
       ),
-      'estimatedPlaytimesMain': serializer.toJson<double?>(
-        estimatedPlaytimesMain,
-      ),
-      'estimatedPlaytimesCompletion': serializer.toJson<double?>(
+      'estimatedPlaytimesMain': serializer.toJson<int?>(estimatedPlaytimesMain),
+      'estimatedPlaytimesCompletion': serializer.toJson<int?>(
         estimatedPlaytimesCompletion,
       ),
     };
@@ -475,9 +468,9 @@ class GameRow extends DataClass implements Insertable<GameRow> {
     List<String>? platforms,
     Value<String?> developer = const Value.absent(),
     Value<String?> publisher = const Value.absent(),
-    Value<double?> estimatedPlaytimesStory = const Value.absent(),
-    Value<double?> estimatedPlaytimesMain = const Value.absent(),
-    Value<double?> estimatedPlaytimesCompletion = const Value.absent(),
+    Value<int?> estimatedPlaytimesStory = const Value.absent(),
+    Value<int?> estimatedPlaytimesMain = const Value.absent(),
+    Value<int?> estimatedPlaytimesCompletion = const Value.absent(),
   }) => GameRow(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -586,9 +579,9 @@ class GamesCompanion extends UpdateCompanion<GameRow> {
   final Value<List<String>> platforms;
   final Value<String?> developer;
   final Value<String?> publisher;
-  final Value<double?> estimatedPlaytimesStory;
-  final Value<double?> estimatedPlaytimesMain;
-  final Value<double?> estimatedPlaytimesCompletion;
+  final Value<int?> estimatedPlaytimesStory;
+  final Value<int?> estimatedPlaytimesMain;
+  final Value<int?> estimatedPlaytimesCompletion;
   const GamesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -629,9 +622,9 @@ class GamesCompanion extends UpdateCompanion<GameRow> {
     Expression<String>? platforms,
     Expression<String>? developer,
     Expression<String>? publisher,
-    Expression<double>? estimatedPlaytimesStory,
-    Expression<double>? estimatedPlaytimesMain,
-    Expression<double>? estimatedPlaytimesCompletion,
+    Expression<int>? estimatedPlaytimesStory,
+    Expression<int>? estimatedPlaytimesMain,
+    Expression<int>? estimatedPlaytimesCompletion,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -662,9 +655,9 @@ class GamesCompanion extends UpdateCompanion<GameRow> {
     Value<List<String>>? platforms,
     Value<String?>? developer,
     Value<String?>? publisher,
-    Value<double?>? estimatedPlaytimesStory,
-    Value<double?>? estimatedPlaytimesMain,
-    Value<double?>? estimatedPlaytimesCompletion,
+    Value<int?>? estimatedPlaytimesStory,
+    Value<int?>? estimatedPlaytimesMain,
+    Value<int?>? estimatedPlaytimesCompletion,
   }) {
     return GamesCompanion(
       id: id ?? this.id,
@@ -720,17 +713,17 @@ class GamesCompanion extends UpdateCompanion<GameRow> {
       map['publisher'] = Variable<String>(publisher.value);
     }
     if (estimatedPlaytimesStory.present) {
-      map['estimated_playtimes_story'] = Variable<double>(
+      map['estimated_playtimes_story'] = Variable<int>(
         estimatedPlaytimesStory.value,
       );
     }
     if (estimatedPlaytimesMain.present) {
-      map['estimated_playtimes_main'] = Variable<double>(
+      map['estimated_playtimes_main'] = Variable<int>(
         estimatedPlaytimesMain.value,
       );
     }
     if (estimatedPlaytimesCompletion.present) {
-      map['estimated_playtimes_completion'] = Variable<double>(
+      map['estimated_playtimes_completion'] = Variable<int>(
         estimatedPlaytimesCompletion.value,
       );
     }
@@ -1033,9 +1026,9 @@ typedef $$GamesTableCreateCompanionBuilder = GamesCompanion Function({
   required List<String> platforms,
   Value<String?> developer,
   Value<String?> publisher,
-  Value<double?> estimatedPlaytimesStory,
-  Value<double?> estimatedPlaytimesMain,
-  Value<double?> estimatedPlaytimesCompletion,
+  Value<int?> estimatedPlaytimesStory,
+  Value<int?> estimatedPlaytimesMain,
+  Value<int?> estimatedPlaytimesCompletion,
 });
 typedef $$GamesTableUpdateCompanionBuilder = GamesCompanion Function({
   Value<int> id,
@@ -1047,9 +1040,9 @@ typedef $$GamesTableUpdateCompanionBuilder = GamesCompanion Function({
   Value<List<String>> platforms,
   Value<String?> developer,
   Value<String?> publisher,
-  Value<double?> estimatedPlaytimesStory,
-  Value<double?> estimatedPlaytimesMain,
-  Value<double?> estimatedPlaytimesCompletion,
+  Value<int?> estimatedPlaytimesStory,
+  Value<int?> estimatedPlaytimesMain,
+  Value<int?> estimatedPlaytimesCompletion,
 });
 
 final class $$GamesTableReferences
@@ -1130,17 +1123,17 @@ class $$GamesTableFilterComposer extends Composer<_$AppDatabase, $GamesTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get estimatedPlaytimesStory => $composableBuilder(
+  ColumnFilters<int> get estimatedPlaytimesStory => $composableBuilder(
     column: $table.estimatedPlaytimesStory,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get estimatedPlaytimesMain => $composableBuilder(
+  ColumnFilters<int> get estimatedPlaytimesMain => $composableBuilder(
     column: $table.estimatedPlaytimesMain,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get estimatedPlaytimesCompletion => $composableBuilder(
+  ColumnFilters<int> get estimatedPlaytimesCompletion => $composableBuilder(
     column: $table.estimatedPlaytimesCompletion,
     builder: (column) => ColumnFilters(column),
   );
@@ -1225,21 +1218,20 @@ class $$GamesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get estimatedPlaytimesStory => $composableBuilder(
+  ColumnOrderings<int> get estimatedPlaytimesStory => $composableBuilder(
     column: $table.estimatedPlaytimesStory,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get estimatedPlaytimesMain => $composableBuilder(
+  ColumnOrderings<int> get estimatedPlaytimesMain => $composableBuilder(
     column: $table.estimatedPlaytimesMain,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get estimatedPlaytimesCompletion =>
-      $composableBuilder(
-        column: $table.estimatedPlaytimesCompletion,
-        builder: (column) => ColumnOrderings(column),
-      );
+  ColumnOrderings<int> get estimatedPlaytimesCompletion => $composableBuilder(
+    column: $table.estimatedPlaytimesCompletion,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$GamesTableAnnotationComposer
@@ -1280,21 +1272,20 @@ class $$GamesTableAnnotationComposer
   GeneratedColumn<String> get publisher =>
       $composableBuilder(column: $table.publisher, builder: (column) => column);
 
-  GeneratedColumn<double> get estimatedPlaytimesStory => $composableBuilder(
+  GeneratedColumn<int> get estimatedPlaytimesStory => $composableBuilder(
     column: $table.estimatedPlaytimesStory,
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get estimatedPlaytimesMain => $composableBuilder(
+  GeneratedColumn<int> get estimatedPlaytimesMain => $composableBuilder(
     column: $table.estimatedPlaytimesMain,
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get estimatedPlaytimesCompletion =>
-      $composableBuilder(
-        column: $table.estimatedPlaytimesCompletion,
-        builder: (column) => column,
-      );
+  GeneratedColumn<int> get estimatedPlaytimesCompletion => $composableBuilder(
+    column: $table.estimatedPlaytimesCompletion,
+    builder: (column) => column,
+  );
 
   Expression<T> userGamesRefs<T extends Object>(
     Expression<T> Function($$UserGamesTableAnnotationComposer a) f,
@@ -1359,10 +1350,9 @@ class $$GamesTableTableManager
                 Value<List<String>> platforms = const Value.absent(),
                 Value<String?> developer = const Value.absent(),
                 Value<String?> publisher = const Value.absent(),
-                Value<double?> estimatedPlaytimesStory = const Value.absent(),
-                Value<double?> estimatedPlaytimesMain = const Value.absent(),
-                Value<double?> estimatedPlaytimesCompletion =
-                    const Value.absent(),
+                Value<int?> estimatedPlaytimesStory = const Value.absent(),
+                Value<int?> estimatedPlaytimesMain = const Value.absent(),
+                Value<int?> estimatedPlaytimesCompletion = const Value.absent(),
               }) => GamesCompanion(
                 id: id,
                 name: name,
@@ -1388,10 +1378,9 @@ class $$GamesTableTableManager
                 required List<String> platforms,
                 Value<String?> developer = const Value.absent(),
                 Value<String?> publisher = const Value.absent(),
-                Value<double?> estimatedPlaytimesStory = const Value.absent(),
-                Value<double?> estimatedPlaytimesMain = const Value.absent(),
-                Value<double?> estimatedPlaytimesCompletion =
-                    const Value.absent(),
+                Value<int?> estimatedPlaytimesStory = const Value.absent(),
+                Value<int?> estimatedPlaytimesMain = const Value.absent(),
+                Value<int?> estimatedPlaytimesCompletion = const Value.absent(),
               }) => GamesCompanion.insert(
                 id: id,
                 name: name,
