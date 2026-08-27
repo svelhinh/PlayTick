@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
+import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_game.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/temporary_library_games_provider.dart';
@@ -36,25 +37,25 @@ void main() {
         overrides: [
           temporaryLibraryGamesProvider.overrideWithValue(const [
             LibraryGame(
-              igdbId: 200,
-              title: 'Hollow Knight',
+              gameId: 200,
+              name: 'Hollow Knight',
               status: GameStatus.wantToPlay,
             ),
             LibraryGame(
-              igdbId: 201,
-              title: 'Cocoon',
+              gameId: 201,
+              name: 'Cocoon',
               status: GameStatus.playing,
               totalPlaytime: Duration(hours: 20),
             ),
             LibraryGame(
-              igdbId: 202,
-              title: 'SOMA',
+              gameId: 202,
+              name: 'SOMA',
               status: GameStatus.completed,
               totalPlaytime: Duration(hours: 10, minutes: 30),
             ),
             LibraryGame(
-              igdbId: 203,
-              title: 'NieR: Automata',
+              gameId: 203,
+              name: 'NieR: Automata',
               status: GameStatus.dropped,
             ),
           ]),

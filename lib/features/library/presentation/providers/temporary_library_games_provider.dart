@@ -1,3 +1,4 @@
+import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_game.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -7,25 +8,25 @@ part 'temporary_library_games_provider.g.dart';
 List<LibraryGame> temporaryLibraryGames(Ref ref) {
   return const [
     LibraryGame(
-      igdbId: 123,
-      title: 'Doom Eternal',
+      gameId: 123,
+      name: 'Doom Eternal',
       status: GameStatus.wantToPlay,
     ),
     LibraryGame(
-      igdbId: 124,
-      title: 'Final Fantasy VII',
+      gameId: 124,
+      name: 'Final Fantasy VII',
       status: GameStatus.playing,
       totalPlaytime: Duration(hours: 20),
     ),
     LibraryGame(
-      igdbId: 125,
-      title: 'The Legend of Zelda: Breath of the Wild',
+      gameId: 125,
+      name: 'The Legend of Zelda: Breath of the Wild',
       status: GameStatus.completed,
       totalPlaytime: Duration(hours: 30, minutes: 15),
     ),
     LibraryGame(
-      igdbId: 126,
-      title: 'The Last of Us II',
+      gameId: 126,
+      name: 'The Last of Us II',
       status: GameStatus.dropped,
       totalPlaytime: Duration(hours: 5),
     ),

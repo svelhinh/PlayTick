@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:playtick/app/app_theme.dart';
+import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_game.dart';
 import 'package:playtick/features/library/presentation/extensions/game_status_localization.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
@@ -48,7 +49,7 @@ class LibraryGameCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                game.title,
+                game.name,
                 style: theme.textTheme.titleMedium,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
