@@ -55,4 +55,4 @@ final class TemporaryLibraryGamesProvider
 }
 
 String _$temporaryLibraryGamesHash() =>
-    r'8e5e2cd0e55da35bb55f7681b829c7489afeee4f';
+    r'9f9498ded73c02b41e86be3c5c00b91321c4112e';
