@@ -1,20 +1,17 @@
-enum GameStatus {
-  wantToPlay,
-  playing,
-  completed,
-  dropped,
-}
+import 'package:playtick/features/library/domain/game_status.dart';
 
 final class LibraryGame {
   const LibraryGame({
-    required this.igdbId,
-    required this.title,
+    required this.gameId,
+    required this.name,
     required this.status,
+    this.coverUrl,
     this.totalPlaytime = Duration.zero,
   });
 
-  final int igdbId;
-  final String title;
+  final int gameId;
+  final String name;
   final GameStatus status;
+  final String? coverUrl;
   final Duration totalPlaytime;
 }

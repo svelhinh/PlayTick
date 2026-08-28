@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:playtick/features/library/domain/library_game.dart';
+import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 extension GameStatusLocalization on GameStatus {

@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,16 +15,12 @@ void main() {
     await database.close();
   });
 
-  test('should be able to add a row', () async {
-    final insertedId = await database
-        .into(database.playTickTable)
-        .insert(const PlayTickTableCompanion(title: Value('Test title')));
+  test('games and user games tables start empty', () async {
+    final games = await database.select(database.games).get();
+    final userGames = await database.select(database.userGames).get();
 
-    final rows = await database.select(database.playTickTable).get();
-
-    expect(rows.length, 1);
-    expect(rows.single.id, insertedId);
-    expect(rows.single.title, 'Test title');
+    expect(games, isEmpty);
+    expect(userGames, isEmpty);
   });
 
   test('riverpod can replace production database on tests', () async {

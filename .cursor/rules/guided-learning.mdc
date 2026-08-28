@@ -1,0 +1,16 @@
+---
+description: Favor visual, end-to-end checkpoints when guiding implementation
+alwaysApply: true
+---
+
+# Guided Learning Workflow
+
+- When the developer asks to learn or implement without receiving the full solution, use progressive hints rather than large paste-ready implementations.
+- Start each checkpoint by explaining the observable behavior and the data flow it enables.
+- Prefer small vertical slices: visible UI or fixture, real state change, domain/data boundary, persistence, then visible verification.
+- Avoid long sequences of models, tables, interfaces, and repositories without connecting them to something the developer can run or see.
+- End every checkpoint with either visible application behavior or a focused test whose purpose is explained.
+- For unavoidable non-visual foundations, use concrete before/after data examples and connect them to the UI in the next checkpoint.
+- A temporary visual harness must invoke the real implementation. Never add fake repositories or no-op controls.
+- Inspect the relevant Figma reference before guiding visual implementation when one is available.
+- Increase hint specificity only when the developer is blocked or explicitly asks for code.
