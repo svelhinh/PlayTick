@@ -7,9 +7,16 @@ import 'package:playtick/features/library/presentation/extensions/playtime_local
 import 'package:playtick/l10n/app_localizations.dart';
 
 class LibraryGameCard extends StatelessWidget {
-  const LibraryGameCard({required this.game, super.key});
+  const LibraryGameCard({
+    required this.game,
+    super.key,
+    this.onRemove,
+    this.onStatusChange,
+  });
 
   final LibraryGame game;
+  final VoidCallback? onRemove;
+  final ValueChanged<GameStatus>? onStatusChange;
 
   Color _statusCircleColor(BuildContext context) {
     final theme = Theme.of(context);
@@ -66,9 +73,18 @@ class LibraryGameCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  Text(
-                    game.status.localize(context),
-                    style: theme.textTheme.bodySmall,
+                  PopupMenuButton<GameStatus>(
+                    onSelected: onStatusChange,
+                    initialValue: game.status,
+                    child: Text(game.status.localize(context)),
+                    itemBuilder: (context) => GameStatus.values
+                        .map<PopupMenuItem<GameStatus>>(
+                          (status) => PopupMenuItem(
+                            value: status,
+                            child: Text(status.localize(context)),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ],
               ),
@@ -88,6 +104,11 @@ class LibraryGameCard extends StatelessWidget {
               ],
             ],
           ),
+        ),
+        const SizedBox(width: 12),
+        IconButton(
+          onPressed: onRemove,
+          icon: const Icon(Icons.delete, color: AppTheme.danger),
         ),
       ],
     );

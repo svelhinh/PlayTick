@@ -14,6 +14,7 @@ import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_repository_provider.dart';
+import 'package:playtick/features/library/presentation/widgets/add_game_sheet.dart';
 
 void main() {
   late AppDatabase database;
@@ -49,7 +50,13 @@ void main() {
 
     expect(find.byType(LibraryScreen), findsOneWidget);
     expect(find.byType(EmptyStateCard), findsOneWidget);
-    expect(find.byType(FilledButton), findsNothing);
+    expect(
+      find.descendant(
+        of: find.byType(EmptyStateCard),
+        matching: find.byType(FilledButton),
+      ),
+      findsNothing,
+    );
   });
 
   testWidgets('Library screen shows library games', (tester) async {
@@ -188,4 +195,81 @@ void main() {
     expect(find.byType(EmptyStateCard), findsOneWidget);
     expect(find.text('3 games'), findsNothing);
   });
+
+  testWidgets(
+    'Library screen adds game to library, changes status and removes game',
+    (
+      tester,
+    ) async {
+      tester.binding.platformDispatcher.localesTestValue = const [Locale('en')];
+      addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const PlayTick(),
+        ),
+      );
+
+      await tester.tap(find.byType(NavigationDestination).at(1));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LibraryScreen), findsOneWidget);
+      expect(find.byType(EmptyStateCard), findsOneWidget);
+
+      // Add game
+      await tester.tap(find.text('Add a game'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AddGameSheet), findsOneWidget);
+
+      await tester.tap(find.text('Add'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(EmptyStateCard), findsNothing);
+      expect(find.text('1 game'), findsOneWidget);
+      expect(find.text('Hollow Knight'), findsOneWidget);
+
+      // Duplicate game
+      await tester.tap(find.byKey(const Key('add-game-button')));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AddGameSheet), findsOneWidget);
+
+      await tester.tap(find.text('Add'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SnackBar), findsOneWidget);
+      expect(
+        find.text('This game is already in your library.'),
+        findsOneWidget,
+      );
+
+      Navigator.of(
+        tester.element(find.byType(AddGameSheet)),
+      ).pop();
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AddGameSheet), findsNothing);
+
+      // Change status
+      await tester.tap(find.text('Want to play'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(PopupMenuButton<GameStatus>), findsOneWidget);
+
+      await tester.tap(find.text('Playing'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Playing'), findsOneWidget);
+
+      // Remove game
+      await tester.tap(find.byIcon(Icons.delete));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(EmptyStateCard), findsOneWidget);
+      expect(find.text('0 games'), findsNothing);
+      expect(find.text('Hollow Knight'), findsNothing);
+    },
+  );
 }
