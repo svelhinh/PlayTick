@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/features/home/presentation/home_screen.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
+import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 
 void main() {
   testWidgets('initial launch renders the home screen', (tester) async {
@@ -35,7 +36,16 @@ void main() {
         );
       }
 
-      await tester.pumpWidget(const ProviderScope(child: PlayTick()));
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            libraryGamesProvider.overrideWith(
+              (_) => Stream.value(const []),
+            ),
+          ],
+          child: const PlayTick(),
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(navigationBar().selectedIndex, 0);
