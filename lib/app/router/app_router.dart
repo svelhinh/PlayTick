@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_shell.dart';
 import 'package:playtick/features/home/presentation/home_screen.dart';
+import 'package:playtick/features/library/presentation/game_details_screen.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,6 +10,9 @@ part 'app_router.g.dart';
 class AppRoutes {
   static const home = '/';
   static const library = '/library';
+  static const gameDetails = '/library/:gameId';
+
+  static String gameDetailsPath(String gameId) => '$library/$gameId';
 }
 
 @Riverpod(keepAlive: true)
@@ -32,6 +36,12 @@ GoRouter appRouter(Ref ref) {
               GoRoute(
                 path: AppRoutes.library,
                 builder: (context, state) => const LibraryScreen(),
+              ),
+              GoRoute(
+                path: AppRoutes.gameDetails,
+                builder: (context, state) => GameDetailsScreen(
+                  gameId: state.pathParameters['gameId']!,
+                ),
               ),
             ],
           ),

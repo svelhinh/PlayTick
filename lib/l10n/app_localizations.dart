@@ -241,6 +241,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{No games} =1{1 game} other{{count} games}}'**
   String libraryGamesCount(int count);
+
+  /// The text of the button to see the details of the game in the library game card
+  ///
+  /// In en, this message translates to:
+  /// **'See'**
+  String get libraryGameCardSeeDetails;
 }
 
 class _AppLocalizationsDelegate

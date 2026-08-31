@@ -94,4 +94,7 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get libraryGameCardSeeDetails => 'See';
 }

@@ -132,5 +132,10 @@
                 "type": "int"
             }
         }
+    },
+    "libraryGameCardSeeDetails": "Voir",
+    "@libraryGameCardSeeDetails": {
+        "type": "text",
+        "description": "Le texte du bouton pour voir les détails du jeu dans la carte de la bibliothèque"
     }
 }
