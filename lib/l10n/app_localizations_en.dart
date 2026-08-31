@@ -42,6 +42,31 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add your first game to start tracking your progress.';
 
   @override
+  String get libraryFilterEmptyStateTitle => 'No games matching your filter';
+
+  @override
+  String get libraryFilterEmptyStateDescription =>
+      'Try a different filter to see your games.';
+
+  @override
+  String get libraryFilterEmptyStateButtonText => 'See all games';
+
+  @override
+  String get libraryFilterAll => 'All';
+
+  @override
+  String get libraryFilterWantToPlay => 'Want to play';
+
+  @override
+  String get libraryFilterPlaying => 'Playing';
+
+  @override
+  String get libraryFilterCompleted => 'Completed';
+
+  @override
+  String get libraryFilterDropped => 'Dropped';
+
+  @override
   String get gameStatusWantToPlay => 'Want to play';
 
   @override

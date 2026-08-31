@@ -50,6 +50,46 @@
         "type": "text",
         "description": "La description de la carte vide dans l'écran de la bibliothèque"
     },
+    "libraryFilterEmptyStateTitle": "Aucun jeu trouvé",
+    "@libraryFilterEmptyStateTitle": {
+        "type": "text",
+        "description": "Le titre de la carte vide dans l'écran de la bibliothèque"
+    },
+    "libraryFilterEmptyStateDescription": "Essayez un autre filtre pour trouver vos jeux.",
+    "@libraryFilterEmptyStateDescription": {
+        "type": "text",
+        "description": "La description de la carte vide dans l'écran de la bibliothèque"
+    },
+    "libraryFilterEmptyStateButtonText": "Voir tous mes jeux",
+    "@libraryFilterEmptyStateButtonText": {
+        "type": "text",
+        "description": "Le texte du bouton de la carte vide dans l'écran de la bibliothèque pour voir tous les jeux"
+    },
+    "libraryFilterAll": "Tous",
+    "@libraryFilterAll": {
+        "type": "text",
+        "description": "Le filtre pour tous les jeux dans la bibliothèque"
+    },
+    "libraryFilterWantToPlay": "À jouer",
+    "@libraryFilterWantToPlay": {
+        "type": "text",
+        "description": "Le filtre pour les jeux à jouer dans la bibliothèque"
+    },
+    "libraryFilterPlaying": "En cours",
+    "@libraryFilterPlaying": {
+        "type": "text",
+        "description": "Le filtre pour les jeux en cours dans la bibliothèque"
+    },
+    "libraryFilterCompleted": "Terminé",
+    "@libraryFilterCompleted": {
+        "type": "text",
+        "description": "Le filtre pour les jeux terminés dans la bibliothèque"
+    },
+    "libraryFilterDropped": "Abandonné",
+    "@libraryFilterDropped": {
+        "type": "text",
+        "description": "Le filtre pour les jeux abandonnés dans la bibliothèque"
+    },
     "gameStatusWantToPlay": "À jouer",
     "@gameStatusWantToPlay": {
         "type": "text",

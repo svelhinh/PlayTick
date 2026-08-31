@@ -42,6 +42,31 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ajoutez votre premier jeu pour commencer à suivre votre progression.';
 
   @override
+  String get libraryFilterEmptyStateTitle => 'Aucun jeu trouvé';
+
+  @override
+  String get libraryFilterEmptyStateDescription =>
+      'Essayez un autre filtre pour trouver vos jeux.';
+
+  @override
+  String get libraryFilterEmptyStateButtonText => 'Voir tous mes jeux';
+
+  @override
+  String get libraryFilterAll => 'Tous';
+
+  @override
+  String get libraryFilterWantToPlay => 'À jouer';
+
+  @override
+  String get libraryFilterPlaying => 'En cours';
+
+  @override
+  String get libraryFilterCompleted => 'Terminé';
+
+  @override
+  String get libraryFilterDropped => 'Abandonné';
+
+  @override
   String get gameStatusWantToPlay => 'À jouer';
 
   @override
