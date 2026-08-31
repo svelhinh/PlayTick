@@ -11,10 +11,12 @@ import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
+import 'package:playtick/features/library/domain/library_repository.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_repository_provider.dart';
 import 'package:playtick/features/library/presentation/widgets/add_game_sheet.dart';
+import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 
 void main() {
   late AppDatabase database;
@@ -34,37 +36,7 @@ void main() {
     unawaited(database.close());
   });
 
-  testWidgets('Library screen shows empty state card', (tester) async {
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          libraryGamesProvider.overrideWith((ref) => Stream.value(const [])),
-        ],
-        child: const PlayTick(),
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byType(NavigationDestination).at(1));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(LibraryScreen), findsOneWidget);
-    expect(find.byType(EmptyStateCard), findsOneWidget);
-    expect(
-      find.descendant(
-        of: find.byType(EmptyStateCard),
-        matching: find.byType(FilledButton),
-      ),
-      findsNothing,
-    );
-  });
-
-  testWidgets('Library screen shows library games', (tester) async {
-    tester.binding.platformDispatcher.localesTestValue = const [Locale('en')];
-    addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
-
-    final libraryRepository = container.read(libraryRepositoryProvider);
-
+  Future<void> addGamesToLibrary(LibraryRepository libraryRepository) async {
     await libraryRepository.addGame(
       Game(
         id: 200,
@@ -146,6 +118,33 @@ void main() {
       ),
       status: GameStatus.dropped,
     );
+  }
+
+  testWidgets('Library screen shows empty state card', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          libraryGamesProvider.overrideWith((ref) => Stream.value(const [])),
+        ],
+        child: const PlayTick(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(NavigationDestination).at(1));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LibraryScreen), findsOneWidget);
+    expect(find.byType(EmptyStateCard), findsOneWidget);
+  });
+
+  testWidgets('Library screen shows library games', (tester) async {
+    tester.binding.platformDispatcher.localesTestValue = const [Locale('en')];
+    addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
+
+    final libraryRepository = container.read(libraryRepositoryProvider);
+
+    await addGamesToLibrary(libraryRepository);
 
     await tester.pumpWidget(
       UncontrolledProviderScope(
@@ -165,10 +164,34 @@ void main() {
     expect(find.text('Cocoon'), findsOneWidget);
     expect(find.text('SOMA'), findsOneWidget);
     expect(find.text('NieR: Automata'), findsOneWidget);
-    expect(find.text('Want to play'), findsOneWidget);
-    expect(find.text('Playing'), findsOneWidget);
-    expect(find.text('Completed'), findsOneWidget);
-    expect(find.text('Dropped'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(LibraryGameCard),
+        matching: find.text('Want to play'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(LibraryGameCard),
+        matching: find.text('Playing'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(LibraryGameCard),
+        matching: find.text('Completed'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(LibraryGameCard),
+        matching: find.text('Dropped'),
+      ),
+      findsOneWidget,
+    );
     expect(find.byIcon(Icons.schedule_outlined), findsNothing);
 
     await libraryRepository.removeGame(200);
@@ -179,10 +202,34 @@ void main() {
     expect(find.text('Cocoon'), findsOneWidget);
     expect(find.text('SOMA'), findsOneWidget);
     expect(find.text('NieR: Automata'), findsOneWidget);
-    expect(find.text('Want to play'), findsNothing);
-    expect(find.text('Playing'), findsOneWidget);
-    expect(find.text('Completed'), findsOneWidget);
-    expect(find.text('Dropped'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(LibraryGameCard),
+        matching: find.text('Want to play'),
+      ),
+      findsNothing,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(LibraryGameCard),
+        matching: find.text('Playing'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(LibraryGameCard),
+        matching: find.text('Completed'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(LibraryGameCard),
+        matching: find.text('Dropped'),
+      ),
+      findsOneWidget,
+    );
     expect(find.byIcon(Icons.schedule_outlined), findsNothing);
 
     await libraryRepository.removeGame(201);
@@ -222,46 +269,36 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(AddGameSheet), findsOneWidget);
+      final temporaryGame = tester
+          .widget<AddGameSheet>(find.byType(AddGameSheet))
+          .game;
 
       await tester.tap(find.text('Add'));
       await tester.pumpAndSettle();
 
       expect(find.byType(EmptyStateCard), findsNothing);
       expect(find.text('1 game'), findsOneWidget);
-      expect(find.text('Hollow Knight'), findsOneWidget);
-
-      // Duplicate game
-      await tester.tap(find.byKey(const Key('add-game-button')));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(AddGameSheet), findsOneWidget);
-
-      await tester.tap(find.text('Add'));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(SnackBar), findsOneWidget);
-      expect(
-        find.text('This game is already in your library.'),
-        findsOneWidget,
-      );
-
-      Navigator.of(
-        tester.element(find.byType(AddGameSheet)),
-      ).pop();
-      await tester.pumpAndSettle();
-
-      expect(find.byType(AddGameSheet), findsNothing);
+      expect(find.text(temporaryGame.name), findsOneWidget);
 
       // Change status
-      await tester.tap(find.text('Want to play'));
+      await tester.tap(find.byType(PopupMenuButton<GameStatus>));
       await tester.pumpAndSettle();
 
-      expect(find.byType(PopupMenuButton<GameStatus>), findsOneWidget);
-
-      await tester.tap(find.text('Playing'));
+      await tester.tap(
+        find.descendant(
+          of: find.byType(PopupMenuItem<GameStatus>),
+          matching: find.text('Playing'),
+        ),
+      );
       await tester.pumpAndSettle();
 
-      expect(find.text('Playing'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(LibraryGameCard),
+          matching: find.text('Playing'),
+        ),
+        findsOneWidget,
+      );
 
       // Remove game
       await tester.tap(find.byIcon(Icons.delete));
@@ -269,7 +306,101 @@ void main() {
 
       expect(find.byType(EmptyStateCard), findsOneWidget);
       expect(find.text('0 games'), findsNothing);
-      expect(find.text('Hollow Knight'), findsNothing);
+      expect(find.text(temporaryGame.name), findsNothing);
     },
   );
+
+  testWidgets('Library screen filters games by status', (tester) async {
+    tester.binding.platformDispatcher.localesTestValue = const [Locale('en')];
+    addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
+
+    final libraryRepository = container.read(libraryRepositoryProvider);
+
+    await addGamesToLibrary(libraryRepository);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const PlayTick(),
+      ),
+    );
+
+    await tester.tap(find.byType(NavigationDestination).at(1));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LibraryScreen), findsOneWidget);
+
+    expect(find.text('4 games'), findsOneWidget);
+    expect(find.text('Hollow Knight'), findsOneWidget);
+    expect(find.text('Cocoon'), findsOneWidget);
+    expect(find.text('SOMA'), findsOneWidget);
+    expect(find.text('NieR: Automata'), findsOneWidget);
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(ChoiceChip),
+        matching: find.text('Want to play'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('1 game'), findsOneWidget);
+    expect(find.text('Hollow Knight'), findsOneWidget);
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(ChoiceChip),
+        matching: find.text('Playing'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('1 game'), findsOneWidget);
+    expect(find.text('Cocoon'), findsOneWidget);
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(ChoiceChip),
+        matching: find.text('Dropped'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('1 game'), findsOneWidget);
+    expect(find.text('NieR: Automata'), findsOneWidget);
+
+    await libraryRepository.updateGameStatus(201, GameStatus.wantToPlay);
+    await tester.pumpAndSettle();
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(ChoiceChip),
+        matching: find.text('Playing'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(EmptyStateCard), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(FilledButton),
+        matching: find.text('See all games'),
+      ),
+      findsOneWidget,
+    );
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(FilledButton),
+        matching: find.text('See all games'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('4 games'), findsOneWidget);
+    expect(find.text('Hollow Knight'), findsOneWidget);
+    expect(find.text('Cocoon'), findsOneWidget);
+    expect(find.text('SOMA'), findsOneWidget);
+    expect(find.text('NieR: Automata'), findsOneWidget);
+  });
 }

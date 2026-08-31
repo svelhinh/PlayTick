@@ -50,6 +50,46 @@
         "type": "text",
         "description": "The description of the empty card in the library screen"
     },
+    "libraryFilterEmptyStateTitle": "No games matching your filter",
+    "@libraryFilterEmptyStateTitle": {
+        "type": "text",
+        "description": "The title of the empty card in the library filter screen"
+    },
+    "libraryFilterEmptyStateDescription": "Try a different filter to see your games.",
+    "@libraryFilterEmptyStateDescription": {
+        "type": "text",
+        "description": "The description of the empty card in the library filter screen"
+    },
+    "libraryFilterEmptyStateButtonText": "See all games",
+    "@libraryFilterEmptyStateButtonText": {
+        "type": "text",
+        "description": "The text of the button in the empty card in the library filter screen to see all games"
+    },
+    "libraryFilterAll": "All",
+    "@libraryFilterAll": {
+        "type": "text",
+        "description": "The filter for all games in the library"
+    },
+    "libraryFilterWantToPlay": "Want to play",
+    "@libraryFilterWantToPlay": {
+        "type": "text",
+        "description": "The filter for want to play games in the library"
+    },
+    "libraryFilterPlaying": "Playing",
+    "@libraryFilterPlaying": {
+        "type": "text",
+        "description": "The filter for playing games in the library"
+    },
+    "libraryFilterCompleted": "Completed",
+    "@libraryFilterCompleted": {
+        "type": "text",
+        "description": "The filter for completed games in the library"
+    },
+    "libraryFilterDropped": "Dropped",
+    "@libraryFilterDropped": {
+        "type": "text",
+        "description": "The filter for dropped games in the library"
+    },
     "gameStatusWantToPlay": "Want to play",
     "@gameStatusWantToPlay": {
         "type": "text",

@@ -158,6 +158,54 @@ abstract class AppLocalizations {
   /// **'Add your first game to start tracking your progress.'**
   String get libraryEmptyStateDescription;
 
+  /// The title of the empty card in the library filter screen
+  ///
+  /// In en, this message translates to:
+  /// **'No games matching your filter'**
+  String get libraryFilterEmptyStateTitle;
+
+  /// The description of the empty card in the library filter screen
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different filter to see your games.'**
+  String get libraryFilterEmptyStateDescription;
+
+  /// The text of the button in the empty card in the library filter screen to see all games
+  ///
+  /// In en, this message translates to:
+  /// **'See all games'**
+  String get libraryFilterEmptyStateButtonText;
+
+  /// The filter for all games in the library
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get libraryFilterAll;
+
+  /// The filter for want to play games in the library
+  ///
+  /// In en, this message translates to:
+  /// **'Want to play'**
+  String get libraryFilterWantToPlay;
+
+  /// The filter for playing games in the library
+  ///
+  /// In en, this message translates to:
+  /// **'Playing'**
+  String get libraryFilterPlaying;
+
+  /// The filter for completed games in the library
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get libraryFilterCompleted;
+
+  /// The filter for dropped games in the library
+  ///
+  /// In en, this message translates to:
+  /// **'Dropped'**
+  String get libraryFilterDropped;
+
   /// The status of the game 'Want to play'
   ///
   /// In en, this message translates to:
