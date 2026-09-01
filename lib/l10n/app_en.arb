@@ -15,6 +15,16 @@
         "type": "text",
         "description": "The error message general"
     },
+    "gameAlreadyInLibrary": "This game is already in your library.",
+    "@gameAlreadyInLibrary": {
+        "type": "text",
+        "description": "The error message when a game is already in the library"
+    },
+    "gameNotFoundInLibrary": "Game not found in your library.",
+    "@gameNotFoundInLibrary": {
+        "type": "text",
+        "description": "The error message when a game is not found in the library"
+    },
     "navigationLabelHome": "Home",
     "@navigationLabelHome": {
         "type": "text",

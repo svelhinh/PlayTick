@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/features/library/domain/library_filter.dart';
+import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/library_filter_extension.dart';
 import 'package:playtick/features/library/presentation/providers/library_filter_notifier_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
@@ -208,6 +209,8 @@ class _AddGameButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appLoc = AppLocalizations.of(context)!;
+
     return FilledButton.icon(
       icon: const Icon(Icons.add),
       onPressed: () async {
@@ -233,7 +236,7 @@ class _AddGameButton extends ConsumerWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(e.toString()),
+                      content: Text(e.localizeLibraryError(appLoc)),
                     ),
                   );
                 }

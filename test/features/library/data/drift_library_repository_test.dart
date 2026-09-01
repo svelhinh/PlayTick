@@ -122,13 +122,7 @@ void main() {
 
         await expectLater(
           repository.updateGameStatus(999, GameStatus.completed),
-          throwsA(
-            isA<GameNotFoundException>().having(
-              (exception) => exception.gameId,
-              'gameId',
-              999,
-            ),
-          ),
+          throwsA(isA<GameNotFoundException>()),
         );
       },
     );
@@ -138,13 +132,7 @@ void main() {
       () async {
         await expectLater(
           repository.updateGameStatus(999, GameStatus.completed),
-          throwsA(
-            isA<GameNotFoundException>().having(
-              (exception) => exception.gameId,
-              'gameId',
-              999,
-            ),
-          ),
+          throwsA(isA<GameNotFoundException>()),
         );
       },
     );
@@ -224,13 +212,7 @@ void main() {
 
         await expectLater(
           repository.addGame(game),
-          throwsA(
-            isA<DuplicateGameException>().having(
-              (exception) => exception.gameId,
-              'gameId',
-              game.id,
-            ),
-          ),
+          throwsA(isA<DuplicateGameException>()),
         );
 
         libraryGames = await repository.watchLibraryGames().first;
@@ -271,13 +253,7 @@ void main() {
       () async {
         await expectLater(
           repository.removeGame(999),
-          throwsA(
-            isA<GameNotFoundException>().having(
-              (exception) => exception.gameId,
-              'gameId',
-              999,
-            ),
-          ),
+          throwsA(isA<GameNotFoundException>()),
         );
       },
     );

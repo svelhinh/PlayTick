@@ -116,6 +116,18 @@ abstract class AppLocalizations {
   /// **'Something went wrong'**
   String get somethingWentWrong;
 
+  /// The error message when a game is already in the library
+  ///
+  /// In en, this message translates to:
+  /// **'This game is already in your library.'**
+  String get gameAlreadyInLibrary;
+
+  /// The error message when a game is not found in the library
+  ///
+  /// In en, this message translates to:
+  /// **'Game not found in your library.'**
+  String get gameNotFoundInLibrary;
+
   /// The label of the home navigation item
   ///
   /// In en, this message translates to:

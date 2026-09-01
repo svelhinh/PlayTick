@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/app/app_theme.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
+import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/providers/library_game_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_repository_provider.dart';
@@ -17,6 +18,8 @@ class GameDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appLoc = AppLocalizations.of(context)!;
+
     final gameIdInt = int.tryParse(gameId);
 
     if (gameIdInt == null) {
@@ -57,7 +60,7 @@ class GameDetailsScreen extends ConsumerWidget {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(e.toString()),
+                                content: Text(e.localizeLibraryError(appLoc)),
                                 backgroundColor: AppTheme.danger,
                               ),
                             );
@@ -96,12 +99,21 @@ class GameDetailsScreen extends ConsumerWidget {
                     coverUrl: game.coverUrl,
                     status: status,
                     totalPlaytime: details.totalPlaytime,
-                    onStatusChanged: (status) => ref
-                        .read(libraryRepositoryProvider)
-                        .updateGameStatus(
-                          game.id,
-                          status,
-                        ),
+                    onStatusChanged: (status) async {
+                      try {
+                        await ref
+                            .read(libraryRepositoryProvider)
+                            .updateGameStatus(game.id, status);
+                      } on Exception catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(e.localizeLibraryError(appLoc)),
+                            ),
+                          );
+                        }
+                      }
+                    },
                   ),
                   const SizedBox(height: 16),
                   _GameInfoCard(

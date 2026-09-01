@@ -19,6 +19,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get somethingWentWrong => 'Something went wrong';
 
   @override
+  String get gameAlreadyInLibrary => 'This game is already in your library.';
+
+  @override
+  String get gameNotFoundInLibrary => 'Game not found in your library.';
+
+  @override
   String get navigationLabelHome => 'Home';
 
   @override

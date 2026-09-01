@@ -132,7 +132,7 @@ class DriftLibraryRepository implements LibraryRepository {
           );
 
       if (insertedUserGame == null) {
-        throw DuplicateGameException(game.id);
+        throw const DuplicateGameException();
       }
     });
   }
@@ -149,7 +149,7 @@ class DriftLibraryRepository implements LibraryRepository {
         );
 
     if (updatedRows == 0) {
-      throw GameNotFoundException(gameId);
+      throw const GameNotFoundException();
     }
   }
 
@@ -160,7 +160,7 @@ class DriftLibraryRepository implements LibraryRepository {
     )..where((row) => row.gameId.equals(gameId))).go();
 
     if (deletedRows == 0) {
-      throw GameNotFoundException(gameId);
+      throw const GameNotFoundException();
     }
   }
 }
