@@ -1,9 +1,11 @@
 import 'package:drift/drift.dart';
 import 'package:playtick/core/database/app_database.dart';
+import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_exception.dart';
 import 'package:playtick/features/library/domain/library_game.dart';
+import 'package:playtick/features/library/domain/library_game_details.dart';
 import 'package:playtick/features/library/domain/library_repository.dart';
 
 class DriftLibraryRepository implements LibraryRepository {
@@ -41,6 +43,49 @@ class DriftLibraryRepository implements LibraryRepository {
             );
           })
           .toList(growable: false);
+    });
+  }
+
+  @override
+  Stream<LibraryGameDetails?> watchGame(int gameId) {
+    final query = _database.select(_database.userGames).join([
+      innerJoin(
+        _database.games,
+        _database.games.id.equalsExp(_database.userGames.gameId),
+      ),
+    ])..where(_database.userGames.gameId.equals(gameId));
+
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        final game = row.readTable(_database.games);
+        final userGame = row.readTable(_database.userGames);
+
+        return LibraryGameDetails(
+          game: Game(
+            id: game.id,
+            name: game.name,
+            coverUrl: game.coverUrl,
+            summary: game.summary,
+            releaseDate: game.releaseDate,
+            genres: game.genres,
+            platforms: game.platforms,
+            developer: game.developer,
+            publisher: game.publisher,
+            estimatedPlaytimes: EstimatedPlaytimes(
+              story: game.estimatedPlaytimesStory != null
+                  ? Duration(seconds: game.estimatedPlaytimesStory!)
+                  : null,
+              main: game.estimatedPlaytimesMain != null
+                  ? Duration(seconds: game.estimatedPlaytimesMain!)
+                  : null,
+              completion: game.estimatedPlaytimesCompletion != null
+                  ? Duration(seconds: game.estimatedPlaytimesCompletion!)
+                  : null,
+            ),
+          ),
+          status: userGame.status,
+        );
+      }).firstOrNull;
     });
   }
 

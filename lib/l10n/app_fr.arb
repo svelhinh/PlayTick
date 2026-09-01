@@ -5,6 +5,11 @@
         "type": "text",
         "description": "Le nom de l'application"
     },
+    "cancel": "Annuler",
+    "@cancel": {
+        "type": "text",
+        "description": "Le texte du bouton d'annulation d'une action"
+    },
     "navigationLabelHome": "Accueil",
     "@navigationLabelHome": {
         "type": "text",
@@ -137,5 +142,60 @@
     "@libraryGameCardSeeDetails": {
         "type": "text",
         "description": "Le texte du bouton pour voir les détails du jeu dans la carte de la bibliothèque"
+    },
+    "gameDetailsDeleteGameTitle": "Supprimer le jeu",
+    "@gameDetailsDeleteGameTitle": {
+        "type": "text",
+        "description": "Le titre de la fenêtre de suppression de jeu"
+    },
+    "gameDetailsDeleteGameDescription": "Voulez-vous vraiment supprimer \"{name}\" de votre bibliothèque ?\n\nLe jeu, ses notes et toutes les sessions enregistrées seront supprimés de cet appareil. Cette action est irréversible.",
+    "@gameDetailsDeleteGameDescription": {
+        "type": "text",
+        "description": "La description de la fenêtre de suppression de jeu",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "gameDetailsDeleteWarning": "Aucune donnée ne sera conservée localement.",
+    "@gameDetailsDeleteWarning": {
+        "type": "text",
+        "description": "Le warning de la fenêtre de suppression de jeu"
+    },
+    "gameDetailsDeleteButton": "Supprimer le jeu",
+    "@gameDetailsDeleteButton": {
+        "type": "text",
+        "description": "Le texte du bouton de suppression de jeu"
+    },
+    "gameDetailsAboutGameTitle": "À propos du jeu",
+    "@gameDetailsAboutGameTitle": {
+        "type": "text",
+        "description": "Le titre de la section 'À propos du jeu' dans les détails du jeu"
+    },
+    "gameDetailsGenresTitle": "Genres",
+    "@gameDetailsGenresTitle": {
+        "type": "text",
+        "description": "Le titre de la section 'Genres' dans les détails du jeu"
+    },
+    "gameDetailsDeveloperTitle": "Développeur",
+    "@gameDetailsDeveloperTitle": {
+        "type": "text",
+        "description": "Le titre de la section 'Développeur' dans les détails du jeu"
+    },
+    "gameDetailsPublisherTitle": "Éditeur",
+    "@gameDetailsPublisherTitle": {
+        "type": "text",
+        "description": "Le titre de la section 'Éditeur' dans les détails du jeu"
+    },
+    "gameDetailsPlatformsTitle": "Plateformes",
+    "@gameDetailsPlatformsTitle": {
+        "type": "text",
+        "description": "Le titre de la section 'Plateformes' dans les détails du jeu"
+    },
+    "gameDetailsSomethingWentWrong": "Une erreur est survenue",
+    "@gameDetailsSomethingWentWrong": {
+        "type": "text",
+        "description": "Le message d'erreur dans les détails du jeu"
     }
 }

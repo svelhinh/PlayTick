@@ -36,12 +36,14 @@ GoRouter appRouter(Ref ref) {
               GoRoute(
                 path: AppRoutes.library,
                 builder: (context, state) => const LibraryScreen(),
-              ),
-              GoRoute(
-                path: AppRoutes.gameDetails,
-                builder: (context, state) => GameDetailsScreen(
-                  gameId: state.pathParameters['gameId']!,
-                ),
+                routes: [
+                  GoRoute(
+                    path: ':gameId',
+                    builder: (context, state) => GameDetailsScreen(
+                      gameId: state.pathParameters['gameId']!,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

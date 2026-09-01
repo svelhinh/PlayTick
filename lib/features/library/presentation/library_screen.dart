@@ -21,7 +21,7 @@ class LibraryScreen extends ConsumerWidget {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    final games = ref.watch(libraryGamesProvider);
+    final gamesAsync = ref.watch(libraryGamesProvider);
     final filter = ref.watch(libraryFilterProvider);
 
     return SafeArea(
@@ -42,7 +42,7 @@ class LibraryScreen extends ConsumerWidget {
             ),
           ),
           Expanded(
-            child: games.when(
+            child: gamesAsync.when(
               data: (games) {
                 if (games.isEmpty) {
                   return Align(
@@ -170,12 +170,6 @@ class LibraryScreen extends ConsumerWidget {
                                   ),
                                   child: LibraryGameCard(
                                     game: filteredGames[index],
-                                    onStatusChange: (status) => ref
-                                        .read(libraryRepositoryProvider)
-                                        .updateGameStatus(
-                                          filteredGames[index].gameId,
-                                          status,
-                                        ),
                                     onTap: () => context.push(
                                       AppRoutes.gameDetailsPath(
                                         filteredGames[index].gameId.toString(),

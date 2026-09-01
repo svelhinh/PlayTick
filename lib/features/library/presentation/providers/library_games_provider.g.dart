@@ -48,4 +48,4 @@ final class LibraryGamesProvider
   }
 }
 
-String _$libraryGamesHash() => r'a713f98671c17c09a8a6e9060506f63ff8f3592e';
+String _$libraryGamesHash() => r'eb26dc5533837c7441b2e30c4c89e6b2ccb47b25';

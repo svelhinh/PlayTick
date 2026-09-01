@@ -5,6 +5,11 @@
         "type": "text",
         "description": "The name of the app"
     },
+    "cancel": "Cancel",
+    "@cancel": {
+        "type": "text",
+        "description": "The text of the button to cancel an action"
+    },
     "navigationLabelHome": "Home",
     "@navigationLabelHome": {
         "type": "text",
@@ -137,5 +142,60 @@
     "@libraryGameCardSeeDetails": {
         "type": "text",
         "description": "The text of the button to see the details of the game in the library game card"
+    },
+    "gameDetailsDeleteGameTitle": "Delete this game",
+    "@gameDetailsDeleteGameTitle": {
+        "type": "text",
+        "description": "The title of the delete game sheet"
+    },
+    "gameDetailsDeleteGameDescription": "Are you sure you want to delete \"{name}\" from your library?\n\nThe game, its notes and all recorded sessions will be removed from this device. This action is irreversible.",
+    "@gameDetailsDeleteGameDescription": {
+        "type": "text",
+        "description": "The description of the delete game sheet",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "gameDetailsDeleteWarning": "No data will be saved locally.",
+    "@gameDetailsDeleteWarning": {
+        "type": "text",
+        "description": "The warning of the delete game sheet"
+    },
+    "gameDetailsDeleteButton": "Delete game",
+    "@gameDetailsDeleteButton": {
+        "type": "text",
+        "description": "The text of the button to delete a game"
+    },
+    "gameDetailsAboutGameTitle": "About the game",
+    "@gameDetailsAboutGameTitle": {
+        "type": "text",
+        "description": "The title of the section 'About the game' in the game details"
+    },
+    "gameDetailsGenresTitle": "Genres",
+    "@gameDetailsGenresTitle": {
+        "type": "text",
+        "description": "The title of the section 'Genres' in the game details"
+    },
+    "gameDetailsDeveloperTitle": "Developer",
+    "@gameDetailsDeveloperTitle": {
+        "type": "text",
+        "description": "The title of the section 'Developer' in the game details"
+    },
+    "gameDetailsPublisherTitle": "Publisher",
+    "@gameDetailsPublisherTitle": {
+        "type": "text",
+        "description": "The title of the section 'Publisher' in the game details"
+    },
+    "gameDetailsPlatformsTitle": "Platforms",
+    "@gameDetailsPlatformsTitle": {
+        "type": "text",
+        "description": "The title of the section 'Platforms' in the game details"
+    },
+    "gameDetailsSomethingWentWrong": "Something went wrong",
+    "@gameDetailsSomethingWentWrong": {
+        "type": "text",
+        "description": "The error message in the game details"
     }
 }

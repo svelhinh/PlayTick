@@ -84,6 +84,9 @@ Game createTemporaryGame() {
       main: Duration(hours: mainHours),
       completion: Duration(hours: completionHours),
     ),
+    coverUrl:
+        'https://sm.ign.com/t/ign_fr/news/h/hollow-kni/hollow-knights'
+        '-next-expansion-changing-name-to-avoid-potenti_pkfm.1200.jpg',
   );
 }
 
