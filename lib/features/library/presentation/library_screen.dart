@@ -192,7 +192,8 @@ class LibraryScreen extends ConsumerWidget {
                   ],
                 );
               },
-              error: (error, stackTrace) => Text(error.toString()),
+              error: (error, stackTrace) =>
+                  Center(child: Text(appLoc.somethingWentWrong)),
               loading: () => const Center(child: CircularProgressIndicator()),
             ),
           ),

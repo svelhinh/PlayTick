@@ -10,6 +10,11 @@
         "type": "text",
         "description": "Le texte du bouton d'annulation d'une action"
     },
+    "somethingWentWrong": "Une erreur est survenue",
+    "@somethingWentWrong": {
+        "type": "text",
+        "description": "Le message d'erreur général"
+    },
     "navigationLabelHome": "Accueil",
     "@navigationLabelHome": {
         "type": "text",
@@ -192,10 +197,5 @@
     "@gameDetailsPlatformsTitle": {
         "type": "text",
         "description": "Le titre de la section 'Plateformes' dans les détails du jeu"
-    },
-    "gameDetailsSomethingWentWrong": "Une erreur est survenue",
-    "@gameDetailsSomethingWentWrong": {
-        "type": "text",
-        "description": "Le message d'erreur dans les détails du jeu"
     }
 }

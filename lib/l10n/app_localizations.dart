@@ -110,6 +110,12 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancel;
 
+  /// The error message general
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
+
   /// The label of the home navigation item
   ///
   /// In en, this message translates to:
@@ -307,12 +313,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Platforms'**
   String get gameDetailsPlatformsTitle;
-
-  /// The error message in the game details
-  ///
-  /// In en, this message translates to:
-  /// **'Something went wrong'**
-  String get gameDetailsSomethingWentWrong;
 }
 
 class _AppLocalizationsDelegate

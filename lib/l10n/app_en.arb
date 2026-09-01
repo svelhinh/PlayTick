@@ -10,6 +10,11 @@
         "type": "text",
         "description": "The text of the button to cancel an action"
     },
+    "somethingWentWrong": "Something went wrong",
+    "@somethingWentWrong": {
+        "type": "text",
+        "description": "The error message general"
+    },
     "navigationLabelHome": "Home",
     "@navigationLabelHome": {
         "type": "text",
@@ -192,10 +197,5 @@
     "@gameDetailsPlatformsTitle": {
         "type": "text",
         "description": "The title of the section 'Platforms' in the game details"
-    },
-    "gameDetailsSomethingWentWrong": "Something went wrong",
-    "@gameDetailsSomethingWentWrong": {
-        "type": "text",
-        "description": "The error message in the game details"
     }
 }

@@ -130,7 +130,7 @@ final class _GameDetailsError extends StatelessWidget {
   Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
 
-    return Center(child: Text(appLoc.gameDetailsSomethingWentWrong));
+    return Center(child: Text(appLoc.somethingWentWrong));
   }
 }
 

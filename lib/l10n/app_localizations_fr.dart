@@ -16,6 +16,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cancel => 'Annuler';
 
   @override
+  String get somethingWentWrong => 'Une erreur est survenue';
+
+  @override
   String get navigationLabelHome => 'Accueil';
 
   @override
@@ -130,7 +133,4 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get gameDetailsPlatformsTitle => 'Plateformes';
-
-  @override
-  String get gameDetailsSomethingWentWrong => 'Une erreur est survenue';
 }
