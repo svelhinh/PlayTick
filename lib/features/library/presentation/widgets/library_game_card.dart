@@ -50,7 +50,7 @@ class LibraryGameCard extends StatelessWidget {
                       const Icon(Icons.schedule_outlined, size: 14),
                       const SizedBox(width: 4),
                       Text(
-                        game.totalPlaytime.localizePlaytime(appLoc),
+                        game.totalPlaytime.localize(appLoc),
                         style: theme.textTheme.bodySmall,
                       ),
                     ],

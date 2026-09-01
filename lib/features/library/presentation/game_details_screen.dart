@@ -236,7 +236,7 @@ final class _TopInfo extends StatelessWidget {
                     const Icon(Icons.schedule_outlined, size: 16),
                     const SizedBox(width: 8),
                     Text(
-                      totalPlaytime.localizePlaytime(
+                      totalPlaytime.localize(
                         appLoc,
                       ),
                       style: theme.textTheme.bodyMedium,
