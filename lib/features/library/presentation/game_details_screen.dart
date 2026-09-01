@@ -8,6 +8,7 @@ import 'package:playtick/features/library/presentation/extensions/library_except
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/providers/library_game_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_repository_provider.dart';
+import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/features/library/presentation/widgets/game_status_row.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -172,24 +173,7 @@ final class _TopInfo extends StatelessWidget {
 
     return Row(
       children: [
-        Container(
-          width: 100,
-          height: 120,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerLow,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: coverUrl != null
-                ? Image.network(
-                    coverUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.gamepad),
-                  )
-                : const Icon(Icons.gamepad),
-          ),
-        ),
+        GameCoverImage(coverUrl: coverUrl, width: 100, height: 120),
         const SizedBox(width: 20),
         Expanded(
           child: Column(
