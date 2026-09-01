@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'Play Tick'**
   String get appName;
 
+  /// The text of the button to cancel an action
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
   /// The label of the home navigation item
   ///
   /// In en, this message translates to:
@@ -241,6 +247,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{No games} =1{1 game} other{{count} games}}'**
   String libraryGamesCount(int count);
+
+  /// The text of the button to see the details of the game in the library game card
+  ///
+  /// In en, this message translates to:
+  /// **'See'**
+  String get libraryGameCardSeeDetails;
+
+  /// The title of the delete game sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this game'**
+  String get gameDetailsDeleteGameTitle;
+
+  /// The description of the delete game sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{name}\" from your library?\n\nThe game, its notes and all recorded sessions will be removed from this device. This action is irreversible.'**
+  String gameDetailsDeleteGameDescription(String name);
+
+  /// The warning of the delete game sheet
+  ///
+  /// In en, this message translates to:
+  /// **'No data will be saved locally.'**
+  String get gameDetailsDeleteWarning;
+
+  /// The text of the button to delete a game
+  ///
+  /// In en, this message translates to:
+  /// **'Delete game'**
+  String get gameDetailsDeleteButton;
+
+  /// The title of the section 'About the game' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'About the game'**
+  String get gameDetailsAboutGameTitle;
+
+  /// The title of the section 'Genres' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Genres'**
+  String get gameDetailsGenresTitle;
+
+  /// The title of the section 'Developer' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get gameDetailsDeveloperTitle;
+
+  /// The title of the section 'Publisher' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Publisher'**
+  String get gameDetailsPublisherTitle;
+
+  /// The title of the section 'Platforms' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Platforms'**
+  String get gameDetailsPlatformsTitle;
+
+  /// The error message in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get gameDetailsSomethingWentWrong;
 }
 
 class _AppLocalizationsDelegate

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/features/library/domain/library_filter.dart';
 import 'package:playtick/features/library/presentation/extensions/library_filter_extension.dart';
@@ -19,7 +21,7 @@ class LibraryScreen extends ConsumerWidget {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    final games = ref.watch(libraryGamesProvider);
+    final gamesAsync = ref.watch(libraryGamesProvider);
     final filter = ref.watch(libraryFilterProvider);
 
     return SafeArea(
@@ -40,7 +42,7 @@ class LibraryScreen extends ConsumerWidget {
             ),
           ),
           Expanded(
-            child: games.when(
+            child: gamesAsync.when(
               data: (games) {
                 if (games.isEmpty) {
                   return Align(
@@ -168,17 +170,16 @@ class LibraryScreen extends ConsumerWidget {
                                   ),
                                   child: LibraryGameCard(
                                     game: filteredGames[index],
-                                    onRemove: () => ref
-                                        .read(libraryRepositoryProvider)
-                                        .removeGame(
-                                          filteredGames[index].gameId,
-                                        ),
-                                    onStatusChange: (status) => ref
-                                        .read(libraryRepositoryProvider)
-                                        .updateGameStatus(
-                                          filteredGames[index].gameId,
-                                          status,
-                                        ),
+                                    onTap: () => context.push(
+                                      AppRoutes.gameDetailsPath(
+                                        filteredGames[index].gameId.toString(),
+                                      ),
+                                    ),
+                                    onSeeDetails: () => context.push(
+                                      AppRoutes.gameDetailsPath(
+                                        filteredGames[index].gameId.toString(),
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 itemCount: filteredGames.length,

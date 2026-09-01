@@ -161,6 +161,54 @@ void main() {
       },
     );
 
+    test('watches a library game by id', () async {
+      expect(await repository.watchGame(game.id).first, isNull);
+
+      await repository.addGame(game, status: GameStatus.playing);
+
+      final details = await repository.watchGame(game.id).first;
+
+      expect(details, isNotNull);
+      expect(details!.status, GameStatus.playing);
+      expect(details.totalPlaytime, Duration.zero);
+      expect(details.game.id, game.id);
+      expect(details.game.name, game.name);
+      expect(details.game.coverUrl, game.coverUrl);
+      expect(details.game.summary, game.summary);
+      expect(
+        details.game.releaseDate?.isAtSameMomentAs(game.releaseDate!),
+        isTrue,
+      );
+      expect(details.game.genres, orderedEquals(game.genres));
+      expect(details.game.platforms, orderedEquals(game.platforms));
+      expect(details.game.developer, game.developer);
+      expect(details.game.publisher, game.publisher);
+      expect(
+        details.game.estimatedPlaytimes?.story,
+        game.estimatedPlaytimes?.story,
+      );
+      expect(
+        details.game.estimatedPlaytimes?.main,
+        game.estimatedPlaytimes?.main,
+      );
+      expect(
+        details.game.estimatedPlaytimes?.completion,
+        game.estimatedPlaytimes?.completion,
+      );
+
+      expect(await repository.watchGame(999).first, isNull);
+
+      await repository.updateGameStatus(game.id, GameStatus.completed);
+
+      final updatedDetails = await repository.watchGame(game.id).first;
+
+      expect(updatedDetails?.status, GameStatus.completed);
+
+      await repository.removeGame(game.id);
+
+      expect(await repository.watchGame(game.id).first, isNull);
+    });
+
     test(
       'throws a duplicate game exception if game is already in library',
       () async {

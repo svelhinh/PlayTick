@@ -244,7 +244,7 @@ void main() {
   });
 
   testWidgets(
-    'Library screen adds game to library, changes status and removes game',
+    'Library screen adds a game to the library',
     (
       tester,
     ) async {
@@ -264,7 +264,6 @@ void main() {
       expect(find.byType(LibraryScreen), findsOneWidget);
       expect(find.byType(EmptyStateCard), findsOneWidget);
 
-      // Add game
       await tester.tap(find.text('Add a game'));
       await tester.pumpAndSettle();
 
@@ -279,34 +278,6 @@ void main() {
       expect(find.byType(EmptyStateCard), findsNothing);
       expect(find.text('1 game'), findsOneWidget);
       expect(find.text(temporaryGame.name), findsOneWidget);
-
-      // Change status
-      await tester.tap(find.byType(PopupMenuButton<GameStatus>));
-      await tester.pumpAndSettle();
-
-      await tester.tap(
-        find.descendant(
-          of: find.byType(PopupMenuItem<GameStatus>),
-          matching: find.text('Playing'),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(
-        find.descendant(
-          of: find.byType(LibraryGameCard),
-          matching: find.text('Playing'),
-        ),
-        findsOneWidget,
-      );
-
-      // Remove game
-      await tester.tap(find.byIcon(Icons.delete));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(EmptyStateCard), findsOneWidget);
-      expect(find.text('0 games'), findsNothing);
-      expect(find.text(temporaryGame.name), findsNothing);
     },
   );
 

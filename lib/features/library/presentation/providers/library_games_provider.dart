@@ -6,7 +6,5 @@ part 'library_games_provider.g.dart';
 
 @riverpod
 Stream<List<LibraryGame>> libraryGames(Ref ref) {
-  final libraryRepository = ref.read(libraryRepositoryProvider);
-
-  return libraryRepository.watchLibraryGames();
+  return ref.read(libraryRepositoryProvider).watchLibraryGames();
 }
