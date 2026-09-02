@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
-import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/library_filter.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/library_filter_extension.dart';
