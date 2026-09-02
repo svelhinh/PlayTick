@@ -207,5 +207,40 @@
     "@gameDetailsPlatformsTitle": {
         "type": "text",
         "description": "The title of the section 'Platforms' in the game details"
+    },
+    "gameDetailsEstimatedPlaytimesTitle": "Estimated playtimes",
+    "@gameDetailsEstimatedPlaytimesTitle": {
+        "type": "text",
+        "description": "The title of the section 'Estimated playtimes' in the game details"
+    },
+    "gameDetailsEstimatedPlaytimesStory": "Story: {playtime}",
+    "@gameDetailsEstimatedPlaytimesStory": {
+        "type": "text",
+        "description": "The label of the section 'Story' in the game details",
+        "placeholders": {
+            "playtime": {
+                "type": "String"
+            }
+        }
+    },
+    "gameDetailsEstimatedPlaytimesMain": "Main: {playtime}",
+    "@gameDetailsEstimatedPlaytimesMain": {
+        "type": "text",
+        "description": "The label of the section 'Main' in the game details",
+        "placeholders": {
+            "playtime": {
+                "type": "String"
+            }
+        }
+    },
+    "gameDetailsEstimatedPlaytimesCompletion": "Completion: {playtime}",
+    "@gameDetailsEstimatedPlaytimesCompletion": {
+        "type": "text",
+        "description": "The label of the section 'Completion' in the game details",
+        "placeholders": {
+            "playtime": {
+                "type": "String"
+            }
+        }
     }
 }

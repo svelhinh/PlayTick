@@ -325,6 +325,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Platforms'**
   String get gameDetailsPlatformsTitle;
+
+  /// The title of the section 'Estimated playtimes' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated playtimes'**
+  String get gameDetailsEstimatedPlaytimesTitle;
+
+  /// The label of the section 'Story' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Story: {playtime}'**
+  String gameDetailsEstimatedPlaytimesStory(String playtime);
+
+  /// The label of the section 'Main' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Main: {playtime}'**
+  String gameDetailsEstimatedPlaytimesMain(String playtime);
+
+  /// The label of the section 'Completion' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Completion: {playtime}'**
+  String gameDetailsEstimatedPlaytimesCompletion(String playtime);
 }
 
 class _AppLocalizationsDelegate

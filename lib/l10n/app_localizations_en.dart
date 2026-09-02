@@ -138,4 +138,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gameDetailsPlatformsTitle => 'Platforms';
+
+  @override
+  String get gameDetailsEstimatedPlaytimesTitle => 'Estimated playtimes';
+
+  @override
+  String gameDetailsEstimatedPlaytimesStory(String playtime) {
+    return 'Story: $playtime';
+  }
+
+  @override
+  String gameDetailsEstimatedPlaytimesMain(String playtime) {
+    return 'Main: $playtime';
+  }
+
+  @override
+  String gameDetailsEstimatedPlaytimesCompletion(String playtime) {
+    return 'Completion: $playtime';
+  }
 }
