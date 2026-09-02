@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:playtick/features/library/data/igdb_credentials.dart';
+import 'package:playtick/features/library/data/igdb/igdb_credentials.dart';
 
 void main() {
   test(
