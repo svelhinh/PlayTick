@@ -10,6 +10,21 @@
         "type": "text",
         "description": "Le texte du bouton d'annulation d'une action"
     },
+    "somethingWentWrong": "Une erreur est survenue",
+    "@somethingWentWrong": {
+        "type": "text",
+        "description": "Le message d'erreur général"
+    },
+    "gameAlreadyInLibrary": "Ce jeu est déjà dans votre bibliothèque.",
+    "@gameAlreadyInLibrary": {
+        "type": "text",
+        "description": "Le message d'erreur quand un jeu est déjà dans la bibliothèque"
+    },
+    "gameNotFoundInLibrary": "Ce jeu n'est pas dans votre bibliothèque.",
+    "@gameNotFoundInLibrary": {
+        "type": "text",
+        "description": "Le message d'erreur quand un jeu n'est pas dans la bibliothèque"
+    },
     "navigationLabelHome": "Accueil",
     "@navigationLabelHome": {
         "type": "text",
@@ -193,9 +208,39 @@
         "type": "text",
         "description": "Le titre de la section 'Plateformes' dans les détails du jeu"
     },
-    "gameDetailsSomethingWentWrong": "Une erreur est survenue",
-    "@gameDetailsSomethingWentWrong": {
+    "gameDetailsEstimatedPlaytimesTitle": "Temps de jeu estimé",
+    "@gameDetailsEstimatedPlaytimesTitle": {
         "type": "text",
-        "description": "Le message d'erreur dans les détails du jeu"
+        "description": "Le titre de la section 'Temps de jeu estimé' dans les détails du jeu"
+    },
+    "gameDetailsEstimatedPlaytimesStory": "Histoire: {playtime}",
+    "@gameDetailsEstimatedPlaytimesStory": {
+        "type": "text",
+        "description": "Le label de la section 'Histoire' dans les détails du jeu",
+        "placeholders": {
+            "playtime": {
+                "type": "String"
+            }
+        }
+    },
+    "gameDetailsEstimatedPlaytimesMain": "Principal: {playtime}",
+    "@gameDetailsEstimatedPlaytimesMain": {
+        "type": "text",
+        "description": "Le label de la section 'Principal' dans les détails du jeu",
+        "placeholders": {
+            "playtime": {
+                "type": "String"
+            }
+        }
+    },
+    "gameDetailsEstimatedPlaytimesCompletion": "Complétion: {playtime}",
+    "@gameDetailsEstimatedPlaytimesCompletion": {
+        "type": "text",
+        "description": "Le label de la section 'Complétion' dans les détails du jeu",
+        "placeholders": {
+            "playtime": {
+                "type": "String"
+            }
+        }
     }
 }

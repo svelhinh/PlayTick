@@ -16,6 +16,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cancel => 'Annuler';
 
   @override
+  String get somethingWentWrong => 'Une erreur est survenue';
+
+  @override
+  String get gameAlreadyInLibrary => 'Ce jeu est déjà dans votre bibliothèque.';
+
+  @override
+  String get gameNotFoundInLibrary =>
+      'Ce jeu n\'est pas dans votre bibliothèque.';
+
+  @override
   String get navigationLabelHome => 'Accueil';
 
   @override
@@ -132,5 +142,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String get gameDetailsPlatformsTitle => 'Plateformes';
 
   @override
-  String get gameDetailsSomethingWentWrong => 'Une erreur est survenue';
+  String get gameDetailsEstimatedPlaytimesTitle => 'Temps de jeu estimé';
+
+  @override
+  String gameDetailsEstimatedPlaytimesStory(String playtime) {
+    return 'Histoire: $playtime';
+  }
+
+  @override
+  String gameDetailsEstimatedPlaytimesMain(String playtime) {
+    return 'Principal: $playtime';
+  }
+
+  @override
+  String gameDetailsEstimatedPlaytimesCompletion(String playtime) {
+    return 'Complétion: $playtime';
+  }
 }

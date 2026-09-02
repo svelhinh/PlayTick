@@ -114,6 +114,10 @@ void main() {
       expect(find.text('Platformer, Action-Adventure'), findsOneWidget);
       expect(find.text('PC, Nintendo Switch'), findsOneWidget);
       expect(
+        find.text('Story: 10 h 00\nMain: 15 h 00\nCompletion: 20 h 00'),
+        findsOneWidget,
+      );
+      expect(
         find.descendant(
           of: find.byType(GameDetailsScreen),
           matching: find.text('Want to play'),
@@ -204,6 +208,7 @@ void main() {
     container.read(appRouterProvider).go('/library/999');
     await tester.pumpAndSettle();
 
+    expect(find.byIcon(Icons.delete), findsNothing);
     expect(find.byType(GameDetailsScreen), findsOneWidget);
     expect(find.text('Something went wrong'), findsOneWidget);
   });

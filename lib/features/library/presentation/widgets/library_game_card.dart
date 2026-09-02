@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_game.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
+import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/features/library/presentation/widgets/game_status_row.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -9,13 +10,11 @@ class LibraryGameCard extends StatelessWidget {
   const LibraryGameCard({
     required this.game,
     super.key,
-    this.onTap,
-    this.onSeeDetails,
+    this.onOpenDetails,
   });
 
   final LibraryGame game;
-  final VoidCallback? onTap;
-  final VoidCallback? onSeeDetails;
+  final VoidCallback? onOpenDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -23,27 +22,10 @@ class LibraryGameCard extends StatelessWidget {
     final appLoc = AppLocalizations.of(context)!;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: onOpenDetails,
       child: Row(
         children: [
-          Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerLow,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: game.coverUrl != null
-                  ? Image.network(
-                      game.coverUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.gamepad),
-                    )
-                  : const Icon(Icons.gamepad),
-            ),
-          ),
+          GameCoverImage(coverUrl: game.coverUrl),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -66,7 +48,7 @@ class LibraryGameCard extends StatelessWidget {
                       const Icon(Icons.schedule_outlined, size: 14),
                       const SizedBox(width: 4),
                       Text(
-                        game.totalPlaytime.localizePlaytime(appLoc),
+                        game.totalPlaytime.localize(appLoc),
                         style: theme.textTheme.bodySmall,
                       ),
                     ],
@@ -79,7 +61,7 @@ class LibraryGameCard extends StatelessWidget {
           SizedBox(
             height: 40,
             child: FilledButton(
-              onPressed: onSeeDetails,
+              onPressed: onOpenDetails,
               child: Text(appLoc.libraryGameCardSeeDetails),
             ),
           ),

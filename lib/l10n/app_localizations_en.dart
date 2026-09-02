@@ -16,6 +16,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get gameAlreadyInLibrary => 'This game is already in your library.';
+
+  @override
+  String get gameNotFoundInLibrary => 'Game not found in your library.';
+
+  @override
   String get navigationLabelHome => 'Home';
 
   @override
@@ -131,5 +140,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gameDetailsPlatformsTitle => 'Platforms';
 
   @override
-  String get gameDetailsSomethingWentWrong => 'Something went wrong';
+  String get gameDetailsEstimatedPlaytimesTitle => 'Estimated playtimes';
+
+  @override
+  String gameDetailsEstimatedPlaytimesStory(String playtime) {
+    return 'Story: $playtime';
+  }
+
+  @override
+  String gameDetailsEstimatedPlaytimesMain(String playtime) {
+    return 'Main: $playtime';
+  }
+
+  @override
+  String gameDetailsEstimatedPlaytimesCompletion(String playtime) {
+    return 'Completion: $playtime';
+  }
 }

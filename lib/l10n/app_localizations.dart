@@ -110,6 +110,24 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancel;
 
+  /// The error message general
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
+
+  /// The error message when a game is already in the library
+  ///
+  /// In en, this message translates to:
+  /// **'This game is already in your library.'**
+  String get gameAlreadyInLibrary;
+
+  /// The error message when a game is not found in the library
+  ///
+  /// In en, this message translates to:
+  /// **'Game not found in your library.'**
+  String get gameNotFoundInLibrary;
+
   /// The label of the home navigation item
   ///
   /// In en, this message translates to:
@@ -308,11 +326,29 @@ abstract class AppLocalizations {
   /// **'Platforms'**
   String get gameDetailsPlatformsTitle;
 
-  /// The error message in the game details
+  /// The title of the section 'Estimated playtimes' in the game details
   ///
   /// In en, this message translates to:
-  /// **'Something went wrong'**
-  String get gameDetailsSomethingWentWrong;
+  /// **'Estimated playtimes'**
+  String get gameDetailsEstimatedPlaytimesTitle;
+
+  /// The label of the section 'Story' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Story: {playtime}'**
+  String gameDetailsEstimatedPlaytimesStory(String playtime);
+
+  /// The label of the section 'Main' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Main: {playtime}'**
+  String gameDetailsEstimatedPlaytimesMain(String playtime);
+
+  /// The label of the section 'Completion' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Completion: {playtime}'**
+  String gameDetailsEstimatedPlaytimesCompletion(String playtime);
 }
 
 class _AppLocalizationsDelegate

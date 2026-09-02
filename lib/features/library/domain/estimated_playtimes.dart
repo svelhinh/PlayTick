@@ -8,4 +8,6 @@ final class EstimatedPlaytimes {
   final Duration? story;
   final Duration? main;
   final Duration? completion;
+
+  bool get hasValues => story != null || main != null || completion != null;
 }

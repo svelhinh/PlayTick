@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/app_theme.dart';
 import 'package:playtick/app/router/app_router.dart';
+import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
+import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/providers/library_game_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_repository_provider.dart';
+import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/features/library/presentation/widgets/game_status_row.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -17,6 +20,8 @@ class GameDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appLoc = AppLocalizations.of(context)!;
+
     final gameIdInt = int.tryParse(gameId);
 
     if (gameIdInt == null) {
@@ -33,6 +38,10 @@ class GameDetailsScreen extends ConsumerWidget {
         actions: [
           gameAsync.when(
             data: (details) {
+              if (details == null) {
+                return const SizedBox.shrink();
+              }
+
               return IconButton(
                 onPressed: () async {
                   await showModalBottomSheet<_DeleteGameSheet>(
@@ -41,7 +50,7 @@ class GameDetailsScreen extends ConsumerWidget {
                     useSafeArea: true,
                     isScrollControlled: true,
                     builder: (context) => _DeleteGameSheet(
-                      name: details?.game.name ?? '',
+                      name: details.game.name,
                       onDelete: () async {
                         try {
                           await ref
@@ -57,7 +66,7 @@ class GameDetailsScreen extends ConsumerWidget {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(e.toString()),
+                                content: Text(e.localizeLibraryError(appLoc)),
                                 backgroundColor: AppTheme.danger,
                               ),
                             );
@@ -91,25 +100,36 @@ class GameDetailsScreen extends ConsumerWidget {
                 children: [
                   _TopInfo(
                     name: game.name,
-                    developer: game.developer ?? '',
+                    developer: game.developer,
+                    publisher: game.publisher,
                     releaseYear: game.releaseDate?.year,
                     coverUrl: game.coverUrl,
                     status: status,
                     totalPlaytime: details.totalPlaytime,
-                    onStatusChanged: (status) => ref
-                        .read(libraryRepositoryProvider)
-                        .updateGameStatus(
-                          game.id,
-                          status,
-                        ),
+                    onStatusChanged: (status) async {
+                      try {
+                        await ref
+                            .read(libraryRepositoryProvider)
+                            .updateGameStatus(game.id, status);
+                      } on Exception catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(e.localizeLibraryError(appLoc)),
+                            ),
+                          );
+                        }
+                      }
+                    },
                   ),
                   const SizedBox(height: 16),
                   _GameInfoCard(
-                    summary: game.summary ?? '',
+                    summary: game.summary,
                     genres: game.genres,
-                    developer: game.developer ?? '',
-                    publisher: game.publisher ?? '',
+                    developer: game.developer,
+                    publisher: game.publisher,
                     platforms: game.platforms,
+                    estimatedPlaytimes: game.estimatedPlaytimes,
                   ),
                 ],
               ),
@@ -130,7 +150,7 @@ final class _GameDetailsError extends StatelessWidget {
   Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
 
-    return Center(child: Text(appLoc.gameDetailsSomethingWentWrong));
+    return Center(child: Text(appLoc.somethingWentWrong));
   }
 }
 
@@ -138,6 +158,7 @@ final class _TopInfo extends StatelessWidget {
   const _TopInfo({
     required this.name,
     required this.developer,
+    required this.publisher,
     required this.releaseYear,
     required this.coverUrl,
     required this.status,
@@ -146,38 +167,42 @@ final class _TopInfo extends StatelessWidget {
   });
 
   final String name;
-  final String developer;
+  final String? developer;
+  final String? publisher;
   final int? releaseYear;
   final String? coverUrl;
   final GameStatus status;
   final Duration totalPlaytime;
   final Future<void> Function(GameStatus) onStatusChanged;
 
+  String? _getDeveloperPublisherText() {
+    if (developer != null) {
+      if (releaseYear != null) {
+        return '$developer • $releaseYear';
+      }
+      return developer!;
+    } else if (publisher != null) {
+      if (releaseYear != null) {
+        return '$publisher • $releaseYear';
+      }
+      return publisher!;
+    } else if (releaseYear != null) {
+      return '$releaseYear';
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
 
+    final developerPublisherText = _getDeveloperPublisherText();
+
     return Row(
       children: [
-        Container(
-          width: 100,
-          height: 120,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerLow,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: coverUrl != null
-                ? Image.network(
-                    coverUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.gamepad),
-                  )
-                : const Icon(Icons.gamepad),
-          ),
-        ),
+        GameCoverImage(coverUrl: coverUrl, width: 100, height: 120),
         const SizedBox(width: 20),
         Expanded(
           child: Column(
@@ -188,13 +213,14 @@ final class _TopInfo extends StatelessWidget {
                 name,
                 style: theme.textTheme.titleLarge,
               ),
-              if (releaseYear != null) ...[
+              if (developerPublisherText != null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  '$developer • $releaseYear',
+                  developerPublisherText,
                   style: theme.textTheme.bodyMedium,
                 ),
               ],
+              const SizedBox(height: 8),
               PopupMenuButton<GameStatus>(
                 initialValue: status,
                 onSelected: onStatusChanged,
@@ -240,7 +266,7 @@ final class _TopInfo extends StatelessWidget {
                     const Icon(Icons.schedule_outlined, size: 16),
                     const SizedBox(width: 8),
                     Text(
-                      totalPlaytime.localizePlaytime(
+                      totalPlaytime.localize(
                         appLoc,
                       ),
                       style: theme.textTheme.bodyMedium,
@@ -368,18 +394,71 @@ final class _GameInfoCard extends StatelessWidget {
     required this.developer,
     required this.publisher,
     required this.platforms,
+    required this.estimatedPlaytimes,
   });
 
-  final String summary;
+  final String? summary;
   final List<String> genres;
-  final String developer;
-  final String publisher;
+  final String? developer;
+  final String? publisher;
   final List<String> platforms;
+  final EstimatedPlaytimes? estimatedPlaytimes;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
+
+    final infoItems = <Widget>[
+      if (genres.isNotEmpty)
+        _InfoItem(
+          icon: Icons.category,
+          label: appLoc.gameDetailsGenresTitle,
+          values: genres,
+        ),
+      if (developer != null && developer!.isNotEmpty)
+        _InfoItem(
+          icon: Icons.developer_board,
+          label: appLoc.gameDetailsDeveloperTitle,
+          values: [developer!],
+        ),
+      if (publisher != null && publisher!.isNotEmpty)
+        _InfoItem(
+          icon: Icons.business,
+          label: appLoc.gameDetailsPublisherTitle,
+          values: [publisher!],
+        ),
+      if (platforms.isNotEmpty)
+        _InfoItem(
+          icon: Icons.gamepad,
+          label: appLoc.gameDetailsPlatformsTitle,
+          values: platforms,
+        ),
+      if (estimatedPlaytimes != null && estimatedPlaytimes!.hasValues)
+        _InfoItem(
+          icon: Icons.schedule,
+          label: appLoc.gameDetailsEstimatedPlaytimesTitle,
+          separator: '\n',
+          values: [
+            if (estimatedPlaytimes!.story != null)
+              appLoc.gameDetailsEstimatedPlaytimesStory(
+                estimatedPlaytimes!.story!.localize(appLoc),
+              ),
+            if (estimatedPlaytimes!.main != null)
+              appLoc.gameDetailsEstimatedPlaytimesMain(
+                estimatedPlaytimes!.main!.localize(appLoc),
+              ),
+            if (estimatedPlaytimes!.completion != null)
+              appLoc.gameDetailsEstimatedPlaytimesCompletion(
+                estimatedPlaytimes!.completion!.localize(appLoc),
+              ),
+          ],
+        ),
+    ];
+
+    if (infoItems.isEmpty && (summary == null || summary!.isEmpty)) {
+      return const SizedBox.shrink();
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
@@ -396,46 +475,22 @@ final class _GameInfoCard extends StatelessWidget {
             style: theme.textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          Text(summary, style: theme.textTheme.bodySmall),
-          const SizedBox(height: 16),
-          _InfoItem(
-            icon: Icons.category,
-            label: appLoc.gameDetailsGenresTitle,
-            values: genres,
-          ),
-          Divider(
-            color: theme.colorScheme.outline,
-            thickness: 0.5,
-            indent: 40,
-            height: 24,
-          ),
-          _InfoItem(
-            icon: Icons.developer_board,
-            label: appLoc.gameDetailsDeveloperTitle,
-            values: [developer],
-          ),
-          Divider(
-            color: theme.colorScheme.outline,
-            thickness: 0.5,
-            indent: 40,
-            height: 24,
-          ),
-          _InfoItem(
-            icon: Icons.business,
-            label: appLoc.gameDetailsPublisherTitle,
-            values: [publisher],
-          ),
-          Divider(
-            color: theme.colorScheme.outline,
-            thickness: 0.5,
-            indent: 40,
-            height: 24,
-          ),
-          _InfoItem(
-            icon: Icons.gamepad,
-            label: appLoc.gameDetailsPlatformsTitle,
-            values: [...platforms],
-          ),
+          if (summary != null && summary!.isNotEmpty) ...[
+            Text(summary!, style: theme.textTheme.bodySmall),
+          ],
+          if (infoItems.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            for (var i = 0; i < infoItems.length; i++) ...[
+              if (i > 0)
+                Divider(
+                  color: theme.colorScheme.outline,
+                  thickness: 0.5,
+                  indent: 40,
+                  height: 24,
+                ),
+              infoItems[i],
+            ],
+          ],
         ],
       ),
     );
@@ -447,11 +502,13 @@ final class _InfoItem extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.values,
+    this.separator = ', ',
   });
 
   final IconData icon;
   final String label;
   final List<String> values;
+  final String separator;
 
   @override
   Widget build(BuildContext context) {
@@ -471,7 +528,7 @@ final class _InfoItem extends StatelessWidget {
             children: [
               Text(label, style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
-              Text(values.join(', '), style: theme.textTheme.bodySmall),
+              Text(values.join(separator), style: theme.textTheme.bodySmall),
             ],
           ),
         ),

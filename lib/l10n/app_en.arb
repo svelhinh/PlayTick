@@ -10,6 +10,21 @@
         "type": "text",
         "description": "The text of the button to cancel an action"
     },
+    "somethingWentWrong": "Something went wrong",
+    "@somethingWentWrong": {
+        "type": "text",
+        "description": "The error message general"
+    },
+    "gameAlreadyInLibrary": "This game is already in your library.",
+    "@gameAlreadyInLibrary": {
+        "type": "text",
+        "description": "The error message when a game is already in the library"
+    },
+    "gameNotFoundInLibrary": "Game not found in your library.",
+    "@gameNotFoundInLibrary": {
+        "type": "text",
+        "description": "The error message when a game is not found in the library"
+    },
     "navigationLabelHome": "Home",
     "@navigationLabelHome": {
         "type": "text",
@@ -193,9 +208,39 @@
         "type": "text",
         "description": "The title of the section 'Platforms' in the game details"
     },
-    "gameDetailsSomethingWentWrong": "Something went wrong",
-    "@gameDetailsSomethingWentWrong": {
+    "gameDetailsEstimatedPlaytimesTitle": "Estimated playtimes",
+    "@gameDetailsEstimatedPlaytimesTitle": {
         "type": "text",
-        "description": "The error message in the game details"
+        "description": "The title of the section 'Estimated playtimes' in the game details"
+    },
+    "gameDetailsEstimatedPlaytimesStory": "Story: {playtime}",
+    "@gameDetailsEstimatedPlaytimesStory": {
+        "type": "text",
+        "description": "The label of the section 'Story' in the game details",
+        "placeholders": {
+            "playtime": {
+                "type": "String"
+            }
+        }
+    },
+    "gameDetailsEstimatedPlaytimesMain": "Main: {playtime}",
+    "@gameDetailsEstimatedPlaytimesMain": {
+        "type": "text",
+        "description": "The label of the section 'Main' in the game details",
+        "placeholders": {
+            "playtime": {
+                "type": "String"
+            }
+        }
+    },
+    "gameDetailsEstimatedPlaytimesCompletion": "Completion: {playtime}",
+    "@gameDetailsEstimatedPlaytimesCompletion": {
+        "type": "text",
+        "description": "The label of the section 'Completion' in the game details",
+        "placeholders": {
+            "playtime": {
+                "type": "String"
+            }
+        }
     }
 }

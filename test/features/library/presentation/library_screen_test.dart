@@ -138,6 +138,33 @@ void main() {
     expect(find.byType(EmptyStateCard), findsOneWidget);
   });
 
+  testWidgets(
+    'Library screen shows a localized error when loading games fails',
+    (tester) async {
+      tester.binding.platformDispatcher.localesTestValue = const [Locale('en')];
+      addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            libraryGamesProvider.overrideWith(
+              (ref) => Stream.error(Exception('drift connection failed')),
+            ),
+          ],
+          child: const PlayTick(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(NavigationDestination).at(1));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LibraryScreen), findsOneWidget);
+      expect(find.text('Something went wrong'), findsOneWidget);
+      expect(find.textContaining('drift connection failed'), findsNothing);
+    },
+  );
+
   testWidgets('Library screen shows library games', (tester) async {
     tester.binding.platformDispatcher.localesTestValue = const [Locale('en')];
     addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
