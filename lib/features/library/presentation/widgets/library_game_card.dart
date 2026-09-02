@@ -10,13 +10,11 @@ class LibraryGameCard extends StatelessWidget {
   const LibraryGameCard({
     required this.game,
     super.key,
-    this.onTap,
-    this.onSeeDetails,
+    this.onOpenDetails,
   });
 
   final LibraryGame game;
-  final VoidCallback? onTap;
-  final VoidCallback? onSeeDetails;
+  final VoidCallback? onOpenDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +22,7 @@ class LibraryGameCard extends StatelessWidget {
     final appLoc = AppLocalizations.of(context)!;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: onOpenDetails,
       child: Row(
         children: [
           GameCoverImage(coverUrl: game.coverUrl),
@@ -63,7 +61,7 @@ class LibraryGameCard extends StatelessWidget {
           SizedBox(
             height: 40,
             child: FilledButton(
-              onPressed: onSeeDetails,
+              onPressed: onOpenDetails,
               child: Text(appLoc.libraryGameCardSeeDetails),
             ),
           ),
