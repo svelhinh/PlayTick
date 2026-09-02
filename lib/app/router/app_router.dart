@@ -10,7 +10,6 @@ part 'app_router.g.dart';
 class AppRoutes {
   static const home = '/';
   static const library = '/library';
-  static const gameDetails = '/library/:gameId';
 
   static String gameDetailsPath(String gameId) => '$library/$gameId';
 }
