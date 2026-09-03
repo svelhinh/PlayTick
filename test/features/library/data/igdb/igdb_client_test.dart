@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
@@ -153,5 +155,33 @@ void main() {
       createClient(httpClient).searchGames('Game'),
       throwsA(isA<IgdbSearchException>()),
     );
+  });
+
+  test('searchGames skips games without an id or name', () async {
+    final httpClient = MockClient((request) async {
+      if (request.url.toString() == '$tokenUrl/oauth2/token') {
+        return Response('{"access_token": "abc"}', 200);
+      }
+
+      if (request.url.toString() == '$searchUrl/games') {
+        return Response(
+          jsonEncode([
+            {'id': 1, 'name': 'Game 1'},
+            {'name': 'Missing id'},
+            {'id': 2},
+          ]),
+          200,
+        );
+      }
+
+      return Response('not found', 404);
+    });
+    addTearDown(httpClient.close);
+
+    final games = await createClient(httpClient).searchGames('Game');
+
+    expect(games, hasLength(1));
+    expect(games.single.id, 1);
+    expect(games.single.name, 'Game 1');
   });
 }

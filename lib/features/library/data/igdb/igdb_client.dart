@@ -65,7 +65,11 @@ final class IgdbClient {
 
     final response = await client.post(
       Uri.parse('$searchUrl/games'),
-      body: 'search "$query"; fields id,name; limit 20;',
+      body:
+          'search "$query"; fields id, name, summary, cover.url, '
+          'genres.name, platforms.name, involved_companies.company.name, '
+          'involved_companies.developer, involved_companies.publisher, '
+          'first_release_date; limit 20;',
       headers: {
         'Client-ID': credentials.clientId,
         'Authorization': 'Bearer $accessToken',
@@ -90,6 +94,7 @@ final class IgdbClient {
     return decoded
         .whereType<Map<String, dynamic>>()
         .map(IgdbGameDto.fromJson)
+        .whereType<IgdbGameDto>()
         .map((dto) => dto.toGame())
         .toList();
   }
