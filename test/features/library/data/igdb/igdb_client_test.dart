@@ -184,4 +184,76 @@ void main() {
     expect(games.single.id, 1);
     expect(games.single.name, 'Game 1');
   });
+
+  test(
+    'searchGames attaches estimated playtimes to the matching game',
+    () async {
+      final httpClient = MockClient((request) async {
+        if (request.url.toString() == '$tokenUrl/oauth2/token') {
+          return Response('{"access_token": "abc"}', 200);
+        }
+
+        if (request.url.toString() == '$searchUrl/games') {
+          return Response(
+            jsonEncode([
+              {'id': 1, 'name': 'Game 1'},
+              {'id': 2, 'name': 'Game 2'},
+            ]),
+            200,
+          );
+        }
+
+        if (request.url.toString() == '$searchUrl/game_time_to_beats') {
+          return Response(
+            jsonEncode([
+              {
+                'game_id': 2,
+                'hastily': 3600,
+                'normally': 7200,
+                'completely': 10800,
+              },
+            ]),
+            200,
+          );
+        }
+
+        return Response('not found', 404);
+      });
+      addTearDown(httpClient.close);
+
+      final games = await createClient(httpClient).searchGames('Game');
+
+      expect(games, hasLength(2));
+      expect(games[0].estimatedPlaytimes, isNull);
+      expect(games[1].estimatedPlaytimes?.story, const Duration(hours: 1));
+      expect(games[1].estimatedPlaytimes?.main, const Duration(hours: 2));
+      expect(games[1].estimatedPlaytimes?.completion, const Duration(hours: 3));
+    },
+  );
+
+  test('searchGames still returns games when time-to-beat fails', () async {
+    final httpClient = MockClient((request) async {
+      if (request.url.toString() == '$tokenUrl/oauth2/token') {
+        return Response('{"access_token": "abc"}', 200);
+      }
+
+      if (request.url.toString() == '$searchUrl/games') {
+        return Response(
+          jsonEncode([
+            {'id': 1, 'name': 'Game 1'},
+          ]),
+          200,
+        );
+      }
+
+      return Response('unavailable', 500);
+    });
+    addTearDown(httpClient.close);
+
+    final games = await createClient(httpClient).searchGames('Game');
+
+    expect(games, hasLength(1));
+    expect(games.single.name, 'Game 1');
+    expect(games.single.estimatedPlaytimes, isNull);
+  });
 }

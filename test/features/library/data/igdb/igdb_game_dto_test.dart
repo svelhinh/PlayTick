@@ -48,6 +48,39 @@ void main() {
     expect(game.platforms, ['PC', 'PlayStation 4']);
     expect(game.developer, 'CD Projekt Red');
     expect(game.publisher, 'CD Projekt');
+    expect(game.estimatedPlaytimes, isNull);
+  });
+
+  test('fromJson maps estimated playtimes from game_time_to_beat', () {
+    final game = IgdbGameDto.fromJson({
+      'id': 1942,
+      'name': 'The Witcher 3',
+      'game_time_to_beat': {
+        'game_id': 1942,
+        'hastily': 36000,
+        'normally': 50000,
+        'completely': 80000,
+      },
+    })?.toGame();
+
+    expect(game!.estimatedPlaytimes?.story, const Duration(seconds: 36000));
+    expect(game.estimatedPlaytimes?.main, const Duration(seconds: 50000));
+    expect(
+      game.estimatedPlaytimes?.completion,
+      const Duration(seconds: 80000),
+    );
+  });
+
+  test('fromJson keeps partial estimated playtimes', () {
+    final game = IgdbGameDto.fromJson({
+      'id': 1,
+      'name': 'Game 1',
+      'game_time_to_beat': {'normally': 12000},
+    })?.toGame();
+
+    expect(game!.estimatedPlaytimes?.story, isNull);
+    expect(game.estimatedPlaytimes?.main, const Duration(seconds: 12000));
+    expect(game.estimatedPlaytimes?.completion, isNull);
   });
 
   test('fromJson keeps optional fields empty when IGDB omits them', () {
@@ -66,6 +99,7 @@ void main() {
     expect(game.publisher, isNull);
     expect(game.genres, isEmpty);
     expect(game.platforms, isEmpty);
+    expect(game.estimatedPlaytimes, isNull);
   });
 
   test('fromJson returns null without a valid id and name', () {

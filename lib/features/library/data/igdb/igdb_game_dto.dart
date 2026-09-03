@@ -1,3 +1,4 @@
+import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 
 final class IgdbGameDto {
@@ -11,6 +12,7 @@ final class IgdbGameDto {
     this.developer,
     this.publisher,
     this.firstReleaseDate,
+    this.gameTimeToBeat,
   });
 
   final int id;
@@ -22,6 +24,7 @@ final class IgdbGameDto {
   final String? developer;
   final String? publisher;
   final DateTime? firstReleaseDate;
+  final EstimatedPlaytimes? gameTimeToBeat;
 
   static IgdbGameDto? fromJson(Map<String, dynamic> json) {
     if (json['id'] is! int || json['name'] is! String) {
@@ -38,6 +41,7 @@ final class IgdbGameDto {
       developer: _companyName(json['involved_companies'], 'developer'),
       publisher: _companyName(json['involved_companies'], 'publisher'),
       firstReleaseDate: _firstReleaseDate(json['first_release_date']),
+      gameTimeToBeat: _gameTimeToBeat(json['game_time_to_beat']),
     );
   }
 
@@ -51,6 +55,7 @@ final class IgdbGameDto {
     developer: developer,
     publisher: publisher,
     releaseDate: firstReleaseDate,
+    estimatedPlaytimes: gameTimeToBeat,
   );
 }
 
@@ -102,4 +107,21 @@ String? _companyName(Object? value, String role) {
 
   final company = match['company'] as Map<String, dynamic>?;
   return company?['name'] as String?;
+}
+
+EstimatedPlaytimes? _gameTimeToBeat(Object? value) {
+  if (value is! Map<String, dynamic>) {
+    return null;
+  }
+
+  final hastily = value['hastily'];
+  final normally = value['normally'];
+  final completely = value['completely'];
+  final playtimes = EstimatedPlaytimes(
+    story: hastily is int ? Duration(seconds: hastily) : null,
+    main: normally is int ? Duration(seconds: normally) : null,
+    completion: completely is int ? Duration(seconds: completely) : null,
+  );
+
+  return playtimes.hasValues ? playtimes : null;
 }

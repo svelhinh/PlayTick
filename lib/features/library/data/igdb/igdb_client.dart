@@ -91,8 +91,46 @@ final class IgdbClient {
       throw const IgdbSearchException();
     }
 
-    return decoded
-        .whereType<Map<String, dynamic>>()
+    final games = decoded.whereType<Map<String, dynamic>>().toList();
+    final gameIds = [
+      for (final game in games)
+        if (game['id'] is int) game['id'] as int,
+    ];
+
+    final timesByGameId = <int, Map<String, dynamic>>{};
+    if (gameIds.isNotEmpty) {
+      final timesResponse = await client.post(
+        Uri.parse('$searchUrl/game_time_to_beats'),
+        body:
+            'fields game_id,hastily,normally,completely; '
+            'where game_id = (${gameIds.join(',')});',
+        headers: {
+          'Client-ID': credentials.clientId,
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (timesResponse.statusCode == 200) {
+        final decodedTimes = jsonDecode(timesResponse.body);
+        if (decodedTimes is List<dynamic>) {
+          for (final item in decodedTimes.whereType<Map<String, dynamic>>()) {
+            final gameId = item['game_id'];
+            if (gameId is int) {
+              timesByGameId[gameId] = item;
+            }
+          }
+        }
+      }
+    }
+
+    for (final game in games) {
+      final id = game['id'];
+      if (id is int) {
+        game['game_time_to_beat'] = timesByGameId[id];
+      }
+    }
+
+    return games
         .map(IgdbGameDto.fromJson)
         .whereType<IgdbGameDto>()
         .map((dto) => dto.toGame())
