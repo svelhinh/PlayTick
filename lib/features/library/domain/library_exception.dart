@@ -13,3 +13,7 @@ final class IgdbCredentialsNotConfiguredException implements Exception {
 final class IgdbTokenFetchException implements Exception {
   const IgdbTokenFetchException();
 }
+
+final class IgdbSearchException implements Exception {
+  const IgdbSearchException();
+}
