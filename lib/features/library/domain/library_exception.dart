@@ -5,3 +5,15 @@ final class DuplicateGameException implements Exception {
 final class GameNotFoundException implements Exception {
   const GameNotFoundException();
 }
+
+final class IgdbCredentialsNotConfiguredException implements Exception {
+  const IgdbCredentialsNotConfiguredException();
+}
+
+final class IgdbTokenFetchException implements Exception {
+  const IgdbTokenFetchException();
+}
+
+final class IgdbSearchException implements Exception {
+  const IgdbSearchException();
+}

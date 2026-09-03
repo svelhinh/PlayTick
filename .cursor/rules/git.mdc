@@ -9,7 +9,8 @@ alwaysApply: true
 - Use lowercase branch names such as `feat/gp-12-active-session`; reference the canonical Notion task ID such as `GP-12` in PR metadata.
 - Before branch or history operations, inspect the current branch, status, and existing changes. Never silently stash, reset, clean, restore, or overwrite user work.
 - Make atomic, reviewable commits with `type(scope): concise imperative description`; useful types include `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`, `build`, and `perf`.
-- Do not commit, push, merge, rebase, squash, tag, delete branches, or rewrite history unless the developer explicitly requests that operation.
+- Create a commit when the developer completes a guided-learning checkpoint; do not wait to be asked again. Still do not push, merge, rebase, squash, tag, delete branches, or rewrite history unless the developer explicitly requests that operation.
+- Do not commit unrelated work or create empty commits. Outside guided checkpoints, commit only when the developer asks.
 - Never force-push `main`, discard unrelated changes, or combine features with unrelated formatting, upgrades, or refactors.
 - Review staged and unstaged diffs before a requested commit. Include only files belonging to that logical change and never include likely secrets.
 - Keep application `pubspec.lock` versioned. Do not commit build output, IDE-local state, caches, credentials, signing files, or debug artifacts.

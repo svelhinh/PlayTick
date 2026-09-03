@@ -14,3 +14,4 @@ alwaysApply: true
 - A temporary visual harness must invoke the real implementation. Never add fake repositories or no-op controls.
 - Inspect the relevant Figma reference before guiding visual implementation when one is available.
 - Increase hint specificity only when the developer is blocked or explicitly asks for code.
+- After the developer completes a checkpoint, review the diff and create that checkpoint's commit. Do not wait for a separate commit request. Show the message used. Keep the commit atomic: only that checkpoint's files, never secrets, and never the next checkpoint's work. Do not push unless asked.
