@@ -456,6 +456,28 @@ void main() {
   );
 
   testWidgets(
+    'Library search clear button restores the library list',
+    (tester) async {
+      final libraryRepository = container.read(libraryRepositoryProvider);
+      await addGamesToLibrary(libraryRepository);
+      searchRepository.games = [Game(id: 300, name: 'Celeste')];
+
+      await openLibrary(tester);
+      await searchFor(tester, 'hollow');
+
+      expect(find.byType(IgdbGameCard), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pumpAndSettle();
+
+      expect(find.widgetWithText(TextField, 'hollow'), findsNothing);
+      expect(find.byType(IgdbGameCard), findsNothing);
+      expect(find.text('4 games'), findsOneWidget);
+      expect(find.byType(ChoiceChip), findsWidgets);
+    },
+  );
+
+  testWidgets(
     'Library search keeps local results when IGDB fails',
     (tester) async {
       final libraryRepository = container.read(libraryRepositoryProvider);

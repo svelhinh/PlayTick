@@ -183,19 +183,45 @@ class LibraryScreen extends ConsumerWidget {
   }
 }
 
-final class _SearchBar extends ConsumerWidget {
+final class _SearchBar extends ConsumerStatefulWidget {
   const _SearchBar();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_SearchBar> createState() => _SearchBarState();
+}
+
+class _SearchBarState extends ConsumerState<_SearchBar> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _clear() {
+    _controller.clear();
+    ref.read(librarySearchProvider.notifier).search('');
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final hasQuery = ref.watch(librarySearchProvider).isNotEmpty;
 
     return Focus(
       child: Builder(
         builder: (context) {
           final isFocused = Focus.of(context).hasFocus;
           return TextField(
+            controller: _controller,
             onChanged: (value) {
               ref.read(librarySearchProvider.notifier).search(value);
             },
@@ -208,11 +234,16 @@ final class _SearchBar extends ConsumerWidget {
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
               prefixIcon: const Icon(Icons.search),
+              suffixIcon: hasQuery
+                  ? IconButton(
+                      onPressed: _clear,
+                      icon: const Icon(Icons.close),
+                    )
+                  : null,
               filled: true,
               fillColor: isFocused
                   ? theme.colorScheme.surface
                   : theme.colorScheme.surfaceContainerLow,
-              // More rounded border
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(100),
                 borderSide: BorderSide(
