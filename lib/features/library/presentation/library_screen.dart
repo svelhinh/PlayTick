@@ -3,14 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
+import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/library_filter.dart';
-import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
+import 'package:playtick/features/library/domain/library_game.dart';
+import 'package:playtick/features/library/domain/library_search_results.dart';
 import 'package:playtick/features/library/presentation/extensions/library_filter_extension.dart';
 import 'package:playtick/features/library/presentation/providers/library_filter_notifier_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
-import 'package:playtick/features/library/presentation/providers/library_repository_provider.dart';
-import 'package:playtick/features/library/presentation/temporary_game_factory.dart';
-import 'package:playtick/features/library/presentation/widgets/add_game_sheet.dart';
+import 'package:playtick/features/library/presentation/providers/library_search_games_provider.dart';
+import 'package:playtick/features/library/presentation/providers/library_search_notifier_provider.dart';
+import 'package:playtick/features/library/presentation/widgets/igdb_game_card.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -24,6 +26,8 @@ class LibraryScreen extends ConsumerWidget {
 
     final gamesAsync = ref.watch(libraryGamesProvider);
     final filter = ref.watch(libraryFilterProvider);
+    final search = ref.watch(librarySearchProvider);
+    final igdbGamesAsync = ref.watch(librarySearchGamesProvider);
 
     return SafeArea(
       child: Column(
@@ -38,24 +42,76 @@ class LibraryScreen extends ConsumerWidget {
                 Text(appLoc.libraryTitle, style: theme.textTheme.headlineLarge),
                 const SizedBox(height: 4),
                 Text(appLoc.librarySubtitle, style: theme.textTheme.bodyMedium),
-                const SizedBox(height: 24),
+                const SizedBox(height: 12),
+                const _SearchBar(),
               ],
             ),
           ),
           Expanded(
             child: gamesAsync.when(
               data: (games) {
-                if (games.isEmpty) {
+                if (games.isEmpty && search.isEmpty) {
                   return Align(
                     alignment: Alignment.topCenter,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                       child: EmptyStateCard(
                         icon: Icons.library_books_outlined,
                         title: appLoc.libraryEmptyStateTitle,
                         description: appLoc.libraryEmptyStateDescription,
-                        action: const _AddGameButton(),
                       ),
+                    ),
+                  );
+                }
+
+                if (search.isNotEmpty) {
+                  final igdbGames = igdbGamesAsync.value ?? [];
+                  final searchResults = LibrarySearchResults.merge(
+                    search,
+                    games,
+                    igdbGames,
+                  );
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: ListView(
+                      children: [
+                        if (searchResults.libraryGames.isNotEmpty) ...[
+                          const SizedBox(height: 12),
+                          _LibraryGamesList(
+                            games: searchResults.libraryGames,
+                            showTitle: true,
+                          ),
+                        ],
+
+                        const SizedBox(height: 12),
+
+                        if (searchResults.igdbGames.isEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                appLoc.igdbSearchResultsTitle,
+                                style: theme.textTheme.titleSmall,
+                              ),
+                              const SizedBox(height: 12),
+                              if (igdbGamesAsync.isLoading)
+                                const Center(child: CircularProgressIndicator())
+                              else if (igdbGamesAsync.hasError)
+                                _IgdbSearchCardError(
+                                  onRetry: () => ref.invalidate(
+                                    librarySearchGamesProvider,
+                                  ),
+                                ),
+                            ],
+                          )
+                        else if (searchResults.igdbGames.isNotEmpty) ...[
+                          _IgdbGamesList(games: searchResults.igdbGames),
+                        ],
+                      ],
                     ),
                   );
                 }
@@ -70,121 +126,43 @@ class LibraryScreen extends ConsumerWidget {
 
                 return ListView(
                   children: [
-                    const _AddGameButton(key: Key('add-game-button')),
                     const SizedBox(height: 12),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                        ),
-                        child: Row(
-                          children: LibraryFilter.values
-                              .map(
-                                (libraryFilter) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 4,
-                                  ),
-                                  child: ChoiceChip(
-                                    label: ConstrainedBox(
-                                      constraints: const BoxConstraints(
-                                        minWidth: 72,
-                                      ),
-                                      child: Text(
-                                        libraryFilter.localize(context),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        30,
-                                      ),
-                                    ),
-                                    side: BorderSide(
-                                      color: theme.colorScheme.outline,
-                                    ),
-                                    selectedColor: theme.colorScheme.primary,
-                                    showCheckmark: false,
-                                    labelStyle: theme.textTheme.bodyLarge
-                                        ?.copyWith(
-                                          color: libraryFilter == filter
-                                              ? theme.colorScheme.onPrimary
-                                              : theme.colorScheme.onSurface,
-                                        ),
-                                    selected: libraryFilter == filter,
-                                    onSelected: (value) {
-                                      if (value) {
-                                        ref
-                                            .read(
-                                              libraryFilterProvider.notifier,
-                                            )
-                                            .select(libraryFilter);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 12),
-                          if (filteredGames.isEmpty)
-                            EmptyStateCard(
-                              icon: Icons.library_books_outlined,
-                              title: appLoc.libraryFilterEmptyStateTitle,
-                              description:
-                                  appLoc.libraryFilterEmptyStateDescription,
-                              action: FilledButton(
-                                onPressed: () {
-                                  ref
-                                      .read(libraryFilterProvider.notifier)
-                                      .select(LibraryFilter.all);
-                                },
-                                child: Text(
-                                  appLoc.libraryFilterEmptyStateButtonText,
-                                ),
-                              ),
-                            )
-                          else ...[
-                            Text(
-                              appLoc.libraryGamesCount(filteredGames.length),
-                              style: theme.textTheme.bodyMedium,
-                            ),
-                            const SizedBox(height: 12),
-                            Card(
-                              child: ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                padding: const EdgeInsets.all(12),
-                                separatorBuilder: (context, index) =>
-                                    const Divider(),
-                                itemBuilder: (context, index) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
-                                  child: LibraryGameCard(
-                                    game: filteredGames[index],
-                                    onOpenDetails: () => context.push(
-                                      AppRoutes.gameDetailsPath(
-                                        filteredGames[index].gameId.toString(),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                itemCount: filteredGames.length,
+                    if (search.isEmpty) ...[
+                      const _LibraryGamesFilters(),
+                      if (filteredGames.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          child: EmptyStateCard(
+                            icon: Icons.library_books_outlined,
+                            title: appLoc.libraryFilterEmptyStateTitle,
+                            description:
+                                appLoc.libraryFilterEmptyStateDescription,
+                            action: FilledButton(
+                              onPressed: () {
+                                ref
+                                    .read(libraryFilterProvider.notifier)
+                                    .select(LibraryFilter.all);
+                              },
+                              child: Text(
+                                appLoc.libraryFilterEmptyStateButtonText,
                               ),
                             ),
-                          ],
-                        ],
-                      ),
-                    ),
+                          ),
+                        )
+                      else
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            right: 24,
+                            left: 24,
+                            top: 12,
+                          ),
+                          child: _LibraryGamesList(games: filteredGames),
+                        ),
+                    ],
+                    const SizedBox(height: 12),
                   ],
                 );
               },
@@ -199,14 +177,64 @@ class LibraryScreen extends ConsumerWidget {
   }
 }
 
-class _AddGameButton extends ConsumerWidget {
-  const _AddGameButton({super.key});
+final class _SearchBar extends ConsumerWidget {
+  const _SearchBar();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLoc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
-    return FilledButton.icon(
+    return Focus(
+      child: Builder(
+        builder: (context) {
+          final isFocused = Focus.of(context).hasFocus;
+          return TextField(
+            onChanged: (value) {
+              ref.read(librarySearchProvider.notifier).search(value);
+            },
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
+            decoration: InputDecoration(
+              hintText: appLoc.librarySearchHintText,
+              hintStyle: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+              prefixIcon: const Icon(Icons.search),
+              filled: true,
+              fillColor: isFocused
+                  ? theme.colorScheme.surface
+                  : theme.colorScheme.surfaceContainerLow,
+              // More rounded border
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(100),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.outline,
+                  width: 2,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(100),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.outline,
+                  width: 2,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(100),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.outline,
+                  width: 2,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+
+    /*FilledButton.icon(
       icon: const Icon(Icons.add),
       onPressed: () async {
         final temporaryGame = createTemporaryGame();
@@ -242,6 +270,231 @@ class _AddGameButton extends ConsumerWidget {
         );
       },
       label: const Text('Add a game'),
+    );*/
+  }
+}
+
+final class _LibraryGamesFilters extends ConsumerWidget {
+  const _LibraryGamesFilters();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final filter = ref.watch(libraryFilterProvider);
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: LibraryFilter.values
+              .map(
+                (libraryFilter) => Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                  ),
+                  child: ChoiceChip(
+                    label: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: 72,
+                      ),
+                      child: Text(
+                        libraryFilter.localize(context),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        30,
+                      ),
+                    ),
+                    side: BorderSide(
+                      color: theme.colorScheme.outline,
+                    ),
+                    selectedColor: theme.colorScheme.primary,
+                    showCheckmark: false,
+                    labelStyle: theme.textTheme.bodyLarge?.copyWith(
+                      color: libraryFilter == filter
+                          ? theme.colorScheme.onPrimary
+                          : theme.colorScheme.onSurface,
+                    ),
+                    selected: libraryFilter == filter,
+                    onSelected: (value) {
+                      if (value) {
+                        ref
+                            .read(
+                              libraryFilterProvider.notifier,
+                            )
+                            .select(libraryFilter);
+                      }
+                    },
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
+  }
+}
+
+final class _LibraryGamesList extends StatelessWidget {
+  const _LibraryGamesList({
+    required this.games,
+    this.showTitle = false,
+  });
+
+  final List<LibraryGame> games;
+  final bool showTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    final appLoc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            if (showTitle)
+              Text(
+                appLoc.librarySearchResultsTitle,
+                style: theme.textTheme.titleSmall,
+              ),
+            Text(
+              appLoc.libraryGamesCount(games.length),
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(12),
+            separatorBuilder: (context, index) => const Divider(),
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 12,
+              ),
+              child: LibraryGameCard(
+                game: games[index],
+                onPressed: () => context.push(
+                  AppRoutes.gameDetailsPath(
+                    games[index].gameId.toString(),
+                  ),
+                ),
+              ),
+            ),
+            itemCount: games.length,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+final class _IgdbGamesList extends StatelessWidget {
+  const _IgdbGamesList({
+    required this.games,
+  });
+
+  final List<Game> games;
+
+  @override
+  Widget build(BuildContext context) {
+    final appLoc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          appLoc.igdbSearchResultsTitle,
+          style: theme.textTheme.titleSmall,
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(12),
+            separatorBuilder: (context, index) => const Divider(),
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 12,
+              ),
+              child: IgdbGameCard(
+                game: games[index],
+                onPressed: () {},
+              ),
+            ),
+            itemCount: games.length,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+final class _IgdbSearchCardError extends StatelessWidget {
+  const _IgdbSearchCardError({
+    required this.onRetry,
+  });
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appLoc = AppLocalizations.of(context)!;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: theme.colorScheme.primaryContainer,
+              child: Icon(
+                Icons.info_outline,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    appLoc.igdbSearchCardErrorTitle,
+                    style: theme.textTheme.titleSmall,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    appLoc.igdbSearchCardErrorDescription,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              height: 40,
+              child: FilledButton(
+                onPressed: onRetry,
+                child: Text(appLoc.retry),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -26,7 +26,7 @@ final class LibraryRepositoryProvider
         argument: null,
         retry: null,
         name: r'libraryRepositoryProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -54,4 +54,4 @@ final class LibraryRepositoryProvider
   }
 }
 
-String _$libraryRepositoryHash() => r'd725a6a9551d2f2d6ba94c042a4092c00f37c9e7';
+String _$libraryRepositoryHash() => r'cf04d239e21d9c428fffa3103208f9a67992bf0e';

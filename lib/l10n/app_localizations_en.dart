@@ -16,6 +16,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
+  String get retry => 'Retry';
+
+  @override
   String get somethingWentWrong => 'Something went wrong';
 
   @override
@@ -79,6 +82,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get libraryFilterDropped => 'Dropped';
 
   @override
+  String get librarySearchHintText => 'Search for a game';
+
+  @override
+  String get librarySearchResultsTitle => 'In your library';
+
+  @override
+  String get igdbSearchResultsTitle => 'IGDB results';
+
+  @override
+  String get igdbSearchCardErrorTitle =>
+      'Unable to retrieve external results at the moment.';
+
+  @override
+  String get igdbSearchCardErrorDescription =>
+      'Check your connection or try again later.';
+
+  @override
   String get gameStatusWantToPlay => 'Want to play';
 
   @override
@@ -109,6 +129,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get libraryGameCardSeeDetails => 'See';
+
+  @override
+  String get libraryGameCardAddGame => 'Add';
 
   @override
   String get gameDetailsDeleteGameTitle => 'Delete this game';

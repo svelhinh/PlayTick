@@ -10,6 +10,11 @@
         "type": "text",
         "description": "The text of the button to cancel an action"
     },
+    "retry": "Retry",
+    "@retry": {
+        "type": "text",
+        "description": "The text of the button to retry an action"
+    },
     "somethingWentWrong": "Something went wrong",
     "@somethingWentWrong": {
         "type": "text",
@@ -110,6 +115,31 @@
         "type": "text",
         "description": "The filter for dropped games in the library"
     },
+    "librarySearchHintText": "Search for a game",
+    "@librarySearchHintText": {
+        "type": "text",
+        "description": "The hint text of the search bar in the library screen"
+    },
+    "librarySearchResultsTitle": "In your library",
+    "@librarySearchResultsTitle": {
+        "type": "text",
+        "description": "The title of the search results in the library screen for games in your library"
+    },
+    "igdbSearchResultsTitle": "IGDB results",
+    "@igdbSearchResultsTitle": {
+        "type": "text",
+        "description": "The title of the IGDB search results in the library screen"
+    },
+    "igdbSearchCardErrorTitle": "Unable to retrieve external results at the moment.",
+    "@igdbSearchCardErrorTitle": {
+        "type": "text",
+        "description": "The title of the error card in the IGDB search results"
+    },
+    "igdbSearchCardErrorDescription": "Check your connection or try again later.",
+    "@igdbSearchCardErrorDescription": {
+        "type": "text",
+        "description": "The description of the error card in the IGDB search results"
+    },
     "gameStatusWantToPlay": "Want to play",
     "@gameStatusWantToPlay": {
         "type": "text",
@@ -157,6 +187,11 @@
     "@libraryGameCardSeeDetails": {
         "type": "text",
         "description": "The text of the button to see the details of the game in the library game card"
+    },
+    "libraryGameCardAddGame": "Add",
+    "@libraryGameCardAddGame": {
+        "type": "text",
+        "description": "The text of the button to add a game to the library in the IGDB search results"
     },
     "gameDetailsDeleteGameTitle": "Delete this game",
     "@gameDetailsDeleteGameTitle": {

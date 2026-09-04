@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:playtick/features/library/domain/game_status.dart';
-import 'package:playtick/features/library/domain/library_game.dart';
-import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
+import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
-import 'package:playtick/features/library/presentation/widgets/game_status_row.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
-class LibraryGameCard extends StatelessWidget {
-  const LibraryGameCard({
+class IgdbGameCard extends StatelessWidget {
+  const IgdbGameCard({
     required this.game,
     super.key,
     this.onPressed,
   });
 
-  final LibraryGame game;
+  final Game game;
   final VoidCallback? onPressed;
 
   @override
@@ -38,20 +35,11 @@ class LibraryGameCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
-                GameStatusRow(status: game.status),
-                if (game.status != GameStatus.wantToPlay &&
-                    game.totalPlaytime.inSeconds > 0) ...[
+                if (game.releaseDate != null) ...[
                   const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(Icons.schedule_outlined, size: 14),
-                      const SizedBox(width: 4),
-                      Text(
-                        game.totalPlaytime.localize(appLoc),
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ],
+                  Text(
+                    game.releaseDate!.year.toString(),
+                    style: theme.textTheme.bodySmall,
                   ),
                 ],
               ],
@@ -62,7 +50,13 @@ class LibraryGameCard extends StatelessWidget {
             height: 40,
             child: FilledButton(
               onPressed: onPressed,
-              child: Text(appLoc.libraryGameCardSeeDetails),
+              child: Row(
+                children: [
+                  const Icon(Icons.add),
+                  const SizedBox(width: 4),
+                  Text(appLoc.libraryGameCardAddGame),
+                ],
+              ),
             ),
           ),
         ],

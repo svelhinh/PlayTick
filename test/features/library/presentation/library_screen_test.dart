@@ -5,28 +5,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
-import 'package:playtick/core/database/app_database.dart';
-import 'package:playtick/core/database/database_provider.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
+import 'package:playtick/features/library/data/database/app_database.dart';
+import 'package:playtick/features/library/data/database/database_provider.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
+import 'package:playtick/features/library/domain/library_exception.dart';
 import 'package:playtick/features/library/domain/library_repository.dart';
+import 'package:playtick/features/library/domain/library_search_repository.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
-import 'package:playtick/features/library/presentation/providers/library_repository_provider.dart';
-import 'package:playtick/features/library/presentation/widgets/add_game_sheet.dart';
+import 'package:playtick/features/library/presentation/widgets/igdb_game_card.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
+import 'package:playtick/features/library/providers/library_repository_provider.dart';
+import 'package:playtick/features/library/providers/library_search_repository_provider.dart';
+
+class _FakeSearchRepository implements LibrarySearchRepository {
+  List<Game> games = [];
+  Exception? errorToThrow;
+
+  @override
+  Future<List<Game>> searchGames(String query) async {
+    final error = errorToThrow;
+    if (error != null) {
+      throw error;
+    }
+    return games;
+  }
+}
 
 void main() {
   late AppDatabase database;
   late ProviderContainer container;
+  late _FakeSearchRepository searchRepository;
 
   setUp(() {
     database = AppDatabase(NativeDatabase.memory());
+    searchRepository = _FakeSearchRepository();
     container = ProviderContainer(
       overrides: [
         databaseProvider.overrideWith((_) => database),
+        librarySearchRepositoryProvider.overrideWith((_) => searchRepository),
       ],
     );
   });
@@ -270,44 +290,6 @@ void main() {
     expect(find.text('3 games'), findsNothing);
   });
 
-  testWidgets(
-    'Library screen adds a game to the library',
-    (
-      tester,
-    ) async {
-      tester.binding.platformDispatcher.localesTestValue = const [Locale('en')];
-      addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
-
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: container,
-          child: const PlayTick(),
-        ),
-      );
-
-      await tester.tap(find.byType(NavigationDestination).at(1));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(LibraryScreen), findsOneWidget);
-      expect(find.byType(EmptyStateCard), findsOneWidget);
-
-      await tester.tap(find.text('Add a game'));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(AddGameSheet), findsOneWidget);
-      final temporaryGame = tester
-          .widget<AddGameSheet>(find.byType(AddGameSheet))
-          .game;
-
-      await tester.tap(find.text('Add'));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(EmptyStateCard), findsNothing);
-      expect(find.text('1 game'), findsOneWidget);
-      expect(find.text(temporaryGame.name), findsOneWidget);
-    },
-  );
-
   testWidgets('Library screen filters games by status', (tester) async {
     tester.binding.platformDispatcher.localesTestValue = const [Locale('en')];
     addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
@@ -401,4 +383,100 @@ void main() {
     expect(find.text('SOMA'), findsOneWidget);
     expect(find.text('NieR: Automata'), findsOneWidget);
   });
+
+  Future<void> openLibrary(WidgetTester tester) async {
+    tester.binding.platformDispatcher.localesTestValue = const [Locale('en')];
+    addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const PlayTick(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(NavigationDestination).at(1));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> searchFor(WidgetTester tester, String query) async {
+    await tester.enterText(find.byType(TextField), query);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
+    await tester.pump();
+  }
+
+  testWidgets(
+    'Library search shows local matches and IGDB hits without duplicates',
+    (tester) async {
+      final libraryRepository = container.read(libraryRepositoryProvider);
+      await addGamesToLibrary(libraryRepository);
+
+      searchRepository.games = [
+        Game(id: 200, name: 'Hollow Knight'),
+        Game(id: 300, name: 'Celeste'),
+      ];
+
+      await openLibrary(tester);
+      await searchFor(tester, 'hollow');
+
+      expect(find.text('In your library'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(LibraryGameCard),
+          matching: find.text('Hollow Knight'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(LibraryGameCard),
+          matching: find.text('See'),
+        ),
+        findsOneWidget,
+      );
+
+      expect(find.text('IGDB results'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(IgdbGameCard),
+          matching: find.text('Celeste'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(IgdbGameCard),
+          matching: find.text('Hollow Knight'),
+        ),
+        findsNothing,
+      );
+      expect(find.text('Cocoon'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Library search keeps local results when IGDB fails',
+    (tester) async {
+      final libraryRepository = container.read(libraryRepositoryProvider);
+      await addGamesToLibrary(libraryRepository);
+      searchRepository.errorToThrow = const IgdbSearchException();
+
+      await openLibrary(tester);
+      await searchFor(tester, 'hollow');
+
+      expect(
+        find.descendant(
+          of: find.byType(LibraryGameCard),
+          matching: find.text('Hollow Knight'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.byType(IgdbGameCard), findsNothing);
+      expect(
+        find.text('Unable to retrieve external results at the moment.'),
+        findsOneWidget,
+      );
+    },
+  );
 }

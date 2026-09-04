@@ -10,6 +10,11 @@
         "type": "text",
         "description": "Le texte du bouton d'annulation d'une action"
     },
+    "retry": "Réessayer",
+    "@retry": {
+        "type": "text",
+        "description": "Le texte du bouton pour réessayer une action"
+    },
     "somethingWentWrong": "Une erreur est survenue",
     "@somethingWentWrong": {
         "type": "text",
@@ -110,6 +115,31 @@
         "type": "text",
         "description": "Le filtre pour les jeux abandonnés dans la bibliothèque"
     },
+    "librarySearchHintText": "Rechercher un jeu",
+    "@librarySearchHintText": {
+        "type": "text",
+        "description": "Le hint text de la barre de recherche dans l'écran de la bibliothèque"
+    },
+    "librarySearchResultsTitle": "Dans votre bibliothèque",
+    "@librarySearchResultsTitle": {
+        "type": "text",
+        "description": "Le titre des résultats de recherche dans l'écran de la bibliothèque pour les jeux dans votre bibliothèque"
+    },
+    "igdbSearchResultsTitle": "Résultats IGDB",
+    "@igdbSearchResultsTitle": {
+        "type": "text",
+        "description": "Le titre des résultats de recherche dans l'écran de la bibliothèque pour les jeux sur IGDB"
+    },
+    "igdbSearchCardErrorTitle": "Impossible de récupérer les résultats externes pour le moment.",
+    "@igdbSearchCardErrorTitle": {
+        "type": "text",
+        "description": "Le titre de la carte d'erreur dans les résultats de recherche IGDB"
+    },
+    "igdbSearchCardErrorDescription": "Vérifiez votre connexion ou réessayez plus tard.",
+    "@igdbSearchCardErrorDescription": {
+        "type": "text",
+        "description": "La description de la carte d'erreur dans les résultats de recherche IGDB"
+    },
     "gameStatusWantToPlay": "À jouer",
     "@gameStatusWantToPlay": {
         "type": "text",
@@ -157,6 +187,11 @@
     "@libraryGameCardSeeDetails": {
         "type": "text",
         "description": "Le texte du bouton pour voir les détails du jeu dans la carte de la bibliothèque"
+    },
+    "libraryGameCardAddGame": "Ajouter",
+    "@libraryGameCardAddGame": {
+        "type": "text",
+        "description": "Le texte du bouton pour ajouter un jeu à la bibliothèque dans les résultats de recherche IGDB"
     },
     "gameDetailsDeleteGameTitle": "Supprimer le jeu",
     "@gameDetailsDeleteGameTitle": {
