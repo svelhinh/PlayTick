@@ -16,6 +16,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cancel => 'Annuler';
 
   @override
+  String get retry => 'Réessayer';
+
+  @override
   String get somethingWentWrong => 'Une erreur est survenue';
 
   @override
@@ -80,6 +83,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get libraryFilterDropped => 'Abandonné';
 
   @override
+  String get librarySearchHintText => 'Rechercher un jeu';
+
+  @override
+  String get librarySearchResultsTitle => 'Dans votre bibliothèque';
+
+  @override
+  String get igdbSearchResultsTitle => 'Résultats IGDB';
+
+  @override
+  String get igdbSearchCardErrorTitle =>
+      'Impossible de récupérer les résultats externes pour le moment.';
+
+  @override
+  String get igdbSearchCardErrorDescription =>
+      'Vérifiez votre connexion ou réessayez plus tard.';
+
+  @override
   String get gameStatusWantToPlay => 'À jouer';
 
   @override
@@ -110,6 +130,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get libraryGameCardSeeDetails => 'Voir';
+
+  @override
+  String get libraryGameCardAddGame => 'Ajouter';
 
   @override
   String get gameDetailsDeleteGameTitle => 'Supprimer le jeu';

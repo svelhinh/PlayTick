@@ -1,8 +1,8 @@
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:playtick/core/database/app_database.dart';
-import 'package:playtick/core/database/database_provider.dart';
+import 'package:playtick/features/library/data/database/app_database.dart';
+import 'package:playtick/features/library/data/database/database_provider.dart';
 
 void main() {
   late AppDatabase database;

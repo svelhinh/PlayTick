@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:playtick/core/database/app_database.dart';
+import 'package:playtick/features/library/data/database/app_database.dart';
 import 'package:playtick/features/library/data/drift_library_repository.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';

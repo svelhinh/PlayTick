@@ -110,6 +110,12 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancel;
 
+  /// The text of the button to retry an action
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
   /// The error message general
   ///
   /// In en, this message translates to:
@@ -230,6 +236,36 @@ abstract class AppLocalizations {
   /// **'Dropped'**
   String get libraryFilterDropped;
 
+  /// The hint text of the search bar in the library screen
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a game'**
+  String get librarySearchHintText;
+
+  /// The title of the search results in the library screen for games in your library
+  ///
+  /// In en, this message translates to:
+  /// **'In your library'**
+  String get librarySearchResultsTitle;
+
+  /// The title of the IGDB search results in the library screen
+  ///
+  /// In en, this message translates to:
+  /// **'IGDB results'**
+  String get igdbSearchResultsTitle;
+
+  /// The title of the error card in the IGDB search results
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to retrieve external results at the moment.'**
+  String get igdbSearchCardErrorTitle;
+
+  /// The description of the error card in the IGDB search results
+  ///
+  /// In en, this message translates to:
+  /// **'Check your connection or try again later.'**
+  String get igdbSearchCardErrorDescription;
+
   /// The status of the game 'Want to play'
   ///
   /// In en, this message translates to:
@@ -271,6 +307,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See'**
   String get libraryGameCardSeeDetails;
+
+  /// The text of the button to add a game to the library in the IGDB search results
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get libraryGameCardAddGame;
 
   /// The title of the delete game sheet
   ///

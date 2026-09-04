@@ -1,19 +1,64 @@
 include: package:very_good_analysis/analysis_options.yaml
 
-analyzer:
-  errors:
-    public_member_api_docs: ignore
-  exclude:
-    - build/**
-    - android/**
-    - ios/**
-    - web/**
-    - windows/**
-    - macos/**
-    - linux/**
+plugins:
+  import_rules: ^0.0.7
+  dependency_overrides:
+    analysis_server_plugin: 0.3.20
+    analyzer: 14.1.0
+    analyzer_plugin: 0.14.14
+
+import_rules:
+  rules:
+    - target: lib/core/**
+      disallow: package:playtick/features/**
+      reason: lib/core must not import feature modules; keep shared code in core only.
+      severity: error
+
+    - target: lib/features/**/domain/**
+      disallow:
+        - lib/features/**/data/**
+        - lib/features/**/presentation/**
+        - package:playtick/features/**/data/**
+        - package:playtick/features/**/presentation/**
+        - package:flutter/**
+        - package:flutter_riverpod/**
+        - package:riverpod/**
+        - package:riverpod_annotation/**
+      reason: domain must stay pure Dart — no Flutter, Riverpod, data, or presentation.
+      severity: error
+
+    - target: lib/features/**/data/**
+      disallow:
+        - lib/features/**/presentation/**
+        - package:playtick/features/**/presentation/**
+      reason: data must not import presentation.
+      severity: error
+
+    - target: lib/features/**/presentation/**
+      disallow:
+        - lib/features/**/data/**
+        - package:playtick/features/**/data/**
+      reason: presentation must not import data; depend on domain and feature providers.
+      severity: error
+
+    - target: lib/features/*/providers/**
+      disallow:
+        - lib/features/**/presentation/**
+        - package:playtick/features/**/presentation/**
+      reason: feature providers wire data and domain; they must not import presentation.
+      severity: error
 
 linter:
   rules:
+    public_member_api_docs: false
+    lines_longer_than_80_chars: false
 
-plugins:
-  riverpod_lint: 3.1.8
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - build/**
+    - android/**
+    - ios/**
+  errors:
+    invalid_annotation_target: ignore

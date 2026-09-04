@@ -8,9 +8,9 @@ import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/providers/library_game_provider.dart';
-import 'package:playtick/features/library/presentation/providers/library_repository_provider.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/features/library/presentation/widgets/game_status_row.dart';
+import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 class GameDetailsScreen extends ConsumerWidget {

@@ -6,15 +6,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/app/router/app_router.dart';
-import 'package:playtick/core/database/app_database.dart';
-import 'package:playtick/core/database/database_provider.dart';
+import 'package:playtick/features/library/data/database/app_database.dart';
+import 'package:playtick/features/library/data/database/database_provider.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/presentation/game_details_screen.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
-import 'package:playtick/features/library/presentation/providers/library_repository_provider.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
+import 'package:playtick/features/library/providers/library_repository_provider.dart';
 
 void main() {
   late AppDatabase database;

@@ -5,8 +5,9 @@ import 'package:playtick/features/library/data/igdb/igdb_credentials.dart';
 import 'package:playtick/features/library/data/igdb/igdb_game_dto.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/library_exception.dart';
+import 'package:playtick/features/library/domain/library_search_repository.dart';
 
-final class IgdbClient {
+final class IgdbClient implements LibrarySearchRepository {
   IgdbClient({
     required this.client,
     required this.credentials,
@@ -56,6 +57,7 @@ final class IgdbClient {
     return accessToken;
   }
 
+  @override
   Future<List<Game>> searchGames(String query) async {
     if (query.trim().isEmpty) {
       return [];

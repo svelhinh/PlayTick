@@ -27,6 +27,7 @@ dev_dependencies:
   drift_dev: ^2.34.5
   flutter_test:
     sdk: flutter
+  import_rules: ^0.0.7
   riverpod_generator: ^4.0.8
   very_good_analysis: ^10.3.0
 
