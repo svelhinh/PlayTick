@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:playtick/features/library/domain/game.dart';
+import 'package:playtick/features/library/presentation/extensions/game_subtitle_extension.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -35,10 +36,10 @@ class IgdbGameCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                if (game.releaseDate != null) ...[
+                if (game.subtitle != null) ...[
                   const SizedBox(height: 4),
                   Text(
-                    game.releaseDate!.year.toString(),
+                    game.subtitle!,
                     style: theme.textTheme.bodySmall,
                   ),
                 ],
@@ -54,7 +55,7 @@ class IgdbGameCard extends StatelessWidget {
                 children: [
                   const Icon(Icons.add),
                   const SizedBox(width: 4),
-                  Text(appLoc.libraryGameCardAddGame),
+                  Text(appLoc.add),
                 ],
               ),
             ),

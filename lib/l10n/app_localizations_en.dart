@@ -13,6 +13,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appName => 'Play Tick';
 
   @override
+  String get add => 'Add';
+
+  @override
   String get cancel => 'Cancel';
 
   @override
@@ -99,6 +102,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Check your connection or try again later.';
 
   @override
+  String get addGameSheetSelectStatus => 'Add as';
+
+  @override
   String get gameStatusWantToPlay => 'Want to play';
 
   @override
@@ -129,9 +135,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get libraryGameCardSeeDetails => 'See';
-
-  @override
-  String get libraryGameCardAddGame => 'Add';
 
   @override
   String get gameDetailsDeleteGameTitle => 'Delete this game';

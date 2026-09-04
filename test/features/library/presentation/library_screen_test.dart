@@ -479,4 +479,76 @@ void main() {
       );
     },
   );
+
+  Game celesteGame() => Game(id: 300, name: 'Celeste');
+
+  Future<void> openAddSheetForCeleste(WidgetTester tester) async {
+    searchRepository.games = [celesteGame()];
+    await openLibrary(tester);
+    await searchFor(tester, 'celeste');
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(IgdbGameCard),
+        matching: find.text('Add'),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets(
+    'Library search adds an IGDB game with want to play by default',
+    (tester) async {
+      await openAddSheetForCeleste(tester);
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Add').last);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(IgdbGameCard), findsNothing);
+      expect(
+        find.descendant(
+          of: find.byType(LibraryGameCard),
+          matching: find.text('Celeste'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(LibraryGameCard),
+          matching: find.text('Want to play'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.widgetWithText(TextField, 'celeste'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Library search adds an IGDB game with the selected status',
+    (tester) async {
+      await openAddSheetForCeleste(tester);
+
+      await tester.tap(find.text('Playing'));
+      await tester.pump();
+      await tester.tap(find.widgetWithText(FilledButton, 'Add').last);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(IgdbGameCard), findsNothing);
+      expect(
+        find.descendant(
+          of: find.byType(LibraryGameCard),
+          matching: find.text('Celeste'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(LibraryGameCard),
+          matching: find.text('Playing'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.widgetWithText(TextField, 'celeste'), findsOneWidget);
+    },
+  );
 }
