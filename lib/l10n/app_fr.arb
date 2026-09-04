@@ -5,6 +5,11 @@
         "type": "text",
         "description": "Le nom de l'application"
     },
+    "add": "Ajouter",
+    "@add": {
+        "type": "text",
+        "description": "Le texte du bouton pour ajouter un item"
+    },
     "cancel": "Annuler",
     "@cancel": {
         "type": "text",
@@ -140,6 +145,11 @@
         "type": "text",
         "description": "La description de la carte d'erreur dans les résultats de recherche IGDB"
     },
+    "addGameSheetSelectStatus": "Ajouter comme",
+    "@addGameSheetSelectStatus": {
+        "type": "text",
+        "description": "Le label de la sélection de statut dans la fiche d'ajout de jeu"
+    },
     "gameStatusWantToPlay": "À jouer",
     "@gameStatusWantToPlay": {
         "type": "text",
@@ -187,11 +197,6 @@
     "@libraryGameCardSeeDetails": {
         "type": "text",
         "description": "Le texte du bouton pour voir les détails du jeu dans la carte de la bibliothèque"
-    },
-    "libraryGameCardAddGame": "Ajouter",
-    "@libraryGameCardAddGame": {
-        "type": "text",
-        "description": "Le texte du bouton pour ajouter un jeu à la bibliothèque dans les résultats de recherche IGDB"
     },
     "gameDetailsDeleteGameTitle": "Supprimer le jeu",
     "@gameDetailsDeleteGameTitle": {

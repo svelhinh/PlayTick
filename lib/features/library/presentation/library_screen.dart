@@ -4,16 +4,22 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/features/library/domain/game.dart';
+import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_filter.dart';
 import 'package:playtick/features/library/domain/library_game.dart';
 import 'package:playtick/features/library/domain/library_search_results.dart';
+import 'package:playtick/features/library/presentation/extensions/game_status_extension.dart';
+import 'package:playtick/features/library/presentation/extensions/game_subtitle_extension.dart';
+import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/library_filter_extension.dart';
 import 'package:playtick/features/library/presentation/providers/library_filter_notifier_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_search_games_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_search_notifier_provider.dart';
+import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/features/library/presentation/widgets/igdb_game_card.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
+import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 class LibraryScreen extends ConsumerWidget {
@@ -177,19 +183,45 @@ class LibraryScreen extends ConsumerWidget {
   }
 }
 
-final class _SearchBar extends ConsumerWidget {
+final class _SearchBar extends ConsumerStatefulWidget {
   const _SearchBar();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_SearchBar> createState() => _SearchBarState();
+}
+
+class _SearchBarState extends ConsumerState<_SearchBar> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _clear() {
+    _controller.clear();
+    ref.read(librarySearchProvider.notifier).search('');
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final hasQuery = ref.watch(librarySearchProvider).isNotEmpty;
 
     return Focus(
       child: Builder(
         builder: (context) {
           final isFocused = Focus.of(context).hasFocus;
           return TextField(
+            controller: _controller,
             onChanged: (value) {
               ref.read(librarySearchProvider.notifier).search(value);
             },
@@ -202,11 +234,16 @@ final class _SearchBar extends ConsumerWidget {
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
               prefixIcon: const Icon(Icons.search),
+              suffixIcon: hasQuery
+                  ? IconButton(
+                      onPressed: _clear,
+                      icon: const Icon(Icons.close),
+                    )
+                  : null,
               filled: true,
               fillColor: isFocused
                   ? theme.colorScheme.surface
                   : theme.colorScheme.surfaceContainerLow,
-              // More rounded border
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(100),
                 borderSide: BorderSide(
@@ -233,44 +270,6 @@ final class _SearchBar extends ConsumerWidget {
         },
       ),
     );
-
-    /*FilledButton.icon(
-      icon: const Icon(Icons.add),
-      onPressed: () async {
-        final temporaryGame = createTemporaryGame();
-        final status = randomTemporaryGameStatus();
-
-        await showModalBottomSheet<void>(
-          context: context,
-          useSafeArea: true,
-          showDragHandle: true,
-          isScrollControlled: true,
-          builder: (context) => AddGameSheet(
-            onAdd: (game) async {
-              try {
-                await ref
-                    .read(libraryRepositoryProvider)
-                    .addGame(game, status: status);
-
-                if (context.mounted) {
-                  Navigator.pop(context);
-                }
-              } on Exception catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(e.localizeLibraryError(appLoc)),
-                    ),
-                  );
-                }
-              }
-            },
-            game: temporaryGame,
-          ),
-        );
-      },
-      label: const Text('Add a game'),
-    );*/
   }
 }
 
@@ -397,7 +396,7 @@ final class _LibraryGamesList extends StatelessWidget {
   }
 }
 
-final class _IgdbGamesList extends StatelessWidget {
+final class _IgdbGamesList extends ConsumerWidget {
   const _IgdbGamesList({
     required this.games,
   });
@@ -405,7 +404,7 @@ final class _IgdbGamesList extends StatelessWidget {
   final List<Game> games;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
@@ -429,7 +428,36 @@ final class _IgdbGamesList extends StatelessWidget {
               ),
               child: IgdbGameCard(
                 game: games[index],
-                onPressed: () {},
+                onPressed: () async {
+                  await showModalBottomSheet<void>(
+                    context: context,
+                    useSafeArea: true,
+                    showDragHandle: true,
+                    isScrollControlled: true,
+                    builder: (context) => _AddGameSheet(
+                      onAdd: (game, status) async {
+                        try {
+                          await ref
+                              .read(libraryRepositoryProvider)
+                              .addGame(game, status: status);
+
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        } on Exception catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(e.localizeLibraryError(appLoc)),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      game: games[index],
+                    ),
+                  );
+                },
               ),
             ),
             itemCount: games.length,
@@ -494,6 +522,92 @@ final class _IgdbSearchCardError extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _AddGameSheet extends StatefulWidget {
+  const _AddGameSheet({required this.game, required this.onAdd});
+
+  final Game game;
+  final void Function(Game, GameStatus) onAdd;
+
+  @override
+  State<_AddGameSheet> createState() => _AddGameSheetState();
+}
+
+class _AddGameSheetState extends State<_AddGameSheet> {
+  GameStatus _selectedStatus = GameStatus.wantToPlay;
+
+  @override
+  Widget build(BuildContext context) {
+    final appLoc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              GameCoverImage(coverUrl: widget.game.coverUrl),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.game.name, style: theme.textTheme.titleMedium),
+                  if (widget.game.subtitle != null) ...[
+                    Text(
+                      widget.game.subtitle!,
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ],
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Text(
+            appLoc.addGameSheetSelectStatus,
+            style: theme.textTheme.titleSmall,
+          ),
+          RadioGroup<GameStatus>(
+            groupValue: _selectedStatus,
+            onChanged: (value) {
+              if (value != null) {
+                setState(() => _selectedStatus = value);
+              }
+            },
+            child: Column(
+              children: [
+                for (final status in GameStatus.values)
+                  InkWell(
+                    onTap: () => setState(() => _selectedStatus = status),
+                    child: Row(
+                      children: [
+                        Radio<GameStatus>(value: status),
+                        Text(
+                          status.localize(context),
+                          style: theme.textTheme.labelLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: () => widget.onAdd(widget.game, _selectedStatus),
+              child: Text(appLoc.add),
+            ),
+          ),
+        ],
       ),
     );
   }

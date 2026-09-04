@@ -5,6 +5,11 @@
         "type": "text",
         "description": "The name of the app"
     },
+    "add": "Add",
+    "@add": {
+        "type": "text",
+        "description": "The text of the button to add an item"
+    },
     "cancel": "Cancel",
     "@cancel": {
         "type": "text",
@@ -140,6 +145,11 @@
         "type": "text",
         "description": "The description of the error card in the IGDB search results"
     },
+    "addGameSheetSelectStatus": "Add as",
+    "@addGameSheetSelectStatus": {
+        "type": "text",
+        "description": "The label of the select status sheet in the add game sheet"
+    },
     "gameStatusWantToPlay": "Want to play",
     "@gameStatusWantToPlay": {
         "type": "text",
@@ -187,11 +197,6 @@
     "@libraryGameCardSeeDetails": {
         "type": "text",
         "description": "The text of the button to see the details of the game in the library game card"
-    },
-    "libraryGameCardAddGame": "Add",
-    "@libraryGameCardAddGame": {
-        "type": "text",
-        "description": "The text of the button to add a game to the library in the IGDB search results"
     },
     "gameDetailsDeleteGameTitle": "Delete this game",
     "@gameDetailsDeleteGameTitle": {

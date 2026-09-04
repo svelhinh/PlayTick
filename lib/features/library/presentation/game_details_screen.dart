@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/app/app_theme.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
+import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
+import 'package:playtick/features/library/presentation/extensions/game_subtitle_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/providers/library_game_provider.dart';
@@ -99,11 +101,7 @@ class GameDetailsScreen extends ConsumerWidget {
               child: Column(
                 children: [
                   _TopInfo(
-                    name: game.name,
-                    developer: game.developer,
-                    publisher: game.publisher,
-                    releaseYear: game.releaseDate?.year,
-                    coverUrl: game.coverUrl,
+                    game: game,
                     status: status,
                     totalPlaytime: details.totalPlaytime,
                     onStatusChanged: (status) async {
@@ -156,53 +154,25 @@ final class _GameDetailsError extends StatelessWidget {
 
 final class _TopInfo extends StatelessWidget {
   const _TopInfo({
-    required this.name,
-    required this.developer,
-    required this.publisher,
-    required this.releaseYear,
-    required this.coverUrl,
+    required this.game,
     required this.status,
     required this.totalPlaytime,
     required this.onStatusChanged,
   });
 
-  final String name;
-  final String? developer;
-  final String? publisher;
-  final int? releaseYear;
-  final String? coverUrl;
+  final Game game;
   final GameStatus status;
   final Duration totalPlaytime;
   final Future<void> Function(GameStatus) onStatusChanged;
-
-  String? _getDeveloperPublisherText() {
-    if (developer != null) {
-      if (releaseYear != null) {
-        return '$developer • $releaseYear';
-      }
-      return developer!;
-    } else if (publisher != null) {
-      if (releaseYear != null) {
-        return '$publisher • $releaseYear';
-      }
-      return publisher!;
-    } else if (releaseYear != null) {
-      return '$releaseYear';
-    }
-
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
 
-    final developerPublisherText = _getDeveloperPublisherText();
-
     return Row(
       children: [
-        GameCoverImage(coverUrl: coverUrl, width: 100, height: 120),
+        GameCoverImage(coverUrl: game.coverUrl, width: 100, height: 120),
         const SizedBox(width: 20),
         Expanded(
           child: Column(
@@ -210,13 +180,13 @@ final class _TopInfo extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name,
+                game.name,
                 style: theme.textTheme.titleLarge,
               ),
-              if (developerPublisherText != null) ...[
+              if (game.subtitle != null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  developerPublisherText,
+                  game.subtitle!,
                   style: theme.textTheme.bodyMedium,
                 ),
               ],

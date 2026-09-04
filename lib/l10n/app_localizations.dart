@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'Play Tick'**
   String get appName;
 
+  /// The text of the button to add an item
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
   /// The text of the button to cancel an action
   ///
   /// In en, this message translates to:
@@ -266,6 +272,12 @@ abstract class AppLocalizations {
   /// **'Check your connection or try again later.'**
   String get igdbSearchCardErrorDescription;
 
+  /// The label of the select status sheet in the add game sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Add as'**
+  String get addGameSheetSelectStatus;
+
   /// The status of the game 'Want to play'
   ///
   /// In en, this message translates to:
@@ -307,12 +319,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See'**
   String get libraryGameCardSeeDetails;
-
-  /// The text of the button to add a game to the library in the IGDB search results
-  ///
-  /// In en, this message translates to:
-  /// **'Add'**
-  String get libraryGameCardAddGame;
 
   /// The title of the delete game sheet
   ///
