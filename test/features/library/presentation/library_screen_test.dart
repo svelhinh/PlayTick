@@ -24,9 +24,15 @@ import 'package:playtick/features/library/providers/library_search_repository_pr
 class _FakeSearchRepository implements LibrarySearchRepository {
   List<Game> games = [];
   Exception? errorToThrow;
+  int failuresBeforeSuccess = 0;
 
   @override
   Future<List<Game>> searchGames(String query) async {
+    if (failuresBeforeSuccess > 0) {
+      failuresBeforeSuccess--;
+      throw const IgdbSearchException();
+    }
+
     final error = errorToThrow;
     if (error != null) {
       throw error;
@@ -497,6 +503,66 @@ void main() {
       expect(find.byType(IgdbGameCard), findsNothing);
       expect(
         find.text('Unable to retrieve external results at the moment.'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'Library search shows an empty IGDB state without hiding local matches',
+    (tester) async {
+      final libraryRepository = container.read(libraryRepositoryProvider);
+      await addGamesToLibrary(libraryRepository);
+      searchRepository.games = [];
+
+      await openLibrary(tester);
+      await searchFor(tester, 'hollow');
+
+      expect(
+        find.descendant(
+          of: find.byType(LibraryGameCard),
+          matching: find.text('Hollow Knight'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.byType(IgdbGameCard), findsNothing);
+      expect(find.text('No games found'), findsOneWidget);
+      expect(
+        find.text('Unable to retrieve external results at the moment.'),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'Library search retry loads IGDB results after an error',
+    (tester) async {
+      searchRepository.failuresBeforeSuccess = 1;
+      searchRepository.games = [Game(id: 300, name: 'Celeste')];
+
+      await openLibrary(tester);
+      await searchFor(tester, 'celeste');
+
+      expect(
+        find.text('Unable to retrieve external results at the moment.'),
+        findsOneWidget,
+      );
+      expect(find.byType(IgdbGameCard), findsNothing);
+
+      await tester.tap(find.text('Retry'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pump();
+
+      expect(
+        find.text('Unable to retrieve external results at the moment.'),
+        findsNothing,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(IgdbGameCard),
+          matching: find.text('Celeste'),
+        ),
         findsOneWidget,
       );
     },

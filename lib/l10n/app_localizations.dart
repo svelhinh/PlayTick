@@ -254,6 +254,18 @@ abstract class AppLocalizations {
   /// **'In your library'**
   String get librarySearchResultsTitle;
 
+  /// The title of the no results card in the library screen for games not in your library
+  ///
+  /// In en, this message translates to:
+  /// **'No games found'**
+  String get librarySearchNoResultsTitle;
+
+  /// The description of the no results card in the library screen for games not in your library
+  ///
+  /// In en, this message translates to:
+  /// **'No games match your search in your library or on IGDB.\n\nTry a different name or check the spelling.'**
+  String get librarySearchNoResultsDescription;
+
   /// The title of the IGDB search results in the library screen
   ///
   /// In en, this message translates to:

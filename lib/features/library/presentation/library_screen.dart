@@ -111,6 +111,13 @@ class LibraryScreen extends ConsumerWidget {
                                   onRetry: () => ref.invalidate(
                                     librarySearchGamesProvider,
                                   ),
+                                )
+                              else
+                                EmptyStateCard(
+                                  icon: Icons.search_off_outlined,
+                                  title: appLoc.librarySearchNoResultsTitle,
+                                  description:
+                                      appLoc.librarySearchNoResultsDescription,
                                 ),
                             ],
                           )

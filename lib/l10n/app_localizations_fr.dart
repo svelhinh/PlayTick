@@ -92,6 +92,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get librarySearchResultsTitle => 'Dans votre bibliothèque';
 
   @override
+  String get librarySearchNoResultsTitle => 'Aucun jeu trouvé';
+
+  @override
+  String get librarySearchNoResultsDescription =>
+      'Aucun jeu ne correspond à votre recherche dans votre bibliothèque ou sur IGDB.\n\nEssayez un autre nom ou vérifiez l\'orthographe.';
+
+  @override
   String get igdbSearchResultsTitle => 'Résultats IGDB';
 
   @override
