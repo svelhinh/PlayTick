@@ -537,8 +537,9 @@ void main() {
   testWidgets(
     'Library search retry loads IGDB results after an error',
     (tester) async {
-      searchRepository.failuresBeforeSuccess = 1;
-      searchRepository.games = [Game(id: 300, name: 'Celeste')];
+      searchRepository
+        ..failuresBeforeSuccess = 1
+        ..games = [Game(id: 300, name: 'Celeste')];
 
       await openLibrary(tester);
       await searchFor(tester, 'celeste');
