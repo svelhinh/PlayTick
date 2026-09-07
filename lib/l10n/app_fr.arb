@@ -130,6 +130,16 @@
         "type": "text",
         "description": "Le titre des résultats de recherche dans l'écran de la bibliothèque pour les jeux dans votre bibliothèque"
     },
+    "librarySearchNoResultsTitle": "Aucun jeu trouvé",
+    "@librarySearchNoResultsTitle": {
+        "type": "text",
+        "description": "Le titre de la carte vide dans l'écran de la bibliothèque pour les jeux non trouvés"
+    },
+    "librarySearchNoResultsDescription": "Aucun jeu ne correspond à votre recherche dans votre bibliothèque ou sur IGDB.\n\nEssayez un autre nom ou vérifiez l'orthographe.",
+    "@librarySearchNoResultsDescription": {
+        "type": "text",
+        "description": "La description de la carte vide dans l'écran de la bibliothèque pour les jeux non trouvés"
+    },
     "igdbSearchResultsTitle": "Résultats IGDB",
     "@igdbSearchResultsTitle": {
         "type": "text",

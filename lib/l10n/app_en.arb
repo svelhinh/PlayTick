@@ -130,6 +130,16 @@
         "type": "text",
         "description": "The title of the search results in the library screen for games in your library"
     },
+    "librarySearchNoResultsTitle": "No games found",
+    "@librarySearchNoResultsTitle": {
+        "type": "text",
+        "description": "The title of the no results card in the library screen for games not in your library"
+    },
+    "librarySearchNoResultsDescription": "No games match your search in your library or on IGDB.\n\nTry a different name or check the spelling.",
+    "@librarySearchNoResultsDescription": {
+        "type": "text",
+        "description": "The description of the no results card in the library screen for games not in your library"
+    },
     "igdbSearchResultsTitle": "IGDB results",
     "@igdbSearchResultsTitle": {
         "type": "text",
