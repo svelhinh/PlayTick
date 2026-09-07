@@ -159,6 +159,7 @@ void main() {
       expect(details, isNotNull);
       expect(details!.status, GameStatus.playing);
       expect(details.totalPlaytime, Duration.zero);
+      expect(details.playSessions, isEmpty);
       expect(details.game.id, game.id);
       expect(details.game.name, game.name);
       expect(details.game.coverUrl, game.coverUrl);
@@ -291,5 +292,130 @@ void main() {
       expect(await iterator.moveNext(), isTrue);
       expect(iterator.current, isEmpty);
     });
+
+    test('adds play sessions and derives total playtime', () async {
+      await repository.addGame(game, status: GameStatus.playing);
+
+      await repository.addPlaySession(
+        game.id,
+        DateTime.utc(2026, 9, 7),
+        const Duration(hours: 1, minutes: 30),
+        note: 'boss',
+      );
+      await repository.addPlaySession(
+        game.id,
+        DateTime.utc(2026, 9, 8),
+        const Duration(minutes: 45),
+      );
+
+      final details = await repository.watchGame(game.id).first;
+      final libraryGames = await repository.watchLibraryGames().first;
+
+      expect(details, isNotNull);
+      expect(details!.totalPlaytime, const Duration(hours: 2, minutes: 15));
+      expect(details.playSessions, hasLength(2));
+      expect(libraryGames.single.totalPlaytime, details.totalPlaytime);
+
+      final latest = details.playSessions.first;
+      expect(latest.gameId, game.id);
+      expect(latest.date.isAtSameMomentAs(DateTime.utc(2026, 9, 8)), isTrue);
+      expect(latest.duration, const Duration(minutes: 45));
+      expect(latest.note, isNull);
+
+      final oldest = details.playSessions.last;
+      expect(oldest.date.isAtSameMomentAs(DateTime.utc(2026, 9, 7)), isTrue);
+      expect(oldest.duration, const Duration(hours: 1, minutes: 30));
+      expect(oldest.note, 'boss');
+    });
+
+    test(
+      'stores a blank play session note as null',
+      () async {
+        await repository.addGame(game);
+
+        await repository.addPlaySession(
+          game.id,
+          DateTime.utc(2026, 9, 7),
+          const Duration(hours: 1),
+          note: '   ',
+        );
+
+        final details = await repository.watchGame(game.id).first;
+
+        expect(details!.playSessions.single.note, isNull);
+      },
+    );
+
+    test(
+      'throws when adding a play session for a missing game',
+      () async {
+        await expectLater(
+          repository.addPlaySession(
+            999,
+            DateTime.utc(2026, 9, 7),
+            const Duration(hours: 1),
+          ),
+          throwsA(isA<GameNotFoundException>()),
+        );
+      },
+    );
+
+    test(
+      'throws when adding a play session with a non-positive duration',
+      () async {
+        await repository.addGame(game);
+
+        await expectLater(
+          repository.addPlaySession(
+            game.id,
+            DateTime.utc(2026, 9, 7),
+            Duration.zero,
+          ),
+          throwsA(isA<InvalidPlaySessionException>()),
+        );
+      },
+    );
+
+    test('deleting a game cascades its play sessions', () async {
+      await repository.addGame(game);
+      await repository.addPlaySession(
+        game.id,
+        DateTime.utc(2026, 9, 7),
+        const Duration(hours: 2),
+      );
+
+      await repository.removeGame(game.id);
+
+      final sessions = await database.select(database.playSessions).get();
+
+      expect(sessions, isEmpty);
+      expect(await repository.watchGame(game.id).first, isNull);
+    });
+
+    test(
+      'watchGame emits after a play session is added',
+      () async {
+        await repository.addGame(game);
+
+        final iterator = StreamIterator(repository.watchGame(game.id));
+        addTearDown(iterator.cancel);
+
+        expect(await iterator.moveNext(), isTrue);
+        expect(iterator.current?.playSessions, isEmpty);
+
+        await repository.addPlaySession(
+          game.id,
+          DateTime.utc(2026, 9, 7),
+          const Duration(hours: 1),
+        );
+
+        expect(await iterator.moveNext(), isTrue);
+        expect(iterator.current?.playSessions, hasLength(1));
+        expect(
+          iterator.current?.totalPlaytime,
+          const Duration(hours: 1),
+        );
+      },
+    );
   });
 }

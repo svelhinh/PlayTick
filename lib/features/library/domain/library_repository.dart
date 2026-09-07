@@ -9,4 +9,10 @@ abstract interface class LibraryRepository {
   Future<void> addGame(Game game, {GameStatus status = GameStatus.wantToPlay});
   Future<void> updateGameStatus(int gameId, GameStatus status);
   Future<void> removeGame(int gameId);
+  Future<void> addPlaySession(
+    int gameId,
+    DateTime date,
+    Duration duration, {
+    String? note,
+  });
 }

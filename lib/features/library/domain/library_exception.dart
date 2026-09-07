@@ -17,3 +17,7 @@ final class IgdbTokenFetchException implements Exception {
 final class IgdbSearchException implements Exception {
   const IgdbSearchException();
 }
+
+final class InvalidPlaySessionException implements Exception {
+  const InvalidPlaySessionException();
+}

@@ -1004,16 +1004,373 @@ class UserGamesCompanion extends UpdateCompanion<UserGameRow> {
   }
 }
 
+class $PlaySessionsTable extends PlaySessions
+    with TableInfo<$PlaySessionsTable, PlaySessionRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlaySessionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _gameIdMeta = const VerificationMeta('gameId');
+  @override
+  late final GeneratedColumn<int> gameId = GeneratedColumn<int>(
+    'game_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES user_games (game_id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _durationMeta = const VerificationMeta(
+    'duration',
+  );
+  @override
+  late final GeneratedColumn<int> duration = GeneratedColumn<int>(
+    'duration',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, gameId, date, duration, note];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'play_sessions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PlaySessionRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('game_id')) {
+      context.handle(
+        _gameIdMeta,
+        gameId.isAcceptableOrUnknown(data['game_id']!, _gameIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_gameIdMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('duration')) {
+      context.handle(
+        _durationMeta,
+        duration.isAcceptableOrUnknown(data['duration']!, _durationMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_durationMeta);
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+        _noteMeta,
+        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PlaySessionRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlaySessionRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      gameId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}game_id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+      duration: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration'],
+      )!,
+      note: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note'],
+      ),
+    );
+  }
+
+  @override
+  $PlaySessionsTable createAlias(String alias) {
+    return $PlaySessionsTable(attachedDatabase, alias);
+  }
+}
+
+class PlaySessionRow extends DataClass implements Insertable<PlaySessionRow> {
+  final int id;
+  final int gameId;
+  final DateTime date;
+  final int duration;
+  final String? note;
+  const PlaySessionRow({
+    required this.id,
+    required this.gameId,
+    required this.date,
+    required this.duration,
+    this.note,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['game_id'] = Variable<int>(gameId);
+    map['date'] = Variable<DateTime>(date);
+    map['duration'] = Variable<int>(duration);
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String>(note);
+    }
+    return map;
+  }
+
+  PlaySessionsCompanion toCompanion(bool nullToAbsent) {
+    return PlaySessionsCompanion(
+      id: Value(id),
+      gameId: Value(gameId),
+      date: Value(date),
+      duration: Value(duration),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+    );
+  }
+
+  factory PlaySessionRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlaySessionRow(
+      id: serializer.fromJson<int>(json['id']),
+      gameId: serializer.fromJson<int>(json['gameId']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      duration: serializer.fromJson<int>(json['duration']),
+      note: serializer.fromJson<String?>(json['note']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'gameId': serializer.toJson<int>(gameId),
+      'date': serializer.toJson<DateTime>(date),
+      'duration': serializer.toJson<int>(duration),
+      'note': serializer.toJson<String?>(note),
+    };
+  }
+
+  PlaySessionRow copyWith({
+    int? id,
+    int? gameId,
+    DateTime? date,
+    int? duration,
+    Value<String?> note = const Value.absent(),
+  }) => PlaySessionRow(
+    id: id ?? this.id,
+    gameId: gameId ?? this.gameId,
+    date: date ?? this.date,
+    duration: duration ?? this.duration,
+    note: note.present ? note.value : this.note,
+  );
+  PlaySessionRow copyWithCompanion(PlaySessionsCompanion data) {
+    return PlaySessionRow(
+      id: data.id.present ? data.id.value : this.id,
+      gameId: data.gameId.present ? data.gameId.value : this.gameId,
+      date: data.date.present ? data.date.value : this.date,
+      duration: data.duration.present ? data.duration.value : this.duration,
+      note: data.note.present ? data.note.value : this.note,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlaySessionRow(')
+          ..write('id: $id, ')
+          ..write('gameId: $gameId, ')
+          ..write('date: $date, ')
+          ..write('duration: $duration, ')
+          ..write('note: $note')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, gameId, date, duration, note);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlaySessionRow &&
+          other.id == this.id &&
+          other.gameId == this.gameId &&
+          other.date == this.date &&
+          other.duration == this.duration &&
+          other.note == this.note);
+}
+
+class PlaySessionsCompanion extends UpdateCompanion<PlaySessionRow> {
+  final Value<int> id;
+  final Value<int> gameId;
+  final Value<DateTime> date;
+  final Value<int> duration;
+  final Value<String?> note;
+  const PlaySessionsCompanion({
+    this.id = const Value.absent(),
+    this.gameId = const Value.absent(),
+    this.date = const Value.absent(),
+    this.duration = const Value.absent(),
+    this.note = const Value.absent(),
+  });
+  PlaySessionsCompanion.insert({
+    this.id = const Value.absent(),
+    required int gameId,
+    required DateTime date,
+    required int duration,
+    this.note = const Value.absent(),
+  }) : gameId = Value(gameId),
+       date = Value(date),
+       duration = Value(duration);
+  static Insertable<PlaySessionRow> custom({
+    Expression<int>? id,
+    Expression<int>? gameId,
+    Expression<DateTime>? date,
+    Expression<int>? duration,
+    Expression<String>? note,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (gameId != null) 'game_id': gameId,
+      if (date != null) 'date': date,
+      if (duration != null) 'duration': duration,
+      if (note != null) 'note': note,
+    });
+  }
+
+  PlaySessionsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? gameId,
+    Value<DateTime>? date,
+    Value<int>? duration,
+    Value<String?>? note,
+  }) {
+    return PlaySessionsCompanion(
+      id: id ?? this.id,
+      gameId: gameId ?? this.gameId,
+      date: date ?? this.date,
+      duration: duration ?? this.duration,
+      note: note ?? this.note,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (gameId.present) {
+      map['game_id'] = Variable<int>(gameId.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (duration.present) {
+      map['duration'] = Variable<int>(duration.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlaySessionsCompanion(')
+          ..write('id: $id, ')
+          ..write('gameId: $gameId, ')
+          ..write('date: $date, ')
+          ..write('duration: $duration, ')
+          ..write('note: $note')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $GamesTable games = $GamesTable(this);
   late final $UserGamesTable userGames = $UserGamesTable(this);
+  late final $PlaySessionsTable playSessions = $PlaySessionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [games, userGames];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    games,
+    userGames,
+    playSessions,
+  ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'user_games',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('play_sessions', kind: UpdateKind.delete)],
+    ),
+  ]);
 }
 
 typedef $$GamesTableCreateCompanionBuilder = GamesCompanion Function({
@@ -1715,6 +2072,187 @@ typedef $$UserGamesTableProcessedTableManager =
       UserGameRow,
       PrefetchHooks Function({bool gameId})
     >;
+typedef $$PlaySessionsTableCreateCompanionBuilder =
+    PlaySessionsCompanion Function({
+      Value<int> id,
+      required int gameId,
+      required DateTime date,
+      required int duration,
+      Value<String?> note,
+    });
+typedef $$PlaySessionsTableUpdateCompanionBuilder =
+    PlaySessionsCompanion Function({
+      Value<int> id,
+      Value<int> gameId,
+      Value<DateTime> date,
+      Value<int> duration,
+      Value<String?> note,
+    });
+
+class $$PlaySessionsTableFilterComposer
+    extends Composer<_$AppDatabase, $PlaySessionsTable> {
+  $$PlaySessionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get duration => $composableBuilder(
+    column: $table.duration,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PlaySessionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $PlaySessionsTable> {
+  $$PlaySessionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get duration => $composableBuilder(
+    column: $table.duration,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PlaySessionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PlaySessionsTable> {
+  $$PlaySessionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<int> get duration =>
+      $composableBuilder(column: $table.duration, builder: (column) => column);
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+}
+
+class $$PlaySessionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PlaySessionsTable,
+          PlaySessionRow,
+          $$PlaySessionsTableFilterComposer,
+          $$PlaySessionsTableOrderingComposer,
+          $$PlaySessionsTableAnnotationComposer,
+          $$PlaySessionsTableCreateCompanionBuilder,
+          $$PlaySessionsTableUpdateCompanionBuilder,
+          (
+            PlaySessionRow,
+            BaseReferences<_$AppDatabase, $PlaySessionsTable, PlaySessionRow>,
+          ),
+          PlaySessionRow,
+          PrefetchHooks Function()
+        > {
+  $$PlaySessionsTableTableManager(_$AppDatabase db, $PlaySessionsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PlaySessionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PlaySessionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PlaySessionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> gameId = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<int> duration = const Value.absent(),
+                Value<String?> note = const Value.absent(),
+              }) => PlaySessionsCompanion(
+                id: id,
+                gameId: gameId,
+                date: date,
+                duration: duration,
+                note: note,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int gameId,
+                required DateTime date,
+                required int duration,
+                Value<String?> note = const Value.absent(),
+              }) => PlaySessionsCompanion.insert(
+                id: id,
+                gameId: gameId,
+                date: date,
+                duration: duration,
+                note: note,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PlaySessionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PlaySessionsTable,
+      PlaySessionRow,
+      $$PlaySessionsTableFilterComposer,
+      $$PlaySessionsTableOrderingComposer,
+      $$PlaySessionsTableAnnotationComposer,
+      $$PlaySessionsTableCreateCompanionBuilder,
+      $$PlaySessionsTableUpdateCompanionBuilder,
+      (
+        PlaySessionRow,
+        BaseReferences<_$AppDatabase, $PlaySessionsTable, PlaySessionRow>,
+      ),
+      PlaySessionRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1723,4 +2261,6 @@ class $AppDatabaseManager {
       $$GamesTableTableManager(_db, _db.games);
   $$UserGamesTableTableManager get userGames =>
       $$UserGamesTableTableManager(_db, _db.userGames);
+  $$PlaySessionsTableTableManager get playSessions =>
+      $$PlaySessionsTableTableManager(_db, _db.playSessions);
 }
