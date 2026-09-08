@@ -25,6 +25,26 @@
         "type": "text",
         "description": "The error message general"
     },
+    "date": "Date",
+    "@date": {
+        "type": "text",
+        "description": "The label of the date field in the add session sheet"
+    },
+    "hours": "hours",
+    "@hours": {
+        "type": "text",
+        "description": "The label of the hours field in the duration picker dialog"
+    },
+    "minutes": "minutes",
+    "@minutes": {
+        "type": "text",
+        "description": "The label of the minutes field in the duration picker dialog"
+    },
+    "validate": "Validate",
+    "@validate": {
+        "type": "text",
+        "description": "The text of the button to validate an action"
+    },
     "gameAlreadyInLibrary": "This game is already in your library.",
     "@gameAlreadyInLibrary": {
         "type": "text",
@@ -180,10 +200,20 @@
         "type": "text",
         "description": "The status of the game 'Dropped'"
     },
-    "gamePlaytime": "{hours} h {minutes}",
+    "gamePlaytimeMinutes": "{minutes} min",
+    "@gamePlaytimeMinutes": {
+        "type": "text",
+        "description": "The playtime of the game in minutes",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "gamePlaytime": "{hours} h {minutes} min",
     "@gamePlaytime": {
         "type": "text",
-        "description": "The playtime of the game",
+        "description": "The playtime of the game in hours and minutes",
         "placeholders": {
             "hours": {
                 "type": "int"
@@ -292,5 +322,45 @@
                 "type": "String"
             }
         }
+    },
+    "gameDetailsPlaySessionsTitle": "Sessions",
+    "@gameDetailsPlaySessionsTitle": {
+        "type": "text",
+        "description": "The title of the section 'Sessions' in the game details"
+    },
+    "gameDetailsPlaySessionsAddButton": "Add a session",
+    "@gameDetailsPlaySessionsAddButton": {
+        "type": "text",
+        "description": "The text of the button to add a session in the game details"
+    },
+    "gameDetailsPlaySessionsAddTitle": "Add a session",
+    "@gameDetailsPlaySessionsAddTitle": {
+        "type": "text",
+        "description": "The title of the add session sheet"
+    },
+    "gameDetailsPlaySessionsAddDurationLabel": "Session duration",
+    "@gameDetailsPlaySessionsAddDurationLabel": {
+        "type": "text",
+        "description": "The label of the duration field in the add session sheet"
+    },
+    "gameDetailsPlaySessionsAddNotesLabel": "Note (optional)",
+    "@gameDetailsPlaySessionsAddNotesLabel": {
+        "type": "text",
+        "description": "The label of the note field in the add session sheet"
+    },
+    "gameDetailsPlaySessionsAddHintText": "What happened during this session?",
+    "@gameDetailsPlaySessionsAddHintText": {
+        "type": "text",
+        "description": "The hint text of the add session sheet"
+    },
+    "gameDetailsPlaySessionsAddSaveButton": "Add session",
+    "@gameDetailsPlaySessionsAddSaveButton": {
+        "type": "text",
+        "description": "The text of the button to add a session in the add session sheet"
+    },
+    "invalidPlaySessionException": "Invalid play session.",
+    "@invalidPlaySessionException": {
+        "type": "text",
+        "description": "The error message when an invalid play session is provided"
     }
 }

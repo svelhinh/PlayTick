@@ -17,6 +17,10 @@ void main() {
       'Game not found in your library.',
     );
     expect(
+      const InvalidPlaySessionException().localizeLibraryError(appLoc),
+      'Invalid play session.',
+    );
+    expect(
       Exception('drift connection failed').localizeLibraryError(appLoc),
       'Something went wrong',
     );

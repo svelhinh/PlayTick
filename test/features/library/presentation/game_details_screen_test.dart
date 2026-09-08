@@ -11,7 +11,7 @@ import 'package:playtick/features/library/data/database/database_provider.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
-import 'package:playtick/features/library/presentation/game_details_screen.dart';
+import 'package:playtick/features/library/presentation/game_details/game_details_screen.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
@@ -114,7 +114,9 @@ void main() {
       expect(find.text('Platformer, Action-Adventure'), findsOneWidget);
       expect(find.text('PC, Nintendo Switch'), findsOneWidget);
       expect(
-        find.text('Story: 10 h 00\nMain: 15 h 00\nCompletion: 20 h 00'),
+        find.text(
+          'Story: 10 h 00 min\nMain: 15 h 00 min\nCompletion: 20 h 00 min',
+        ),
         findsOneWidget,
       );
       expect(
@@ -212,4 +214,40 @@ void main() {
     expect(find.byType(GameDetailsScreen), findsOneWidget);
     expect(find.text('Something went wrong'), findsOneWidget);
   });
+
+  testWidgets(
+    'adds a manual play session from game details',
+    (tester) async {
+      await seedLibrary();
+      await pumpApp(tester);
+      await openLibrary(tester);
+
+      await tester.tap(seeDetailsOnCard('Cocoon'));
+      await tester.pumpAndSettle();
+
+      await tester.ensureVisible(find.text('Add a session'));
+      await tester.tap(find.text('Add a session'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Add session'), findsOneWidget);
+
+      await tester.enterText(
+        find.byType(TextFormField),
+        'Boss beaten',
+      );
+      await tester.ensureVisible(find.text('Add session'));
+      await tester.tap(find.text('Add session'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Add session'), findsNothing);
+      expect(find.text('Boss beaten'), findsOneWidget);
+      expect(find.text('15 min'), findsWidgets);
+
+      final dateLabel = MaterialLocalizations.of(
+        tester.element(find.byType(GameDetailsScreen)),
+      ).formatShortDate(DateTime.now());
+
+      expect(find.text(dateLabel), findsOneWidget);
+    },
+  );
 }

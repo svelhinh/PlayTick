@@ -128,6 +128,30 @@ abstract class AppLocalizations {
   /// **'Something went wrong'**
   String get somethingWentWrong;
 
+  /// The label of the date field in the add session sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// The label of the hours field in the duration picker dialog
+  ///
+  /// In en, this message translates to:
+  /// **'hours'**
+  String get hours;
+
+  /// The label of the minutes field in the duration picker dialog
+  ///
+  /// In en, this message translates to:
+  /// **'minutes'**
+  String get minutes;
+
+  /// The text of the button to validate an action
+  ///
+  /// In en, this message translates to:
+  /// **'Validate'**
+  String get validate;
+
   /// The error message when a game is already in the library
   ///
   /// In en, this message translates to:
@@ -314,10 +338,16 @@ abstract class AppLocalizations {
   /// **'Dropped'**
   String get gameStatusDropped;
 
-  /// The playtime of the game
+  /// The playtime of the game in minutes
   ///
   /// In en, this message translates to:
-  /// **'{hours} h {minutes}'**
+  /// **'{minutes} min'**
+  String gamePlaytimeMinutes(String minutes);
+
+  /// The playtime of the game in hours and minutes
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h {minutes} min'**
   String gamePlaytime(int hours, String minutes);
 
   /// Number of games in the library
@@ -409,6 +439,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Completion: {playtime}'**
   String gameDetailsEstimatedPlaytimesCompletion(String playtime);
+
+  /// The title of the section 'Sessions' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get gameDetailsPlaySessionsTitle;
+
+  /// The text of the button to add a session in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Add a session'**
+  String get gameDetailsPlaySessionsAddButton;
+
+  /// The title of the add session sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Add a session'**
+  String get gameDetailsPlaySessionsAddTitle;
+
+  /// The label of the duration field in the add session sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Session duration'**
+  String get gameDetailsPlaySessionsAddDurationLabel;
+
+  /// The label of the note field in the add session sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get gameDetailsPlaySessionsAddNotesLabel;
+
+  /// The hint text of the add session sheet
+  ///
+  /// In en, this message translates to:
+  /// **'What happened during this session?'**
+  String get gameDetailsPlaySessionsAddHintText;
+
+  /// The text of the button to add a session in the add session sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Add session'**
+  String get gameDetailsPlaySessionsAddSaveButton;
+
+  /// The error message when an invalid play session is provided
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid play session.'**
+  String get invalidPlaySessionException;
 }
 
 class _AppLocalizationsDelegate

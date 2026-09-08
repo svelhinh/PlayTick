@@ -5,6 +5,10 @@ extension PlaytimeLocalization on Duration {
     final hours = inHours;
     final minutes = inMinutes.remainder(60).toString().padLeft(2, '0');
 
+    if (hours == 0) {
+      return appLoc.gamePlaytimeMinutes(minutes);
+    }
+
     return appLoc.gamePlaytime(hours, minutes);
   }
 }

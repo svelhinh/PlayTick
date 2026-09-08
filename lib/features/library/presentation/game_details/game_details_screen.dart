@@ -9,6 +9,8 @@ import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/presentation/extensions/game_subtitle_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
+import 'package:playtick/features/library/presentation/game_details/delete_game_sheet.dart';
+import 'package:playtick/features/library/presentation/game_details/play_sessions_card.dart';
 import 'package:playtick/features/library/presentation/providers/library_game_provider.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/features/library/presentation/widgets/game_status_row.dart';
@@ -23,6 +25,7 @@ class GameDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLoc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     final gameIdInt = int.tryParse(gameId);
 
@@ -46,12 +49,13 @@ class GameDetailsScreen extends ConsumerWidget {
 
               return IconButton(
                 onPressed: () async {
-                  await showModalBottomSheet<_DeleteGameSheet>(
+                  await showModalBottomSheet<DeleteGameSheet>(
                     context: context,
                     showDragHandle: true,
                     useSafeArea: true,
                     isScrollControlled: true,
-                    builder: (context) => _DeleteGameSheet(
+                    backgroundColor: theme.colorScheme.surface,
+                    builder: (context) => DeleteGameSheet(
                       name: details.game.name,
                       onDelete: () async {
                         try {
@@ -128,6 +132,11 @@ class GameDetailsScreen extends ConsumerWidget {
                     publisher: game.publisher,
                     platforms: game.platforms,
                     estimatedPlaytimes: game.estimatedPlaytimes,
+                  ),
+                  const SizedBox(height: 16),
+                  PlaySessionsCard(
+                    playSessions: details.playSessions,
+                    gameId: game.id,
                   ),
                 ],
               ),
@@ -228,8 +237,7 @@ final class _TopInfo extends StatelessWidget {
                   ),
                 ),
               ),
-              if (status != GameStatus.wantToPlay &&
-                  totalPlaytime.inSeconds > 0) ...[
+              if (totalPlaytime.inSeconds > 0) ...[
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -248,111 +256,6 @@ final class _TopInfo extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-final class _DeleteGameSheet extends StatelessWidget {
-  const _DeleteGameSheet({
-    required this.name,
-    required this.onDelete,
-  });
-
-  final String name;
-  final VoidCallback onDelete;
-
-  @override
-  Widget build(BuildContext context) {
-    final appLoc = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.sizeOf(context).height * 0.8,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    backgroundColor: AppTheme.danger.withValues(alpha: 0.1),
-                    radius: 24,
-                    child: const Icon(
-                      Icons.delete_outline,
-                      color: AppTheme.danger,
-                      size: 32,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          appLoc.gameDetailsDeleteGameTitle,
-                          style: theme.textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          appLoc.gameDetailsDeleteGameDescription(name),
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.warning_outlined,
-                              size: 16,
-                              color: AppTheme.danger,
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                appLoc.gameDetailsDeleteWarning,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: AppTheme.danger,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppTheme.danger,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                  ),
-                  onPressed: onDelete,
-                  child: Text(appLoc.gameDetailsDeleteButton),
-                ),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  appLoc.cancel,
-                  style: theme.textTheme.bodyMedium!.copyWith(
-                    color: AppTheme.danger,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
@@ -431,7 +334,7 @@ final class _GameInfoCard extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
