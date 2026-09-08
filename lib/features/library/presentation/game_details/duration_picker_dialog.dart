@@ -29,7 +29,12 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
   void _decreaseMinutes() {
     setState(() {
       final next = _minutes - 1;
-      _minutes = next < 0 ? 59 : next;
+      if (next < 0) {
+        _decreaseHours();
+        _minutes = 59;
+      } else {
+        _minutes = next;
+      }
     });
   }
 
