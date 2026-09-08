@@ -21,6 +21,10 @@ void main() {
       'Invalid play session.',
     );
     expect(
+      const PlaySessionNotFoundException().localizeLibraryError(appLoc),
+      'Play session not found.',
+    );
+    expect(
       Exception('drift connection failed').localizeLibraryError(appLoc),
       'Something went wrong',
     );

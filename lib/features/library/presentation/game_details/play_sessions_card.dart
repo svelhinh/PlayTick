@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:playtick/features/library/domain/play_session.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
-import 'package:playtick/features/library/presentation/game_details/add_play_session_sheet.dart';
+import 'package:playtick/features/library/presentation/game_details/play_session_sheet.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -39,13 +39,13 @@ final class PlaySessionsCard extends ConsumerWidget {
               ),
               TextButton(
                 onPressed: () async {
-                  await showModalBottomSheet<AddPlaySessionSheet>(
+                  await showModalBottomSheet<PlaySessionSheet>(
                     context: context,
                     showDragHandle: true,
                     useSafeArea: true,
                     isScrollControlled: true,
                     backgroundColor: theme.colorScheme.surface,
-                    builder: (context) => AddPlaySessionSheet(
+                    builder: (context) => PlaySessionSheet(
                       onSave: (date, duration, note) async {
                         await ref
                             .read(libraryRepositoryProvider)
@@ -89,7 +89,7 @@ final class PlaySessionsCard extends ConsumerWidget {
   }
 }
 
-final class _PlaySessionItem extends StatelessWidget {
+final class _PlaySessionItem extends ConsumerWidget {
   const _PlaySessionItem({
     required this.session,
   });
@@ -97,7 +97,7 @@ final class _PlaySessionItem extends StatelessWidget {
   final PlaySession session;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
 
@@ -135,10 +135,39 @@ final class _PlaySessionItem extends StatelessWidget {
                   style: theme.textTheme.bodySmall,
                 ),
                 const SizedBox(width: 16),
-                Icon(
-                  Icons.edit,
-                  size: 20,
-                  color: theme.colorScheme.primary,
+                IconButton(
+                  onPressed: () async {
+                    await showModalBottomSheet<PlaySessionSheet>(
+                      context: context,
+                      showDragHandle: true,
+                      useSafeArea: true,
+                      isScrollControlled: true,
+                      backgroundColor: theme.colorScheme.surface,
+                      builder: (context) => PlaySessionSheet(
+                        session: session,
+                        onDelete: () async {
+                          await ref
+                              .read(libraryRepositoryProvider)
+                              .removePlaySession(session.id);
+                        },
+                        onSave: (date, duration, note) async {
+                          await ref
+                              .read(libraryRepositoryProvider)
+                              .updatePlaySession(
+                                session.id,
+                                date,
+                                duration,
+                                note: note ?? '',
+                              );
+                        },
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    size: 20,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
               ],
             ),

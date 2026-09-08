@@ -458,23 +458,29 @@ abstract class AppLocalizations {
   /// **'Add a session'**
   String get gameDetailsPlaySessionsAddTitle;
 
+  /// The title of the add session sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Edit a session'**
+  String get gameDetailsPlaySessionsEditTitle;
+
   /// The label of the duration field in the add session sheet
   ///
   /// In en, this message translates to:
   /// **'Session duration'**
-  String get gameDetailsPlaySessionsAddDurationLabel;
+  String get gameDetailsPlaySessionsDurationLabel;
 
   /// The label of the note field in the add session sheet
   ///
   /// In en, this message translates to:
   /// **'Note (optional)'**
-  String get gameDetailsPlaySessionsAddNotesLabel;
+  String get gameDetailsPlaySessionsNoteLabel;
 
   /// The hint text of the add session sheet
   ///
   /// In en, this message translates to:
   /// **'What happened during this session?'**
-  String get gameDetailsPlaySessionsAddHintText;
+  String get gameDetailsPlaySessionsHintText;
 
   /// The text of the button to add a session in the add session sheet
   ///
@@ -482,11 +488,41 @@ abstract class AppLocalizations {
   /// **'Add session'**
   String get gameDetailsPlaySessionsAddSaveButton;
 
+  /// The text of the button to edit a session in the edit session sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Save session'**
+  String get gameDetailsPlaySessionsEditSaveButton;
+
+  /// The title of the delete play session dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this session'**
+  String get gameDetailsPlaySessionsDeleteTitle;
+
+  /// The description of the delete play session dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this session?\n\nThe session and its note will be removed from this device. This action is irreversible.'**
+  String get gameDetailsPlaySessionsDeleteDescription;
+
+  /// The text of the button to delete a play session
+  ///
+  /// In en, this message translates to:
+  /// **'Delete session'**
+  String get gameDetailsPlaySessionsDeleteButton;
+
   /// The error message when an invalid play session is provided
   ///
   /// In en, this message translates to:
   /// **'Invalid play session.'**
   String get invalidPlaySessionException;
+
+  /// The error message when a play session is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Play session not found.'**
+  String get playSessionNotFoundException;
 }
 
 class _AppLocalizationsDelegate

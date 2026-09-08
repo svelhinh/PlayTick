@@ -338,18 +338,23 @@
         "type": "text",
         "description": "Le titre de la fiche d'ajout de session"
     },
-    "gameDetailsPlaySessionsAddDurationLabel": "Durée de la session",
-    "@gameDetailsPlaySessionsAddDurationLabel": {
+    "gameDetailsPlaySessionsEditTitle": "Modifier la session",
+    "@gameDetailsPlaySessionsEditTitle": {
+        "type": "text",
+        "description": "Le titre de la fiche de modification de session"
+    },
+    "gameDetailsPlaySessionsDurationLabel": "Durée de la session",
+    "@gameDetailsPlaySessionsDurationLabel": {
         "type": "text",
         "description": "Le label de la durée de la session dans la fiche d'ajout de session"
     },
-    "gameDetailsPlaySessionsAddNotesLabel": "Note (facultatif)",
-    "@gameDetailsPlaySessionsAddNotesLabel": {
+    "gameDetailsPlaySessionsNoteLabel": "Note (facultatif)",
+    "@gameDetailsPlaySessionsNoteLabel": {
         "type": "text",
         "description": "Le label de la note dans la fiche d'ajout de session"
     },
-    "gameDetailsPlaySessionsAddHintText": "Que s'est-il passé pendant cette session ?",
-    "@gameDetailsPlaySessionsAddHintText": {
+    "gameDetailsPlaySessionsHintText": "Que s'est-il passé pendant cette session ?",
+    "@gameDetailsPlaySessionsHintText": {
         "type": "text",
         "description": "Le hint text de la fiche d'ajout de session"
     },
@@ -358,9 +363,34 @@
         "type": "text",
         "description": "Le texte du bouton pour ajouter une session dans la fiche d'ajout de session"
     },
+    "gameDetailsPlaySessionsEditSaveButton": "Enregistrer la session",
+    "@gameDetailsPlaySessionsEditSaveButton": {
+        "type": "text",
+        "description": "Le texte du bouton pour enregistrer une session dans la fiche de modification de session"
+    },
+    "gameDetailsPlaySessionsDeleteTitle": "Supprimer cette session",
+    "@gameDetailsPlaySessionsDeleteTitle": {
+        "type": "text",
+        "description": "Le titre de la boîte de dialogue de suppression de session"
+    },
+    "gameDetailsPlaySessionsDeleteDescription": "Voulez-vous vraiment supprimer cette session ?\n\nLa session et sa note seront retirées de cet appareil. Cette action est irréversible.",
+    "@gameDetailsPlaySessionsDeleteDescription": {
+        "type": "text",
+        "description": "La description de la boîte de dialogue de suppression de session"
+    },
+    "gameDetailsPlaySessionsDeleteButton": "Supprimer la session",
+    "@gameDetailsPlaySessionsDeleteButton": {
+        "type": "text",
+        "description": "Le texte du bouton pour supprimer une session"
+    },
     "invalidPlaySessionException": "Session de jeu invalide.",
     "@invalidPlaySessionException": {
         "type": "text",
         "description": "Le message d'erreur quand une session de jeu invalide est fournie"
+    },
+    "playSessionNotFoundException": "Session de jeu introuvable.",
+    "@playSessionNotFoundException": {
+        "type": "text",
+        "description": "Le message d'erreur quand une session de jeu est introuvable"
     }
 }
