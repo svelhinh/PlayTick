@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_shell.dart';
 import 'package:playtick/features/home/presentation/home_screen.dart';
-import 'package:playtick/features/library/presentation/game_details_screen.dart';
+import 'package:playtick/features/library/presentation/game_details/game_details_screen.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
