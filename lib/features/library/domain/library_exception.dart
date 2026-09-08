@@ -21,3 +21,7 @@ final class IgdbSearchException implements Exception {
 final class InvalidPlaySessionException implements Exception {
   const InvalidPlaySessionException();
 }
+
+final class PlaySessionNotFoundException implements Exception {
+  const PlaySessionNotFoundException();
+}

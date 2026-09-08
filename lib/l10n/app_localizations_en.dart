@@ -217,18 +217,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gameDetailsPlaySessionsAddTitle => 'Add a session';
 
   @override
-  String get gameDetailsPlaySessionsAddDurationLabel => 'Session duration';
+  String get gameDetailsPlaySessionsEditTitle => 'Edit a session';
 
   @override
-  String get gameDetailsPlaySessionsAddNotesLabel => 'Note (optional)';
+  String get gameDetailsPlaySessionsDurationLabel => 'Session duration';
 
   @override
-  String get gameDetailsPlaySessionsAddHintText =>
+  String get gameDetailsPlaySessionsNoteLabel => 'Note (optional)';
+
+  @override
+  String get gameDetailsPlaySessionsHintText =>
       'What happened during this session?';
 
   @override
   String get gameDetailsPlaySessionsAddSaveButton => 'Add session';
 
   @override
+  String get gameDetailsPlaySessionsEditSaveButton => 'Save session';
+
+  @override
+  String get gameDetailsPlaySessionsDeleteTitle => 'Delete this session';
+
+  @override
+  String get gameDetailsPlaySessionsDeleteDescription =>
+      'Are you sure you want to delete this session?\n\nThe session and its note will be removed from this device. This action is irreversible.';
+
+  @override
+  String get gameDetailsPlaySessionsDeleteButton => 'Delete session';
+
+  @override
   String get invalidPlaySessionException => 'Invalid play session.';
+
+  @override
+  String get playSessionNotFoundException => 'Play session not found.';
 }

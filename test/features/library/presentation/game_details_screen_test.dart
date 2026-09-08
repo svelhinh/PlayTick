@@ -11,7 +11,9 @@ import 'package:playtick/features/library/data/database/database_provider.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
+import 'package:playtick/features/library/presentation/game_details/delete_play_session_dialog.dart';
 import 'package:playtick/features/library/presentation/game_details/game_details_screen.dart';
+import 'package:playtick/features/library/presentation/game_details/play_session_sheet.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
@@ -248,6 +250,180 @@ void main() {
       ).formatShortDate(DateTime.now());
 
       expect(find.text(dateLabel), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'edits a play session from game details',
+    (tester) async {
+      await seedLibrary();
+      await container
+          .read(libraryRepositoryProvider)
+          .addPlaySession(
+            201,
+            DateTime.now(),
+            const Duration(minutes: 15),
+            note: 'Boss beaten',
+          );
+      await pumpApp(tester);
+      await openLibrary(tester);
+
+      await tester.tap(seeDetailsOnCard('Cocoon'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Boss beaten'), findsOneWidget);
+      expect(find.text('15 min'), findsWidgets);
+
+      await tester.ensureVisible(find.byIcon(Icons.edit));
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Edit a session'), findsOneWidget);
+
+      await tester.tap(
+        find.descendant(
+          of: find.byType(PlaySessionSheet),
+          matching: find.byIcon(Icons.add),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextFormField), 'Chapter 2');
+      await tester.ensureVisible(find.text('Save session'));
+      await tester.tap(find.text('Save session'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Edit a session'), findsNothing);
+      expect(find.text('Boss beaten'), findsNothing);
+      expect(find.text('Chapter 2'), findsOneWidget);
+      expect(find.text('30 min'), findsWidgets);
+      expect(find.text('15 min'), findsNothing);
+
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.descendant(
+          of: find.ancestor(
+            of: find.text('Cocoon'),
+            matching: find.byType(LibraryGameCard),
+          ),
+          matching: find.text('30 min'),
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'deletes a play session from game details',
+    (tester) async {
+      await seedLibrary();
+      await container
+          .read(libraryRepositoryProvider)
+          .addPlaySession(
+            201,
+            DateTime.now(),
+            const Duration(minutes: 15),
+            note: 'Boss beaten',
+          );
+      await pumpApp(tester);
+      await openLibrary(tester);
+
+      await tester.tap(seeDetailsOnCard('Cocoon'));
+      await tester.pumpAndSettle();
+
+      await tester.ensureVisible(find.byIcon(Icons.edit));
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pumpAndSettle();
+
+      await tester.tap(
+        find.descendant(
+          of: find.byType(PlaySessionSheet),
+          matching: find.byIcon(Icons.delete),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(DeletePlaySessionDialog), findsOneWidget);
+      expect(find.text('Delete this session'), findsOneWidget);
+
+      await tester.tap(find.text('Delete session'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(PlaySessionSheet), findsNothing);
+      expect(find.text('Boss beaten'), findsNothing);
+      expect(find.text('15 min'), findsNothing);
+      expect(find.byType(GameDetailsScreen), findsOneWidget);
+
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.descendant(
+          of: find.ancestor(
+            of: find.text('Cocoon'),
+            matching: find.byType(LibraryGameCard),
+          ),
+          matching: find.text('15 min'),
+        ),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'canceling play session delete keeps the session',
+    (tester) async {
+      await seedLibrary();
+      await container
+          .read(libraryRepositoryProvider)
+          .addPlaySession(
+            201,
+            DateTime.now(),
+            const Duration(minutes: 15),
+            note: 'Boss beaten',
+          );
+      await pumpApp(tester);
+      await openLibrary(tester);
+
+      await tester.tap(seeDetailsOnCard('Cocoon'));
+      await tester.pumpAndSettle();
+
+      await tester.ensureVisible(find.byIcon(Icons.edit));
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pumpAndSettle();
+
+      await tester.tap(
+        find.descendant(
+          of: find.byType(PlaySessionSheet),
+          matching: find.byIcon(Icons.delete),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(
+        find.descendant(
+          of: find.byType(DeletePlaySessionDialog),
+          matching: find.text('Cancel'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(DeletePlaySessionDialog), findsNothing);
+      expect(find.text('Edit a session'), findsOneWidget);
+
+      await tester.tap(
+        find.descendant(
+          of: find.byType(PlaySessionSheet),
+          matching: find.text('Cancel'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(PlaySessionSheet), findsNothing);
+      expect(find.text('Boss beaten'), findsOneWidget);
+      expect(find.text('15 min'), findsWidgets);
     },
   );
 }

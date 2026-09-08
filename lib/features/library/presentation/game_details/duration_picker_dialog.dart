@@ -64,7 +64,7 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
 
     return AlertDialog(
       title: Text(
-        appLoc.gameDetailsPlaySessionsAddDurationLabel,
+        appLoc.gameDetailsPlaySessionsDurationLabel,
         style: theme.textTheme.titleLarge,
       ),
       actions: [

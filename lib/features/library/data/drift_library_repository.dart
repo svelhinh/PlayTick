@@ -259,4 +259,46 @@ class DriftLibraryRepository implements LibraryRepository {
       note: session.note,
     );
   }
+
+  @override
+  Future<void> updatePlaySession(
+    int sessionId,
+    DateTime date,
+    Duration duration, {
+    String? note,
+  }) async {
+    if (duration <= Duration.zero) {
+      throw const InvalidPlaySessionException();
+    }
+
+    final trimmedNote = note?.trim();
+
+    final updatedRows =
+        await (_database.update(
+          _database.playSessions,
+        )..where((row) => row.id.equals(sessionId))).write(
+          PlaySessionsCompanion(
+            date: Value(date),
+            duration: Value(duration.inSeconds),
+            note: Value(
+              trimmedNote == null || trimmedNote.isEmpty ? null : trimmedNote,
+            ),
+          ),
+        );
+
+    if (updatedRows == 0) {
+      throw const PlaySessionNotFoundException();
+    }
+  }
+
+  @override
+  Future<void> removePlaySession(int sessionId) async {
+    final deletedRows = await (_database.delete(
+      _database.playSessions,
+    )..where((row) => row.id.equals(sessionId))).go();
+
+    if (deletedRows == 0) {
+      throw const PlaySessionNotFoundException();
+    }
+  }
 }

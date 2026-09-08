@@ -1,28 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:playtick/app/app_theme.dart';
+import 'package:playtick/features/library/domain/play_session.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
+import 'package:playtick/features/library/presentation/game_details/delete_play_session_dialog.dart';
 import 'package:playtick/features/library/presentation/game_details/duration_picker_dialog.dart';
 import 'package:playtick/features/library/presentation/game_details/hold_step_button.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
-final class AddPlaySessionSheet extends StatefulWidget {
-  const AddPlaySessionSheet({
+final class PlaySessionSheet extends StatefulWidget {
+  const PlaySessionSheet({
     required this.onSave,
+    this.onDelete,
+    this.session,
     super.key,
   });
 
   final Future<void> Function(DateTime date, Duration duration, String? note)
   onSave;
+  final Future<void> Function()? onDelete;
+
+  final PlaySession? session;
 
   @override
-  State<AddPlaySessionSheet> createState() => _AddPlaySessionSheetState();
+  State<PlaySessionSheet> createState() => _PlaySessionSheetState();
 }
 
-class _AddPlaySessionSheetState extends State<AddPlaySessionSheet> {
+class _PlaySessionSheetState extends State<PlaySessionSheet> {
   DateTime _date = DateTime.now();
   Duration _duration = const Duration(minutes: 15);
   final TextEditingController _noteController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.session != null) {
+      _date = widget.session!.date;
+      _duration = widget.session!.duration;
+      _noteController.text = widget.session!.note ?? '';
+    }
+  }
 
   void _decreaseDuration() {
     setState(() {
@@ -37,10 +54,42 @@ class _AddPlaySessionSheetState extends State<AddPlaySessionSheet> {
     setState(() => _duration += const Duration(minutes: 15));
   }
 
+  Future<void> _onDeletePressed() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => const DeletePlaySessionDialog(),
+    );
+
+    if (confirmed != true || !mounted) {
+      return;
+    }
+
+    final appLoc = AppLocalizations.of(context)!;
+
+    try {
+      await widget.onDelete!();
+
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    } on Exception catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.localizeLibraryError(appLoc)),
+            backgroundColor: AppTheme.danger,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
+
+    final isEditing = widget.session != null;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -53,9 +102,25 @@ class _AddPlaySessionSheetState extends State<AddPlaySessionSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              appLoc.gameDetailsPlaySessionsAddTitle,
-              style: theme.textTheme.titleLarge,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  isEditing
+                      ? appLoc.gameDetailsPlaySessionsEditTitle
+                      : appLoc.gameDetailsPlaySessionsAddTitle,
+                  style: theme.textTheme.titleLarge,
+                ),
+                if (widget.onDelete != null)
+                  IconButton(
+                    onPressed: _onDeletePressed,
+                    tooltip: appLoc.gameDetailsPlaySessionsDeleteButton,
+                    icon: const Icon(
+                      Icons.delete,
+                      color: AppTheme.danger,
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 24),
             GestureDetector(
@@ -104,7 +169,7 @@ class _AddPlaySessionSheetState extends State<AddPlaySessionSheet> {
             const SizedBox(height: 16),
             InputDecorator(
               decoration: InputDecoration(
-                labelText: appLoc.gameDetailsPlaySessionsAddDurationLabel,
+                labelText: appLoc.gameDetailsPlaySessionsDurationLabel,
                 fillColor: theme.colorScheme.surface,
                 contentPadding: const EdgeInsets.all(8),
               ),
@@ -169,11 +234,11 @@ class _AddPlaySessionSheetState extends State<AddPlaySessionSheet> {
                 color: theme.colorScheme.onSurface,
               ),
               decoration: InputDecoration(
-                labelText: appLoc.gameDetailsPlaySessionsAddNotesLabel,
+                labelText: appLoc.gameDetailsPlaySessionsNoteLabel,
                 fillColor: theme.colorScheme.surface,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 contentPadding: const EdgeInsets.all(8),
-                hintText: appLoc.gameDetailsPlaySessionsAddHintText,
+                hintText: appLoc.gameDetailsPlaySessionsHintText,
                 hintStyle: theme.textTheme.bodyMedium!.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
@@ -207,7 +272,11 @@ class _AddPlaySessionSheetState extends State<AddPlaySessionSheet> {
                     }
                   }
                 },
-                child: Text(appLoc.gameDetailsPlaySessionsAddSaveButton),
+                child: Text(
+                  isEditing
+                      ? appLoc.gameDetailsPlaySessionsEditSaveButton
+                      : appLoc.gameDetailsPlaySessionsAddSaveButton,
+                ),
               ),
             ),
             SizedBox(

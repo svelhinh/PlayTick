@@ -15,4 +15,11 @@ abstract interface class LibraryRepository {
     Duration duration, {
     String? note,
   });
+  Future<void> updatePlaySession(
+    int sessionId,
+    DateTime date,
+    Duration duration, {
+    String? note,
+  });
+  Future<void> removePlaySession(int sessionId);
 }
