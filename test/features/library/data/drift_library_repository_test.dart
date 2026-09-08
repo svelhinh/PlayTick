@@ -417,5 +417,181 @@ void main() {
         );
       },
     );
+
+    test('updates a play session and derives total playtime', () async {
+      await repository.addGame(game);
+      await repository.addPlaySession(
+        game.id,
+        DateTime.utc(2026, 9, 7),
+        const Duration(hours: 1, minutes: 30),
+        note: 'boss',
+      );
+      await repository.addPlaySession(
+        game.id,
+        DateTime.utc(2026, 9, 8),
+        const Duration(minutes: 45),
+      );
+
+      var details = await repository.watchGame(game.id).first;
+      final sessionId = details!.playSessions.last.id;
+
+      await repository.updatePlaySession(
+        sessionId,
+        DateTime.utc(2026, 9, 6),
+        const Duration(hours: 2),
+        note: 'chapitre 7',
+      );
+
+      details = await repository.watchGame(game.id).first;
+      final libraryGames = await repository.watchLibraryGames().first;
+      final updated = details!.playSessions.singleWhere(
+        (session) => session.id == sessionId,
+      );
+
+      expect(details.totalPlaytime, const Duration(hours: 2, minutes: 45));
+      expect(libraryGames.single.totalPlaytime, details.totalPlaytime);
+      expect(updated.date.isAtSameMomentAs(DateTime.utc(2026, 9, 6)), isTrue);
+      expect(updated.duration, const Duration(hours: 2));
+      expect(updated.note, 'chapitre 7');
+    });
+
+    test(
+      'stores a blank play session note as null when updating',
+      () async {
+        await repository.addGame(game);
+        await repository.addPlaySession(
+          game.id,
+          DateTime.utc(2026, 9, 7),
+          const Duration(hours: 1),
+          note: 'boss',
+        );
+
+        final sessionId =
+            (await repository.watchGame(game.id).first)!.playSessions.single.id;
+
+        await repository.updatePlaySession(
+          sessionId,
+          DateTime.utc(2026, 9, 7),
+          const Duration(hours: 1),
+          note: '   ',
+        );
+
+        final details = await repository.watchGame(game.id).first;
+
+        expect(details!.playSessions.single.note, isNull);
+      },
+    );
+
+    test(
+      'throws when updating a missing play session',
+      () async {
+        await expectLater(
+          repository.updatePlaySession(
+            999,
+            DateTime.utc(2026, 9, 7),
+            const Duration(hours: 1),
+          ),
+          throwsA(isA<PlaySessionNotFoundException>()),
+        );
+      },
+    );
+
+    test(
+      'throws when updating a play session with a non-positive duration',
+      () async {
+        await repository.addGame(game);
+        await repository.addPlaySession(
+          game.id,
+          DateTime.utc(2026, 9, 7),
+          const Duration(hours: 1),
+        );
+
+        final sessionId =
+            (await repository.watchGame(game.id).first)!.playSessions.single.id;
+
+        await expectLater(
+          repository.updatePlaySession(
+            sessionId,
+            DateTime.utc(2026, 9, 7),
+            Duration.zero,
+          ),
+          throwsA(isA<InvalidPlaySessionException>()),
+        );
+      },
+    );
+
+    test('removes a play session and derives total playtime', () async {
+      await repository.addGame(game);
+      await repository.addPlaySession(
+        game.id,
+        DateTime.utc(2026, 9, 7),
+        const Duration(hours: 1, minutes: 30),
+      );
+      await repository.addPlaySession(
+        game.id,
+        DateTime.utc(2026, 9, 8),
+        const Duration(minutes: 45),
+      );
+
+      var details = await repository.watchGame(game.id).first;
+      final sessionId = details!.playSessions.first.id;
+
+      await repository.removePlaySession(sessionId);
+
+      details = await repository.watchGame(game.id).first;
+      final libraryGames = await repository.watchLibraryGames().first;
+
+      expect(details!.playSessions, hasLength(1));
+      expect(details.totalPlaytime, const Duration(hours: 1, minutes: 30));
+      expect(libraryGames.single.totalPlaytime, details.totalPlaytime);
+    });
+
+    test(
+      'throws when removing a missing play session',
+      () async {
+        await expectLater(
+          repository.removePlaySession(999),
+          throwsA(isA<PlaySessionNotFoundException>()),
+        );
+      },
+    );
+
+    test(
+      'watchGame emits after a play session is updated and removed',
+      () async {
+        await repository.addGame(game);
+        await repository.addPlaySession(
+          game.id,
+          DateTime.utc(2026, 9, 7),
+          const Duration(hours: 1),
+        );
+
+        final iterator = StreamIterator(repository.watchGame(game.id));
+        addTearDown(iterator.cancel);
+
+        expect(await iterator.moveNext(), isTrue);
+        expect(iterator.current?.playSessions, hasLength(1));
+
+        final sessionId = iterator.current!.playSessions.single.id;
+
+        await repository.updatePlaySession(
+          sessionId,
+          DateTime.utc(2026, 9, 8),
+          const Duration(hours: 2),
+        );
+
+        expect(await iterator.moveNext(), isTrue);
+        expect(
+          iterator.current?.totalPlaytime,
+          const Duration(hours: 2),
+        );
+
+        await repository.removePlaySession(sessionId);
+
+        expect(await iterator.moveNext(), isTrue);
+        expect(iterator.current?.playSessions, isEmpty);
+        expect(iterator.current?.totalPlaytime, Duration.zero);
+      },
+    );
   });
 }
