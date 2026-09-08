@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_game.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
@@ -40,8 +39,7 @@ class LibraryGameCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 GameStatusRow(status: game.status),
-                if (game.status != GameStatus.wantToPlay &&
-                    game.totalPlaytime.inSeconds > 0) ...[
+                if (game.totalPlaytime.inSeconds > 0) ...[
                   const SizedBox(height: 4),
                   Row(
                     children: [

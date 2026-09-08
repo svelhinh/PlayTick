@@ -6,6 +6,7 @@ extension LibraryExceptionExtension on Exception {
     return switch (this) {
       DuplicateGameException() => appLoc.gameAlreadyInLibrary,
       GameNotFoundException() => appLoc.gameNotFoundInLibrary,
+      InvalidPlaySessionException() => appLoc.invalidPlaySessionException,
       _ => appLoc.somethingWentWrong,
     };
   }

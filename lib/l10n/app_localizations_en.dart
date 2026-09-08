@@ -25,6 +25,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get somethingWentWrong => 'Something went wrong';
 
   @override
+  String get date => 'Date';
+
+  @override
+  String get hours => 'hours';
+
+  @override
+  String get minutes => 'minutes';
+
+  @override
+  String get validate => 'Validate';
+
+  @override
   String get gameAlreadyInLibrary => 'This game is already in your library.';
 
   @override
@@ -124,8 +136,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gameStatusDropped => 'Dropped';
 
   @override
+  String gamePlaytimeMinutes(String minutes) {
+    return '$minutes min';
+  }
+
+  @override
   String gamePlaytime(int hours, String minutes) {
-    return '$hours h $minutes';
+    return '$hours h $minutes min';
   }
 
   @override
@@ -189,4 +206,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String gameDetailsEstimatedPlaytimesCompletion(String playtime) {
     return 'Completion: $playtime';
   }
+
+  @override
+  String get gameDetailsPlaySessionsTitle => 'Sessions';
+
+  @override
+  String get gameDetailsPlaySessionsAddButton => 'Add a session';
+
+  @override
+  String get gameDetailsPlaySessionsAddTitle => 'Add a session';
+
+  @override
+  String get gameDetailsPlaySessionsAddDurationLabel => 'Session duration';
+
+  @override
+  String get gameDetailsPlaySessionsAddNotesLabel => 'Note (optional)';
+
+  @override
+  String get gameDetailsPlaySessionsAddHintText =>
+      'What happened during this session?';
+
+  @override
+  String get gameDetailsPlaySessionsAddSaveButton => 'Add session';
+
+  @override
+  String get invalidPlaySessionException => 'Invalid play session.';
 }

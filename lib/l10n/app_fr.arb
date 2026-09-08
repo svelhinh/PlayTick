@@ -25,6 +25,26 @@
         "type": "text",
         "description": "Le message d'erreur général"
     },
+    "date": "Date",
+    "@date": {
+        "type": "text",
+        "description": "Le label de la date dans la fiche d'ajout de session"
+    },
+    "hours": "heures",
+    "@hours": {
+        "type": "text",
+        "description": "Le label de la durée de la session en heures dans la fiche d'ajout de session"
+    },
+    "minutes": "minutes",
+    "@minutes": {
+        "type": "text",
+        "description": "Le label de la durée de la session en minutes dans la fiche d'ajout de session"
+    },
+    "validate": "Valider",
+    "@validate": {
+        "type": "text",
+        "description": "Le texte du bouton pour valider une action"
+    },
     "gameAlreadyInLibrary": "Ce jeu est déjà dans votre bibliothèque.",
     "@gameAlreadyInLibrary": {
         "type": "text",
@@ -180,10 +200,20 @@
         "type": "text",
         "description": "Le statut de jeu 'Abandonné'"
     },
-    "gamePlaytime": "{hours} h {minutes}",
+    "gamePlaytimeMinutes": "{minutes} min",
+    "@gamePlaytimeMinutes": {
+        "type": "text",
+        "description": "Le temps de jeu du jeu en minutes",
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "gamePlaytime": "{hours} h {minutes} min",
     "@gamePlaytime": {
         "type": "text",
-        "description": "Le temps de jeu du jeu",
+        "description": "Le temps de jeu du jeu en heures et minutes",
         "placeholders": {
             "hours": {
                 "type": "int"
@@ -292,5 +322,45 @@
                 "type": "String"
             }
         }
+    },
+    "gameDetailsPlaySessionsTitle": "Sessions",
+    "@gameDetailsPlaySessionsTitle": {
+        "type": "text",
+        "description": "Le titre de la section 'Sessions' dans les détails du jeu"
+    },
+    "gameDetailsPlaySessionsAddButton": "Ajouter une session",
+    "@gameDetailsPlaySessionsAddButton": {
+        "type": "text",
+        "description": "Le texte du bouton pour ajouter une session dans les détails du jeu"
+    },
+    "gameDetailsPlaySessionsAddTitle": "Ajouter une session",
+    "@gameDetailsPlaySessionsAddTitle": {
+        "type": "text",
+        "description": "Le titre de la fiche d'ajout de session"
+    },
+    "gameDetailsPlaySessionsAddDurationLabel": "Durée de la session",
+    "@gameDetailsPlaySessionsAddDurationLabel": {
+        "type": "text",
+        "description": "Le label de la durée de la session dans la fiche d'ajout de session"
+    },
+    "gameDetailsPlaySessionsAddNotesLabel": "Note (facultatif)",
+    "@gameDetailsPlaySessionsAddNotesLabel": {
+        "type": "text",
+        "description": "Le label de la note dans la fiche d'ajout de session"
+    },
+    "gameDetailsPlaySessionsAddHintText": "Que s'est-il passé pendant cette session ?",
+    "@gameDetailsPlaySessionsAddHintText": {
+        "type": "text",
+        "description": "Le hint text de la fiche d'ajout de session"
+    },
+    "gameDetailsPlaySessionsAddSaveButton": "Ajouter la session",
+    "@gameDetailsPlaySessionsAddSaveButton": {
+        "type": "text",
+        "description": "Le texte du bouton pour ajouter une session dans la fiche d'ajout de session"
+    },
+    "invalidPlaySessionException": "Session de jeu invalide.",
+    "@invalidPlaySessionException": {
+        "type": "text",
+        "description": "Le message d'erreur quand une session de jeu invalide est fournie"
     }
 }
