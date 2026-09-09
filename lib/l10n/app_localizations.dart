@@ -194,6 +194,18 @@ abstract class AppLocalizations {
   /// **'Go to library'**
   String get homeEmptyCardButtonText;
 
+  /// The title of the playtime this week section in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Playtime this week'**
+  String get homeWeeklyPlaytime;
+
+  /// The title of the games in progress section in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Games in progress'**
+  String get homeTotalGames;
+
   /// The title of the library screen
   ///
   /// In en, this message translates to:
@@ -338,6 +350,12 @@ abstract class AppLocalizations {
   /// **'Dropped'**
   String get gameStatusDropped;
 
+  /// The playtime of the game
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h {minutes}'**
+  String gamePlaytime(int hours, String minutes);
+
   /// The playtime of the game in minutes
   ///
   /// In en, this message translates to:
@@ -348,7 +366,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{hours} h {minutes} min'**
-  String gamePlaytime(int hours, String minutes);
+  String gamePlaytimeHoursMinutes(int hours, String minutes);
 
   /// Number of games in the library
   ///

@@ -80,6 +80,16 @@
         "type": "text",
         "description": "The text of the button in the empty card in the home screen"
     },
+    "homeWeeklyPlaytime": "Playtime this week",
+    "@homeWeeklyPlaytime": {
+        "type": "text",
+        "description": "The title of the playtime this week section in the home screen"
+    },
+    "homeTotalGames": "Games in progress",
+    "@homeTotalGames": {
+        "type": "text",
+        "description": "The title of the games in progress section in the home screen"
+    },
     "libraryTitle": "Library",
     "@libraryTitle": {
         "type": "text",
@@ -200,6 +210,19 @@
         "type": "text",
         "description": "The status of the game 'Dropped'"
     },
+    "gamePlaytime": "{hours} h {minutes}",
+    "@gamePlaytime": {
+        "type": "text",
+        "description": "The playtime of the game",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
     "gamePlaytimeMinutes": "{minutes} min",
     "@gamePlaytimeMinutes": {
         "type": "text",
@@ -210,8 +233,8 @@
             }
         }
     },
-    "gamePlaytime": "{hours} h {minutes} min",
-    "@gamePlaytime": {
+    "gamePlaytimeHoursMinutes": "{hours} h {minutes} min",
+    "@gamePlaytimeHoursMinutes": {
         "type": "text",
         "description": "The playtime of the game in hours and minutes",
         "placeholders": {

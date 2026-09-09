@@ -80,6 +80,16 @@
         "type": "text",
         "description": "Le texte du bouton de la carte vide dans l'écran d'accueil"
     },
+    "homeWeeklyPlaytime": "Temps cette semaine",
+    "@homeWeeklyPlaytime": {
+        "type": "text",
+        "description": "Le titre de la section de temps de jeu hebdomadaire dans l'écran d'accueil"
+    },
+    "homeTotalGames": "Jeux en cours",
+    "@homeTotalGames": {
+        "type": "text",
+        "description": "Le titre de la section de jeux en cours dans l'écran d'accueil"
+    },
     "libraryTitle": "Bibliothèque",
     "@libraryTitle": {
         "type": "text",
@@ -200,6 +210,19 @@
         "type": "text",
         "description": "Le statut de jeu 'Abandonné'"
     },
+    "gamePlaytime": "{hours} h {minutes}",
+    "@gamePlaytime": {
+        "type": "text",
+        "description": "Le temps de jeu du jeu en heures et minutes",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            },
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
     "gamePlaytimeMinutes": "{minutes} min",
     "@gamePlaytimeMinutes": {
         "type": "text",
@@ -210,8 +233,8 @@
             }
         }
     },
-    "gamePlaytime": "{hours} h {minutes} min",
-    "@gamePlaytime": {
+    "gamePlaytimeHoursMinutes": "{hours} h {minutes} min",
+    "@gamePlaytimeHoursMinutes": {
         "type": "text",
         "description": "Le temps de jeu du jeu en heures et minutes",
         "placeholders": {

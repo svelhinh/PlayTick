@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
+import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_filter.dart';
@@ -492,12 +493,10 @@ final class _IgdbSearchCardError extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            CircleAvatar(
+            IconCircle(
+              icon: Icons.info_outline,
               backgroundColor: theme.colorScheme.primaryContainer,
-              child: Icon(
-                Icons.info_outline,
-                color: theme.colorScheme.primary,
-              ),
+              iconColor: theme.colorScheme.primary,
             ),
             const SizedBox(width: 12),
             Expanded(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:playtick/app/app_theme.dart';
+import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 final class DeleteGameSheet extends StatelessWidget {
@@ -30,14 +31,12 @@ final class DeleteGameSheet extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
+                  IconCircle(
+                    icon: Icons.delete_outline,
                     backgroundColor: AppTheme.danger.withValues(alpha: 0.1),
                     radius: 24,
-                    child: const Icon(
-                      Icons.delete_outline,
-                      color: AppTheme.danger,
-                      size: 32,
-                    ),
+                    iconSize: 32,
+                    iconColor: AppTheme.danger,
                   ),
                   const SizedBox(width: 16),
                   Expanded(

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/app_theme.dart';
 import 'package:playtick/app/router/app_router.dart';
+import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
@@ -389,10 +390,12 @@ final class _InfoItem extends StatelessWidget {
 
     return Row(
       children: [
-        CircleAvatar(
+        IconCircle(
+          icon: icon,
           radius: 16,
+          iconSize: 16,
           backgroundColor: theme.colorScheme.surfaceContainerLow,
-          child: Icon(icon, size: 16, color: theme.colorScheme.onSurface),
+          iconColor: theme.colorScheme.onSurface,
         ),
         const SizedBox(width: 16),
         Expanded(

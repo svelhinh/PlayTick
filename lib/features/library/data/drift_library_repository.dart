@@ -14,7 +14,7 @@ class DriftLibraryRepository implements LibraryRepository {
   DriftLibraryRepository(
     this._database, {
     DateTime Function()? now,
-  }) : _now = now ?? (() => DateTime.now().toUtc());
+  }) : _now = now ?? DateTime.now;
 
   final AppDatabase _database;
   final DateTime Function() _now;

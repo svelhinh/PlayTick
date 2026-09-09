@@ -18,7 +18,7 @@ void main() {
 
     setUp(() {
       database = AppDatabase(NativeDatabase.memory());
-      now = DateTime.utc(2026, 8, 27, 12);
+      now = DateTime(2026, 8, 27, 12);
       repository = DriftLibraryRepository(database, now: () => now);
       game = Game(
         id: 200,
@@ -600,12 +600,12 @@ void main() {
         await repository.addGame(game);
         await repository.addPlaySession(
           game.id,
-          DateTime.utc(2026, 8, 23),
+          DateTime(2026, 8, 23),
           const Duration(hours: 2),
         );
         await repository.addPlaySession(
           game.id,
-          DateTime.utc(2026, 8, 26),
+          DateTime(2026, 8, 26),
           const Duration(hours: 1),
         );
 
@@ -629,7 +629,7 @@ void main() {
 
         await repository.addPlaySession(
           game.id,
-          DateTime.utc(2026, 8, 26),
+          DateTime(2026, 8, 26),
           const Duration(hours: 1),
         );
 
@@ -641,7 +641,7 @@ void main() {
 
         await repository.updatePlaySession(
           sessionId,
-          DateTime.utc(2026, 8, 23),
+          DateTime(2026, 8, 23),
           const Duration(hours: 1),
         );
 

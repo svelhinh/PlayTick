@@ -3,7 +3,7 @@ import 'package:playtick/features/library/domain/play_session.dart';
 import 'package:playtick/features/library/domain/weekly_playtime.dart';
 
 void main() {
-  final now = DateTime.utc(2026, 8, 27, 12);
+  final now = DateTime(2026, 8, 27, 12);
 
   PlaySession sessionOn(DateTime date, {Duration? duration, int id = 1}) {
     return PlaySession(
@@ -22,9 +22,9 @@ void main() {
     expect(
       weeklyPlaytime(
         [
-          sessionOn(DateTime.utc(2026, 8, 24)),
+          sessionOn(DateTime(2026, 8, 24)),
           sessionOn(
-            DateTime.utc(2026, 8, 30),
+            DateTime(2026, 8, 30),
             duration: const Duration(hours: 2),
             id: 2,
           ),
@@ -40,12 +40,12 @@ void main() {
       weeklyPlaytime(
         [
           sessionOn(
-            DateTime.utc(2026, 8, 23),
+            DateTime(2026, 8, 23),
             duration: const Duration(hours: 2),
           ),
-          sessionOn(DateTime.utc(2026, 8, 26), id: 2),
+          sessionOn(DateTime(2026, 8, 26), id: 2),
           sessionOn(
-            DateTime.utc(2026, 8, 31),
+            DateTime(2026, 8, 31),
             duration: const Duration(hours: 3),
             id: 3,
           ),
