@@ -654,5 +654,47 @@ void main() {
         expect(iterator.current, Duration.zero);
       },
     );
+
+    test(
+      'watchActivePlaySession emits after a active play session is started',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.startActivePlaySession(game.id);
+
+        final iterator = StreamIterator(repository.watchActivePlaySession());
+        addTearDown(iterator.cancel);
+
+        expect(await iterator.moveNext(), isTrue);
+        expect(iterator.current, isNotNull);
+        expect(iterator.current!.gameId, game.id);
+        expect(iterator.current!.startedAt.isAtSameMomentAs(now), isTrue);
+      },
+    );
+
+    test(
+      'startActivePlaySession throws invalid active play session exception if '
+      'the game is not playing',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.updateGameStatus(game.id, GameStatus.wantToPlay);
+        await expectLater(
+          repository.startActivePlaySession(game.id),
+          throwsA(isA<InvalidActivePlaySessionException>()),
+        );
+      },
+    );
+
+    test(
+      'startActivePlaySession throws duplicate active play session exception '
+      'if the active play session already exists',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.startActivePlaySession(game.id);
+        await expectLater(
+          repository.startActivePlaySession(game.id),
+          throwsA(isA<DuplicateActivePlaySessionException>()),
+        );
+      },
+    );
   });
 }

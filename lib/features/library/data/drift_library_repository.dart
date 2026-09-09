@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
+import 'package:playtick/features/library/domain/active_play_session.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
@@ -308,5 +309,51 @@ class DriftLibraryRepository implements LibraryRepository {
     return _database.select(_database.playSessions).watch().map((rows) {
       return weeklyPlaytime(rows.map(_toPlaySession), _now());
     });
+  }
+
+  @override
+  Stream<ActivePlaySession?> watchActivePlaySession() {
+    return _database.select(_database.activePlaySessions).watch().map((rows) {
+      if (rows.isEmpty) {
+        return null;
+      }
+
+      return ActivePlaySession(
+        gameId: rows.first.gameId,
+        startedAt: rows.first.startedAt,
+      );
+    });
+  }
+
+  @override
+  Future<void> startActivePlaySession(int gameId) async {
+    final userGame = await (_database.select(
+      _database.userGames,
+    )..where((row) => row.gameId.equals(gameId))).getSingleOrNull();
+
+    if (userGame == null) {
+      throw const GameNotFoundException();
+    }
+
+    if (userGame.status != GameStatus.playing) {
+      throw const InvalidActivePlaySessionException();
+    }
+
+    final activePlaySession = await _database
+        .select(_database.activePlaySessions)
+        .getSingleOrNull();
+
+    if (activePlaySession != null) {
+      throw const DuplicateActivePlaySessionException();
+    }
+
+    await _database
+        .into(_database.activePlaySessions)
+        .insert(
+          ActivePlaySessionsCompanion.insert(
+            gameId: gameId,
+            startedAt: _now(),
+          ),
+        );
   }
 }
