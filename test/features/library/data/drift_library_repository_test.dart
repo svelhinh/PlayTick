@@ -713,7 +713,6 @@ void main() {
       () async {
         await repository.addGame(game, status: GameStatus.playing);
         await repository.startActivePlaySession(game.id);
-        await repository.watchActivePlaySession().first;
 
         await repository.clearActivePlaySession();
 
