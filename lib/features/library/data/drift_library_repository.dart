@@ -8,6 +8,7 @@ import 'package:playtick/features/library/domain/library_game.dart';
 import 'package:playtick/features/library/domain/library_game_details.dart';
 import 'package:playtick/features/library/domain/library_repository.dart';
 import 'package:playtick/features/library/domain/play_session.dart';
+import 'package:playtick/features/library/domain/weekly_playtime.dart';
 
 class DriftLibraryRepository implements LibraryRepository {
   DriftLibraryRepository(
@@ -300,5 +301,12 @@ class DriftLibraryRepository implements LibraryRepository {
     if (deletedRows == 0) {
       throw const PlaySessionNotFoundException();
     }
+  }
+
+  @override
+  Stream<Duration> watchWeeklyPlaytime() {
+    return _database.select(_database.playSessions).watch().map((rows) {
+      return weeklyPlaytime(rows.map(_toPlaySession), _now());
+    });
   }
 }

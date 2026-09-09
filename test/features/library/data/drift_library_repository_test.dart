@@ -593,5 +593,66 @@ void main() {
         expect(iterator.current?.totalPlaytime, Duration.zero);
       },
     );
+
+    test(
+      'watchWeeklyPlaytime sums only sessions in the current week',
+      () async {
+        await repository.addGame(game);
+        await repository.addPlaySession(
+          game.id,
+          DateTime.utc(2026, 8, 23),
+          const Duration(hours: 2),
+        );
+        await repository.addPlaySession(
+          game.id,
+          DateTime.utc(2026, 8, 26),
+          const Duration(hours: 1),
+        );
+
+        expect(
+          await repository.watchWeeklyPlaytime().first,
+          const Duration(hours: 1),
+        );
+      },
+    );
+
+    test(
+      'watchWeeklyPlaytime emits after a play session is added, updated, and removed',
+      () async {
+        await repository.addGame(game);
+
+        final iterator = StreamIterator(repository.watchWeeklyPlaytime());
+        addTearDown(iterator.cancel);
+
+        expect(await iterator.moveNext(), isTrue);
+        expect(iterator.current, Duration.zero);
+
+        await repository.addPlaySession(
+          game.id,
+          DateTime.utc(2026, 8, 26),
+          const Duration(hours: 1),
+        );
+
+        expect(await iterator.moveNext(), isTrue);
+        expect(iterator.current, const Duration(hours: 1));
+
+        final sessionId =
+            (await repository.watchGame(game.id).first)!.playSessions.single.id;
+
+        await repository.updatePlaySession(
+          sessionId,
+          DateTime.utc(2026, 8, 23),
+          const Duration(hours: 1),
+        );
+
+        expect(await iterator.moveNext(), isTrue);
+        expect(iterator.current, Duration.zero);
+
+        await repository.removePlaySession(sessionId);
+
+        expect(await iterator.moveNext(), isTrue);
+        expect(iterator.current, Duration.zero);
+      },
+    );
   });
 }
