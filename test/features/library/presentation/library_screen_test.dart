@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
+import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
 import 'package:playtick/features/library/data/database/database_provider.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
@@ -148,10 +149,8 @@ void main() {
 
   testWidgets('Library screen shows empty state card', (tester) async {
     await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          libraryGamesProvider.overrideWith((ref) => Stream.value(const [])),
-        ],
+      UncontrolledProviderScope(
+        container: container,
         child: const PlayTick(),
       ),
     );
@@ -173,6 +172,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
+            weeklyPlaytimeProvider.overrideWith(
+              (ref) => Stream.value(Duration.zero),
+            ),
             libraryGamesProvider.overrideWith(
               (ref) => Stream.error(Exception('drift connection failed')),
             ),

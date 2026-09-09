@@ -3,10 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/app/app_theme.dart';
+import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
 
 void main() {
   testWidgets('renders the PlayTick application', (tester) async {
-    await tester.pumpWidget(const ProviderScope(child: PlayTick()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          weeklyPlaytimeProvider.overrideWith(
+            (ref) => Stream.value(Duration.zero),
+          ),
+        ],
+        child: const PlayTick(),
+      ),
+    );
 
     await tester.pumpAndSettle();
 
@@ -20,7 +30,12 @@ void main() {
   ) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [appTitleProvider.overrideWith((ref) => 'Test Title')],
+        overrides: [
+          weeklyPlaytimeProvider.overrideWith(
+            (ref) => Stream.value(Duration.zero),
+          ),
+          appTitleProvider.overrideWith((ref) => 'Test Title'),
+        ],
         child: const PlayTick(),
       ),
     );
@@ -34,7 +49,16 @@ void main() {
   testWidgets(
     'renders the PlayTick application with the correct theme',
     (tester) async {
-      await tester.pumpWidget(const ProviderScope(child: PlayTick()));
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            weeklyPlaytimeProvider.overrideWith(
+              (ref) => Stream.value(Duration.zero),
+            ),
+          ],
+          child: const PlayTick(),
+        ),
+      );
 
       await tester.pumpAndSettle();
 

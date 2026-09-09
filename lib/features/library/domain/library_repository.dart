@@ -22,4 +22,5 @@ abstract interface class LibraryRepository {
     String? note,
   });
   Future<void> removePlaySession(int sessionId);
+  Stream<Duration> watchWeeklyPlaytime();
 }

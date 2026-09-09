@@ -59,6 +59,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeEmptyCardButtonText => 'Go to library';
 
   @override
+  String get homeWeeklyPlaytime => 'Playtime this week';
+
+  @override
+  String get homeTotalGames => 'Games in progress';
+
+  @override
   String get libraryTitle => 'Library';
 
   @override
@@ -136,12 +142,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gameStatusDropped => 'Dropped';
 
   @override
+  String gamePlaytime(int hours, String minutes) {
+    return '$hours h $minutes';
+  }
+
+  @override
   String gamePlaytimeMinutes(String minutes) {
     return '$minutes min';
   }
 
   @override
-  String gamePlaytime(int hours, String minutes) {
+  String gamePlaytimeHoursMinutes(int hours, String minutes) {
     return '$hours h $minutes min';
   }
 

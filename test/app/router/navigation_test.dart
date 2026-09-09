@@ -3,12 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/features/home/presentation/home_screen.dart';
+import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 
 void main() {
   testWidgets('initial launch renders the home screen', (tester) async {
-    await tester.pumpWidget(const ProviderScope(child: PlayTick()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          weeklyPlaytimeProvider.overrideWith(
+            (ref) => Stream.value(Duration.zero),
+          ),
+        ],
+        child: const PlayTick(),
+      ),
+    );
 
     await tester.pumpAndSettle();
 
@@ -20,7 +30,16 @@ void main() {
     tester.binding.platformDispatcher.localesTestValue = const [Locale('fr')];
     addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
 
-    await tester.pumpWidget(const ProviderScope(child: PlayTick()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          weeklyPlaytimeProvider.overrideWith(
+            (ref) => Stream.value(Duration.zero),
+          ),
+        ],
+        child: const PlayTick(),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Accueil'), findsWidgets);
@@ -39,6 +58,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
+            weeklyPlaytimeProvider.overrideWith(
+              (ref) => Stream.value(Duration.zero),
+            ),
             libraryGamesProvider.overrideWith(
               (_) => Stream.value(const []),
             ),

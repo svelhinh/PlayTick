@@ -6,6 +6,7 @@ import 'package:playtick/features/library/presentation/extensions/playtime_local
 import 'package:playtick/features/library/presentation/game_details/delete_play_session_dialog.dart';
 import 'package:playtick/features/library/presentation/game_details/duration_picker_dialog.dart';
 import 'package:playtick/features/library/presentation/game_details/hold_step_button.dart';
+import 'package:playtick/features/library/presentation/game_details/session_duration_step.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 final class PlaySessionSheet extends StatefulWidget {
@@ -42,16 +43,11 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
   }
 
   void _decreaseDuration() {
-    setState(() {
-      final next = _duration - const Duration(minutes: 15);
-      _duration = next < const Duration(minutes: 15)
-          ? const Duration(minutes: 15)
-          : next;
-    });
+    setState(() => _duration = previousQuarterHour(_duration));
   }
 
   void _increaseDuration() {
-    setState(() => _duration += const Duration(minutes: 15));
+    setState(() => _duration = nextQuarterHour(_duration));
   }
 
   Future<void> _onDeletePressed() async {
