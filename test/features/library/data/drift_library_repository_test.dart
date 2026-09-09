@@ -707,5 +707,37 @@ void main() {
         );
       },
     );
+
+    test(
+      'clearActivePlaySession clears the active play session',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.startActivePlaySession(game.id);
+        await repository.watchActivePlaySession().first;
+
+        await repository.clearActivePlaySession();
+
+        expect(
+          await database.select(database.activePlaySessions).get(),
+          isEmpty,
+        );
+        expect(await repository.watchActivePlaySession().first, isNull);
+
+        final playSessions = await database.select(database.playSessions).get();
+        expect(playSessions, isEmpty);
+      },
+    );
+
+    test(
+      'clearActivePlaySession does not throw if the active play session does '
+      'not exist',
+      () async {
+        await repository.clearActivePlaySession();
+        expect(
+          await database.select(database.activePlaySessions).get(),
+          isEmpty,
+        );
+      },
+    );
   });
 }

@@ -356,4 +356,9 @@ class DriftLibraryRepository implements LibraryRepository {
           ),
         );
   }
+
+  @override
+  Future<void> clearActivePlaySession() async {
+    await _database.delete(_database.activePlaySessions).go();
+  }
 }
