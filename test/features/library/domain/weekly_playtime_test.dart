@@ -22,7 +22,7 @@ void main() {
     expect(
       weeklyPlaytime(
         [
-          sessionOn(DateTime.utc(2026, 8, 24), id: 1),
+          sessionOn(DateTime.utc(2026, 8, 24)),
           sessionOn(
             DateTime.utc(2026, 8, 30),
             duration: const Duration(hours: 2),
@@ -42,7 +42,6 @@ void main() {
           sessionOn(
             DateTime.utc(2026, 8, 23),
             duration: const Duration(hours: 2),
-            id: 1,
           ),
           sessionOn(DateTime.utc(2026, 8, 26), id: 2),
           sessionOn(
