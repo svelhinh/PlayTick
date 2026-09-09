@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["IGDB", "igdb", "PlayTick", "playtick", "subosito"]
+  "cSpell.words": ["IGDB", "igdb", "PlayTick", "playtick", "subosito"],
+  "dart.flutterGenerateLocalizationsOnSave": "allIfDirty"
 }

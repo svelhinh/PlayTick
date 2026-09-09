@@ -696,5 +696,16 @@ void main() {
         );
       },
     );
+
+    test(
+      'startActivePlaySession throws game not found exception if the game is '
+      'not in the library',
+      () async {
+        await expectLater(
+          repository.startActivePlaySession(999),
+          throwsA(isA<GameNotFoundException>()),
+        );
+      },
+    );
   });
 }
