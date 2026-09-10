@@ -738,5 +738,92 @@ void main() {
         );
       },
     );
+
+    test(
+      'finishActivePlaySession saves the corrected session and clears the active session',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.startActivePlaySession(game.id);
+
+        await repository.finishActivePlaySession(
+          const Duration(minutes: 47),
+          note: '  Chapter complete  ',
+        );
+
+        final details = await repository.watchGame(game.id).first;
+
+        expect(details, isNotNull);
+        expect(details!.totalPlaytime, const Duration(minutes: 47));
+        expect(details.playSessions, hasLength(1));
+        expect(details.playSessions.single.gameId, game.id);
+        expect(details.playSessions.single.date.isAtSameMomentAs(now), isTrue);
+        expect(
+          details.playSessions.single.duration,
+          const Duration(minutes: 47),
+        );
+        expect(details.playSessions.single.note, 'Chapter complete');
+        expect(await repository.watchActivePlaySession().first, isNull);
+      },
+    );
+
+    test(
+      'finishActivePlaySession keeps the active session when duration is invalid',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.startActivePlaySession(game.id);
+
+        await expectLater(
+          repository.finishActivePlaySession(Duration.zero),
+          throwsA(isA<InvalidPlaySessionException>()),
+        );
+
+        expect(
+          await database.select(database.playSessions).get(),
+          isEmpty,
+        );
+        expect(await repository.watchActivePlaySession().first, isNotNull);
+      },
+    );
+
+    test(
+      'finishActivePlaySession throws when no active session exists',
+      () async {
+        await expectLater(
+          repository.finishActivePlaySession(const Duration(minutes: 30)),
+          throwsA(isA<ActivePlaySessionNotFoundException>()),
+        );
+
+        expect(
+          await database.select(database.playSessions).get(),
+          isEmpty,
+        );
+      },
+    );
+
+    test(
+      'finishActivePlaySession rolls back the saved session if clearing fails',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.startActivePlaySession(game.id);
+        await database.customStatement('''
+          CREATE TRIGGER prevent_active_session_delete
+          BEFORE DELETE ON active_play_sessions
+          BEGIN
+            SELECT RAISE(ABORT, 'delete blocked');
+          END;
+        ''');
+
+        await expectLater(
+          repository.finishActivePlaySession(const Duration(minutes: 30)),
+          throwsA(anything),
+        );
+
+        expect(
+          await database.select(database.playSessions).get(),
+          isEmpty,
+        );
+        expect(await repository.watchActivePlaySession().first, isNotNull);
+      },
+    );
   });
 }

@@ -27,4 +27,5 @@ abstract interface class LibraryRepository {
   Stream<ActivePlaySession?> watchActivePlaySession();
   Future<void> startActivePlaySession(int gameId);
   Future<void> clearActivePlaySession();
+  Future<void> finishActivePlaySession(Duration duration, {String? note});
 }
