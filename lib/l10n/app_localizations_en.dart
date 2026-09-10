@@ -65,6 +65,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeTotalGames => 'Games in progress';
 
   @override
+  String get homeActivePlaySession => 'Active session';
+
+  @override
+  String get homeActivePlaySessionStopButton => 'Stop';
+
+  @override
   String get libraryTitle => 'Library';
 
   @override
