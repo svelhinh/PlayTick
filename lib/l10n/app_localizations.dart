@@ -206,6 +206,18 @@ abstract class AppLocalizations {
   /// **'Games in progress'**
   String get homeTotalGames;
 
+  /// The title of the active session section in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Active session'**
+  String get homeActivePlaySession;
+
+  /// The text of the button to stop the active session in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get homeActivePlaySessionStopButton;
+
   /// The title of the library screen
   ///
   /// In en, this message translates to:

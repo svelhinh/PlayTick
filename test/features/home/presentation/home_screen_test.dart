@@ -1,11 +1,23 @@
+import 'dart:async';
+
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
+import 'package:playtick/features/home/presentation/providers/active_play_session_provider.dart';
+import 'package:playtick/features/home/presentation/providers/timer_now_provider.dart';
 import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
+import 'package:playtick/features/library/data/database/app_database.dart';
+import 'package:playtick/features/library/data/drift_library_repository.dart';
+import 'package:playtick/features/library/domain/active_play_session.dart';
+import 'package:playtick/features/library/domain/game.dart';
+import 'package:playtick/features/library/domain/game_status.dart';
+import 'package:playtick/features/library/domain/library_game.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
+import 'package:playtick/features/library/providers/library_repository_provider.dart';
 
 void main() {
   testWidgets('Home screen Empty Card button navigates to the library screen', (
@@ -19,6 +31,9 @@ void main() {
           ),
           libraryGamesProvider.overrideWith(
             (_) => Stream.value(const []),
+          ),
+          activePlaySessionProvider.overrideWith(
+            (_) => Stream.value(null),
           ),
         ],
         child: const PlayTick(),
@@ -46,6 +61,12 @@ void main() {
           weeklyPlaytimeProvider.overrideWith(
             (ref) => Stream.value(Duration.zero),
           ),
+          libraryGamesProvider.overrideWith(
+            (_) => Stream.value(const []),
+          ),
+          activePlaySessionProvider.overrideWith(
+            (_) => Stream.value(null),
+          ),
         ],
         child: const PlayTick(),
       ),
@@ -64,6 +85,12 @@ void main() {
           weeklyPlaytimeProvider.overrideWith(
             (ref) => Stream.value(const Duration(hours: 12, minutes: 45)),
           ),
+          libraryGamesProvider.overrideWith(
+            (_) => Stream.value(const []),
+          ),
+          activePlaySessionProvider.overrideWith(
+            (_) => Stream.value(null),
+          ),
         ],
         child: const PlayTick(),
       ),
@@ -71,5 +98,96 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('12 h 45'), findsOneWidget);
+  });
+
+  testWidgets(
+    'Home shows the active game and elapsed time from the timer',
+    (tester) async {
+      final startedAt = DateTime(2026, 9, 10, 14);
+      final now = DateTime(2026, 9, 10, 15, 2, 3);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            weeklyPlaytimeProvider.overrideWith(
+              (_) => Stream.value(Duration.zero),
+            ),
+            activePlaySessionProvider.overrideWith(
+              (_) => Stream.value(
+                ActivePlaySession(
+                  gameId: 1,
+                  startedAt: startedAt,
+                ),
+              ),
+            ),
+            libraryGamesProvider.overrideWith(
+              (_) => Stream.value(const [
+                LibraryGame(
+                  gameId: 1,
+                  name: 'Celeste',
+                  status: GameStatus.playing,
+                ),
+              ]),
+            ),
+            timerNowProvider.overrideWith(
+              (_) => Stream.value(now),
+            ),
+          ],
+          child: const PlayTick(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Active session'), findsOneWidget);
+      expect(find.text('Celeste'), findsOneWidget);
+      expect(find.text('01:02:03'), findsOneWidget);
+    },
+  );
+
+  testWidgets('stopping the active session removes its card', (tester) async {
+    final startedAt = DateTime(2026, 9, 10, 14);
+    final database = AppDatabase(NativeDatabase.memory());
+    final repository = DriftLibraryRepository(
+      database,
+      now: () => startedAt,
+    );
+    final container = ProviderContainer(
+      overrides: [
+        libraryRepositoryProvider.overrideWith((_) => repository),
+        timerNowProvider.overrideWith(
+          (_) => Stream.value(startedAt.add(const Duration(minutes: 5))),
+        ),
+      ],
+    );
+    addTearDown(() {
+      container.dispose();
+      unawaited(database.close());
+    });
+
+    await repository.addGame(
+      Game(id: 1, name: 'Celeste'),
+      status: GameStatus.playing,
+    );
+    await repository.startActivePlaySession(1);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const PlayTick(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Active session'), findsOneWidget);
+    expect(find.text('00:05:00'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Stop'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Active session'), findsNothing);
+    expect(
+      await database.select(database.activePlaySessions).get(),
+      isEmpty,
+    );
   });
 }

@@ -4,8 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
+import 'package:playtick/features/home/presentation/providers/active_play_session_provider.dart';
+import 'package:playtick/features/home/presentation/providers/timer_now_provider.dart';
 import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
+import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
+import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
+import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
+import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -17,6 +23,22 @@ class HomeScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     final playtime = ref.watch(weeklyPlaytimeProvider);
+    final activeSession = ref.watch(activePlaySessionProvider).value;
+    final games = ref.watch(libraryGamesProvider).value ?? [];
+
+    var now = DateTime.now();
+
+    if (activeSession != null) {
+      now = ref.watch(timerNowProvider).value ?? now;
+    }
+
+    final activeGame = games
+        .where((game) => game.gameId == activeSession?.gameId)
+        .firstOrNull;
+
+    final gameToStart = games
+        .where((game) => game.status == GameStatus.playing)
+        .firstOrNull;
 
     return SafeArea(
       child: Padding(
@@ -31,10 +53,21 @@ class HomeScreen extends ConsumerWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    if (activeSession != null && activeGame != null) ...[
+                      _ActivePlaySessionCard(
+                        coverUrl: activeGame.coverUrl,
+                        gameTitle: activeGame.name,
+                        playtime: now.difference(activeSession.startedAt),
+                        onStop: () => ref
+                            .read(libraryRepositoryProvider)
+                            .clearActivePlaySession(),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     Row(
                       children: [
                         Expanded(
-                          child: _TopCard(
+                          child: _InfoCard(
                             title: appLoc.homeWeeklyPlaytime,
                             info: (playtime.value ?? Duration.zero).localize(
                               appLoc,
@@ -45,7 +78,7 @@ class HomeScreen extends ConsumerWidget {
                         ),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: _TopCard(
+                          child: _InfoCard(
                             title: appLoc.homeTotalGames,
                             info: '0',
                             icon: Icons.sports_esports_outlined,
@@ -53,7 +86,7 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
                     EmptyStateCard(
                       icon: Icons.sports_esports_outlined,
                       title: appLoc.homeEmptyCardTitle,
@@ -63,6 +96,14 @@ class HomeScreen extends ConsumerWidget {
                         child: Text(appLoc.homeEmptyCardButtonText),
                       ),
                     ),
+                    const SizedBox(height: 16),
+                    if (activeSession == null && gameToStart != null)
+                      FilledButton(
+                        onPressed: () => ref
+                            .read(libraryRepositoryProvider)
+                            .startActivePlaySession(gameToStart.gameId),
+                        child: const Text('Start'),
+                      ),
                   ],
                 ),
               ),
@@ -74,8 +115,8 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-final class _TopCard extends StatelessWidget {
-  const _TopCard({
+final class _InfoCard extends StatelessWidget {
+  const _InfoCard({
     required this.title,
     required this.info,
     required this.icon,
@@ -119,6 +160,89 @@ final class _TopCard extends StatelessWidget {
                   iconSize: 24,
                 ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+final class _ActivePlaySessionCard extends StatelessWidget {
+  const _ActivePlaySessionCard({
+    required this.coverUrl,
+    required this.gameTitle,
+    required this.playtime,
+    required this.onStop,
+  });
+
+  final String? coverUrl;
+  final String gameTitle;
+  final Duration playtime;
+  final VoidCallback onStop;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appLoc = AppLocalizations.of(context)!;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              appLoc.homeActivePlaySession,
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  GameCoverImage(coverUrl: coverUrl),
+                  const SizedBox(width: 16),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(gameTitle, style: theme.textTheme.titleLarge),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          IconCircle(
+                            icon: Icons.access_time_outlined,
+                            iconSize: 16,
+                            radius: 14,
+                            backgroundColor: theme.colorScheme.secondary
+                                .withValues(alpha: 0.1),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            playtime.formatTimer(),
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        height: 40,
+                        child: FilledButton(
+                          onPressed: onStop,
+                          child: Text(appLoc.homeActivePlaySessionStopButton),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),

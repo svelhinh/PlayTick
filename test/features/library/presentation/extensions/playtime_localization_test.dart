@@ -37,4 +37,16 @@ void main() {
       '12 h 45',
     );
   });
+
+  test('formats a timer with padded hours, minutes, and seconds', () {
+    expect(Duration.zero.formatTimer(), '00:00:00');
+    expect(
+      const Duration(hours: 1, minutes: 2, seconds: 3).formatTimer(),
+      '01:02:03',
+    );
+    expect(
+      const Duration(hours: 100, seconds: 9).formatTimer(),
+      '100:00:09',
+    );
+  });
 }
