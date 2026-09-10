@@ -1,3 +1,4 @@
+import 'package:playtick/features/library/domain/active_play_session.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_game.dart';
@@ -23,4 +24,7 @@ abstract interface class LibraryRepository {
   });
   Future<void> removePlaySession(int sessionId);
   Stream<Duration> watchWeeklyPlaytime();
+  Stream<ActivePlaySession?> watchActivePlaySession();
+  Future<void> startActivePlaySession(int gameId);
+  Future<void> clearActivePlaySession();
 }

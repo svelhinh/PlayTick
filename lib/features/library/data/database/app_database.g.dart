@@ -1346,12 +1346,268 @@ class PlaySessionsCompanion extends UpdateCompanion<PlaySessionRow> {
   }
 }
 
+class $ActivePlaySessionsTable extends ActivePlaySessions
+    with TableInfo<$ActivePlaySessionsTable, ActivePlaySessionRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ActivePlaySessionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _gameIdMeta = const VerificationMeta('gameId');
+  @override
+  late final GeneratedColumn<int> gameId = GeneratedColumn<int>(
+    'game_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES user_games (game_id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _startedAtMeta = const VerificationMeta(
+    'startedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startedAt = GeneratedColumn<DateTime>(
+    'started_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, gameId, startedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'active_play_sessions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ActivePlaySessionRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('game_id')) {
+      context.handle(
+        _gameIdMeta,
+        gameId.isAcceptableOrUnknown(data['game_id']!, _gameIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_gameIdMeta);
+    }
+    if (data.containsKey('started_at')) {
+      context.handle(
+        _startedAtMeta,
+        startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ActivePlaySessionRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ActivePlaySessionRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      gameId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}game_id'],
+      )!,
+      startedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}started_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ActivePlaySessionsTable createAlias(String alias) {
+    return $ActivePlaySessionsTable(attachedDatabase, alias);
+  }
+}
+
+class ActivePlaySessionRow extends DataClass
+    implements Insertable<ActivePlaySessionRow> {
+  final int id;
+  final int gameId;
+  final DateTime startedAt;
+  const ActivePlaySessionRow({
+    required this.id,
+    required this.gameId,
+    required this.startedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['game_id'] = Variable<int>(gameId);
+    map['started_at'] = Variable<DateTime>(startedAt);
+    return map;
+  }
+
+  ActivePlaySessionsCompanion toCompanion(bool nullToAbsent) {
+    return ActivePlaySessionsCompanion(
+      id: Value(id),
+      gameId: Value(gameId),
+      startedAt: Value(startedAt),
+    );
+  }
+
+  factory ActivePlaySessionRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ActivePlaySessionRow(
+      id: serializer.fromJson<int>(json['id']),
+      gameId: serializer.fromJson<int>(json['gameId']),
+      startedAt: serializer.fromJson<DateTime>(json['startedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'gameId': serializer.toJson<int>(gameId),
+      'startedAt': serializer.toJson<DateTime>(startedAt),
+    };
+  }
+
+  ActivePlaySessionRow copyWith({int? id, int? gameId, DateTime? startedAt}) =>
+      ActivePlaySessionRow(
+        id: id ?? this.id,
+        gameId: gameId ?? this.gameId,
+        startedAt: startedAt ?? this.startedAt,
+      );
+  ActivePlaySessionRow copyWithCompanion(ActivePlaySessionsCompanion data) {
+    return ActivePlaySessionRow(
+      id: data.id.present ? data.id.value : this.id,
+      gameId: data.gameId.present ? data.gameId.value : this.gameId,
+      startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActivePlaySessionRow(')
+          ..write('id: $id, ')
+          ..write('gameId: $gameId, ')
+          ..write('startedAt: $startedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, gameId, startedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ActivePlaySessionRow &&
+          other.id == this.id &&
+          other.gameId == this.gameId &&
+          other.startedAt == this.startedAt);
+}
+
+class ActivePlaySessionsCompanion
+    extends UpdateCompanion<ActivePlaySessionRow> {
+  final Value<int> id;
+  final Value<int> gameId;
+  final Value<DateTime> startedAt;
+  const ActivePlaySessionsCompanion({
+    this.id = const Value.absent(),
+    this.gameId = const Value.absent(),
+    this.startedAt = const Value.absent(),
+  });
+  ActivePlaySessionsCompanion.insert({
+    this.id = const Value.absent(),
+    required int gameId,
+    required DateTime startedAt,
+  }) : gameId = Value(gameId),
+       startedAt = Value(startedAt);
+  static Insertable<ActivePlaySessionRow> custom({
+    Expression<int>? id,
+    Expression<int>? gameId,
+    Expression<DateTime>? startedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (gameId != null) 'game_id': gameId,
+      if (startedAt != null) 'started_at': startedAt,
+    });
+  }
+
+  ActivePlaySessionsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? gameId,
+    Value<DateTime>? startedAt,
+  }) {
+    return ActivePlaySessionsCompanion(
+      id: id ?? this.id,
+      gameId: gameId ?? this.gameId,
+      startedAt: startedAt ?? this.startedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (gameId.present) {
+      map['game_id'] = Variable<int>(gameId.value);
+    }
+    if (startedAt.present) {
+      map['started_at'] = Variable<DateTime>(startedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActivePlaySessionsCompanion(')
+          ..write('id: $id, ')
+          ..write('gameId: $gameId, ')
+          ..write('startedAt: $startedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $GamesTable games = $GamesTable(this);
   late final $UserGamesTable userGames = $UserGamesTable(this);
   late final $PlaySessionsTable playSessions = $PlaySessionsTable(this);
+  late final $ActivePlaySessionsTable activePlaySessions =
+      $ActivePlaySessionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1360,6 +1616,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     games,
     userGames,
     playSessions,
+    activePlaySessions,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -1369,6 +1626,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('play_sessions', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'user_games',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('active_play_sessions', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -2253,6 +2517,162 @@ typedef $$PlaySessionsTableProcessedTableManager =
       PlaySessionRow,
       PrefetchHooks Function()
     >;
+typedef $$ActivePlaySessionsTableCreateCompanionBuilder =
+    ActivePlaySessionsCompanion Function({
+      Value<int> id,
+      required int gameId,
+      required DateTime startedAt,
+    });
+typedef $$ActivePlaySessionsTableUpdateCompanionBuilder =
+    ActivePlaySessionsCompanion Function({
+      Value<int> id,
+      Value<int> gameId,
+      Value<DateTime> startedAt,
+    });
+
+class $$ActivePlaySessionsTableFilterComposer
+    extends Composer<_$AppDatabase, $ActivePlaySessionsTable> {
+  $$ActivePlaySessionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ActivePlaySessionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ActivePlaySessionsTable> {
+  $$ActivePlaySessionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ActivePlaySessionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ActivePlaySessionsTable> {
+  $$ActivePlaySessionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startedAt =>
+      $composableBuilder(column: $table.startedAt, builder: (column) => column);
+}
+
+class $$ActivePlaySessionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ActivePlaySessionsTable,
+          ActivePlaySessionRow,
+          $$ActivePlaySessionsTableFilterComposer,
+          $$ActivePlaySessionsTableOrderingComposer,
+          $$ActivePlaySessionsTableAnnotationComposer,
+          $$ActivePlaySessionsTableCreateCompanionBuilder,
+          $$ActivePlaySessionsTableUpdateCompanionBuilder,
+          (
+            ActivePlaySessionRow,
+            BaseReferences<
+              _$AppDatabase,
+              $ActivePlaySessionsTable,
+              ActivePlaySessionRow
+            >,
+          ),
+          ActivePlaySessionRow,
+          PrefetchHooks Function()
+        > {
+  $$ActivePlaySessionsTableTableManager(
+    _$AppDatabase db,
+    $ActivePlaySessionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ActivePlaySessionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ActivePlaySessionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ActivePlaySessionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> gameId = const Value.absent(),
+                Value<DateTime> startedAt = const Value.absent(),
+              }) => ActivePlaySessionsCompanion(
+                id: id,
+                gameId: gameId,
+                startedAt: startedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int gameId,
+                required DateTime startedAt,
+              }) => ActivePlaySessionsCompanion.insert(
+                id: id,
+                gameId: gameId,
+                startedAt: startedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ActivePlaySessionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ActivePlaySessionsTable,
+      ActivePlaySessionRow,
+      $$ActivePlaySessionsTableFilterComposer,
+      $$ActivePlaySessionsTableOrderingComposer,
+      $$ActivePlaySessionsTableAnnotationComposer,
+      $$ActivePlaySessionsTableCreateCompanionBuilder,
+      $$ActivePlaySessionsTableUpdateCompanionBuilder,
+      (
+        ActivePlaySessionRow,
+        BaseReferences<
+          _$AppDatabase,
+          $ActivePlaySessionsTable,
+          ActivePlaySessionRow
+        >,
+      ),
+      ActivePlaySessionRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2263,4 +2683,6 @@ class $AppDatabaseManager {
       $$UserGamesTableTableManager(_db, _db.userGames);
   $$PlaySessionsTableTableManager get playSessions =>
       $$PlaySessionsTableTableManager(_db, _db.playSessions);
+  $$ActivePlaySessionsTableTableManager get activePlaySessions =>
+      $$ActivePlaySessionsTableTableManager(_db, _db.activePlaySessions);
 }

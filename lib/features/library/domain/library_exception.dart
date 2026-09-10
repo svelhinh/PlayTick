@@ -25,3 +25,11 @@ final class InvalidPlaySessionException implements Exception {
 final class PlaySessionNotFoundException implements Exception {
   const PlaySessionNotFoundException();
 }
+
+final class InvalidActivePlaySessionException implements Exception {
+  const InvalidActivePlaySessionException();
+}
+
+final class DuplicateActivePlaySessionException implements Exception {
+  const DuplicateActivePlaySessionException();
+}
