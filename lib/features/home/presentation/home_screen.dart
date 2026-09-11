@@ -4,11 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
-import 'package:playtick/features/home/presentation/finish_active_play_session_sheet.dart';
 import 'package:playtick/features/home/presentation/providers/active_play_session_provider.dart';
 import 'package:playtick/features/home/presentation/providers/timer_now_provider.dart';
 import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
+import 'package:playtick/features/home/presentation/widgets/finish_active_play_session_sheet.dart';
+import 'package:playtick/features/home/presentation/widgets/home_games_list.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
+import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
@@ -32,7 +34,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final playtime = ref.watch(weeklyPlaytimeProvider);
     final activeSession = ref.watch(activePlaySessionProvider).value;
-    final games = ref.watch(libraryGamesProvider).value ?? [];
+
+    final gamesAsync = ref.watch(libraryGamesProvider);
 
     var now = DateTime.now();
 
@@ -40,12 +43,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       now = ref.watch(timerNowProvider).value ?? now;
     }
 
-    final activeGame = games
-        .where((game) => game.gameId == activeSession?.gameId)
-        .firstOrNull;
-
-    final gameToStart = games
+    final loadedGames = gamesAsync.value ?? [];
+    final playingGames = loadedGames
         .where((game) => game.status == GameStatus.playing)
+        .toList();
+
+    final activeGame = loadedGames
+        .where((game) => game.gameId == activeSession?.gameId)
         .firstOrNull;
 
     return SafeArea(
@@ -128,30 +132,66 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         Expanded(
                           child: _InfoCard(
                             title: appLoc.homeTotalGames,
-                            info: '0',
+                            info: playingGames.length.toString(),
                             icon: Icons.sports_esports_outlined,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
-                    EmptyStateCard(
-                      icon: Icons.sports_esports_outlined,
-                      title: appLoc.homeEmptyCardTitle,
-                      description: appLoc.homeEmptyCardDescription,
-                      action: FilledButton(
-                        onPressed: () => context.go(AppRoutes.library),
-                        child: Text(appLoc.homeEmptyCardButtonText),
+                    gamesAsync.when(
+                      data: (games) {
+                        if (playingGames.isEmpty) {
+                          return EmptyStateCard(
+                            icon: Icons.sports_esports_outlined,
+                            title: appLoc.homeEmptyCardTitle,
+                            description: appLoc.homeEmptyCardDescription,
+                            action: FilledButton(
+                              onPressed: () => context.go(AppRoutes.library),
+                              child: Text(appLoc.homeEmptyCardButtonText),
+                            ),
+                          );
+                        }
+
+                        if (activeSession != null) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return GamesList(
+                          games: playingGames,
+                          onGamePressed: (game) async {
+                            try {
+                              await ref
+                                  .read(libraryRepositoryProvider)
+                                  .startActivePlaySession(game.gameId);
+                            } on Exception catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      e.localizeLibraryError(appLoc),
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                        );
+                      },
+                      error: (error, stackTrace) => EmptyStateCard(
+                        icon: Icons.sports_esports_outlined,
+                        title: appLoc.homeEmptyCardTitle,
+                        description: appLoc.homeEmptyCardDescription,
+                        action: FilledButton(
+                          onPressed: () => context.go(AppRoutes.library),
+                          child: Text(appLoc.homeEmptyCardButtonText),
+                        ),
+                      ),
+                      loading: () => const Padding(
+                        padding: EdgeInsets.only(top: 24),
+                        child: CircularProgressIndicator(),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    if (activeSession == null && gameToStart != null)
-                      FilledButton(
-                        onPressed: () => ref
-                            .read(libraryRepositoryProvider)
-                            .startActivePlaySession(gameToStart.gameId),
-                        child: const Text('Start'),
-                      ),
                   ],
                 ),
               ),

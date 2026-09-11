@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/features/home/presentation/home_screen.dart';
+import 'package:playtick/features/home/presentation/providers/active_play_session_provider.dart';
 import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
@@ -15,6 +16,8 @@ void main() {
           weeklyPlaytimeProvider.overrideWith(
             (ref) => Stream.value(Duration.zero),
           ),
+          activePlaySessionProvider.overrideWith((_) => Stream.value(null)),
+          libraryGamesProvider.overrideWith((_) => Stream.value(const [])),
         ],
         child: const PlayTick(),
       ),
@@ -36,6 +39,8 @@ void main() {
           weeklyPlaytimeProvider.overrideWith(
             (ref) => Stream.value(Duration.zero),
           ),
+          activePlaySessionProvider.overrideWith((_) => Stream.value(null)),
+          libraryGamesProvider.overrideWith((_) => Stream.value(const [])),
         ],
         child: const PlayTick(),
       ),
@@ -61,6 +66,7 @@ void main() {
             weeklyPlaytimeProvider.overrideWith(
               (ref) => Stream.value(Duration.zero),
             ),
+            activePlaySessionProvider.overrideWith((_) => Stream.value(null)),
             libraryGamesProvider.overrideWith(
               (_) => Stream.value(const []),
             ),

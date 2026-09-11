@@ -260,6 +260,18 @@ abstract class AppLocalizations {
   /// **'Delete session'**
   String get homeFinishActivePlaySessionDeleteButton;
 
+  /// The title of the games list in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get homeGamesListTitle;
+
+  /// The text of the button to launch a game in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Launch'**
+  String get homeGamesListButtonText;
+
   /// The title of the library screen
   ///
   /// In en, this message translates to:
