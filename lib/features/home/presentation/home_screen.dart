@@ -32,7 +32,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final playtime = ref.watch(weeklyPlaytimeProvider);
     final activeSession = ref.watch(activePlaySessionProvider).value;
-    final games = ref.watch(libraryGamesProvider).value ?? [];
+
+    final games = ref.watch(libraryGamesProvider);
 
     var now = DateTime.now();
 
@@ -40,12 +41,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       now = ref.watch(timerNowProvider).value ?? now;
     }
 
-    final activeGame = games
-        .where((game) => game.gameId == activeSession?.gameId)
-        .firstOrNull;
-
-    final gameToStart = games
+    final loadedGames = games.value ?? [];
+    final playingGames = loadedGames
         .where((game) => game.status == GameStatus.playing)
+        .toList();
+
+    final activeGame = loadedGames
+        .where((game) => game.gameId == activeSession?.gameId)
         .firstOrNull;
 
     return SafeArea(
@@ -128,30 +130,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         Expanded(
                           child: _InfoCard(
                             title: appLoc.homeTotalGames,
-                            info: '0',
+                            info: playingGames.length.toString(),
                             icon: Icons.sports_esports_outlined,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
-                    EmptyStateCard(
-                      icon: Icons.sports_esports_outlined,
-                      title: appLoc.homeEmptyCardTitle,
-                      description: appLoc.homeEmptyCardDescription,
-                      action: FilledButton(
-                        onPressed: () => context.go(AppRoutes.library),
-                        child: Text(appLoc.homeEmptyCardButtonText),
+                    games.when(
+                      data: (games) {
+                        if (playingGames.isEmpty) {
+                          return EmptyStateCard(
+                            icon: Icons.sports_esports_outlined,
+                            title: appLoc.homeEmptyCardTitle,
+                            description: appLoc.homeEmptyCardDescription,
+                            action: FilledButton(
+                              onPressed: () => context.go(AppRoutes.library),
+                              child: Text(appLoc.homeEmptyCardButtonText),
+                            ),
+                          );
+                        }
+
+                        return const SizedBox.shrink();
+                      },
+                      error: (error, stackTrace) => EmptyStateCard(
+                        icon: Icons.sports_esports_outlined,
+                        title: appLoc.homeEmptyCardTitle,
+                        description: appLoc.homeEmptyCardDescription,
+                        action: FilledButton(
+                          onPressed: () => context.go(AppRoutes.library),
+                          child: Text(appLoc.homeEmptyCardButtonText),
+                        ),
+                      ),
+                      loading: () => const Padding(
+                        padding: EdgeInsets.only(top: 24),
+                        child: CircularProgressIndicator(),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    if (activeSession == null && gameToStart != null)
-                      FilledButton(
-                        onPressed: () => ref
-                            .read(libraryRepositoryProvider)
-                            .startActivePlaySession(gameToStart.gameId),
-                        child: const Text('Start'),
-                      ),
                   ],
                 ),
               ),

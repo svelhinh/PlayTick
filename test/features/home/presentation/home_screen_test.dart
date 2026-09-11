@@ -101,6 +101,37 @@ void main() {
     expect(find.text('12 h 45'), findsOneWidget);
   });
 
+  testWidgets('Home excludes non-playing games from its summary', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          weeklyPlaytimeProvider.overrideWith(
+            (_) => Stream.value(Duration.zero),
+          ),
+          libraryGamesProvider.overrideWith(
+            (_) => Stream.value(const [
+              LibraryGame(
+                gameId: 1,
+                name: 'Celeste',
+                status: GameStatus.completed,
+              ),
+            ]),
+          ),
+          activePlaySessionProvider.overrideWith(
+            (_) => Stream.value(null),
+          ),
+        ],
+        child: const PlayTick(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('0'), findsOneWidget);
+    expect(find.byType(EmptyStateCard), findsOneWidget);
+  });
+
   testWidgets(
     'Home shows the active game and elapsed time from the timer',
     (tester) async {
@@ -116,7 +147,7 @@ void main() {
             activePlaySessionProvider.overrideWith(
               (_) => Stream.value(
                 ActivePlaySession(
-                  gameId: 1,
+                  gameId: 2,
                   startedAt: startedAt,
                 ),
               ),
@@ -125,6 +156,11 @@ void main() {
               (_) => Stream.value(const [
                 LibraryGame(
                   gameId: 1,
+                  name: 'Hollow Knight',
+                  status: GameStatus.playing,
+                ),
+                LibraryGame(
+                  gameId: 2,
                   name: 'Celeste',
                   status: GameStatus.playing,
                 ),
@@ -141,7 +177,10 @@ void main() {
 
       expect(find.text('Active session'), findsOneWidget);
       expect(find.text('Celeste'), findsOneWidget);
+      expect(find.text('Hollow Knight'), findsNothing);
       expect(find.text('01:02:03'), findsOneWidget);
+      expect(find.text('2'), findsOneWidget);
+      expect(find.byType(EmptyStateCard), findsNothing);
     },
   );
 
