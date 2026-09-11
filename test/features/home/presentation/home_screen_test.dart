@@ -189,6 +189,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Finished session'), findsOneWidget);
+    expect(find.text('00:05:00'), findsOneWidget);
     expect(
       await database.select(database.activePlaySessions).get(),
       hasLength(1),

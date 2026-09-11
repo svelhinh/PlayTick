@@ -15,11 +15,18 @@ import 'package:playtick/features/library/presentation/widgets/game_cover_image.
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  Duration? _pendingFinishDuration;
+
+  @override
+  Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
@@ -29,7 +36,7 @@ class HomeScreen extends ConsumerWidget {
 
     var now = DateTime.now();
 
-    if (activeSession != null) {
+    if (activeSession != null && _pendingFinishDuration == null) {
       now = ref.watch(timerNowProvider).value ?? now;
     }
 
@@ -58,29 +65,46 @@ class HomeScreen extends ConsumerWidget {
                       _ActivePlaySessionCard(
                         coverUrl: activeGame.coverUrl,
                         gameTitle: activeGame.name,
-                        playtime: now.difference(activeSession.startedAt),
+                        playtime:
+                            _pendingFinishDuration ??
+                            now.difference(activeSession.startedAt),
                         onStop: () async {
-                          await showModalBottomSheet<void>(
-                            context: context,
-                            isScrollControlled: true,
-                            showDragHandle: true,
-                            useSafeArea: true,
-                            backgroundColor: theme.colorScheme.surface,
-                            builder: (context) => FinishActivePlaySessionSheet(
-                              onSave: (duration, note) => ref
-                                  .read(libraryRepositoryProvider)
-                                  .finishActivePlaySession(
-                                    duration,
-                                    note: note,
-                                  ),
-                              coverUrl: activeGame.coverUrl,
-                              gameTitle: activeGame.name,
-                              startedAt: activeSession.startedAt,
-                              initialDuration: now.difference(
-                                activeSession.startedAt,
-                              ),
-                            ),
+                          final pendingDuration = now.difference(
+                            activeSession.startedAt,
                           );
+
+                          setState(() {
+                            _pendingFinishDuration = pendingDuration;
+                          });
+
+                          try {
+                            await showModalBottomSheet<void>(
+                              context: context,
+                              isScrollControlled: true,
+                              showDragHandle: true,
+                              useSafeArea: true,
+                              backgroundColor: theme.colorScheme.surface,
+                              builder: (context) =>
+                                  FinishActivePlaySessionSheet(
+                                    onSave: (duration, note) => ref
+                                        .read(libraryRepositoryProvider)
+                                        .finishActivePlaySession(
+                                          duration,
+                                          note: note,
+                                        ),
+                                    coverUrl: activeGame.coverUrl,
+                                    gameTitle: activeGame.name,
+                                    startedAt: activeSession.startedAt,
+                                    initialDuration: pendingDuration,
+                                  ),
+                            );
+                          } finally {
+                            if (mounted) {
+                              setState(() {
+                                _pendingFinishDuration = null;
+                              });
+                            }
+                          }
                         },
                       ),
                       const SizedBox(height: 16),
