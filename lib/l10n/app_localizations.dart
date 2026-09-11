@@ -152,6 +152,12 @@ abstract class AppLocalizations {
   /// **'Validate'**
   String get validate;
 
+  /// The text of the button to save an action
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
   /// The error message when a game is already in the library
   ///
   /// In en, this message translates to:
@@ -217,6 +223,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stop'**
   String get homeActivePlaySessionStopButton;
+
+  /// The title of the finished session section in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Finished session'**
+  String get homeFinishActivePlaySession;
+
+  /// The text of the button to edit the duration of the active session in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Edit duration'**
+  String get homeFinishActivePlaySessionEditDurationButton;
+
+  /// The label of the duration label in the finish active play session sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get homeFinishActivePlaySessionDurationLabel;
+
+  /// The title of the delete active session dialog in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the active session'**
+  String get homeFinishActivePlaySessionDeleteTitle;
+
+  /// The description of the delete active session dialog in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete the active session?\n\nThe session and its note will be removed from this device. This action is irreversible.'**
+  String get homeFinishActivePlaySessionDeleteDescription;
+
+  /// The text of the button to delete the active session in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Delete session'**
+  String get homeFinishActivePlaySessionDeleteButton;
 
   /// The title of the library screen
   ///

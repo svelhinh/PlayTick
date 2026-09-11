@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
+import 'package:playtick/features/home/presentation/finish_active_play_session_sheet.dart';
 import 'package:playtick/features/home/presentation/providers/active_play_session_provider.dart';
 import 'package:playtick/features/home/presentation/providers/timer_now_provider.dart';
 import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
@@ -14,11 +15,18 @@ import 'package:playtick/features/library/presentation/widgets/game_cover_image.
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  Duration? _pendingFinishDuration;
+
+  @override
+  Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
@@ -28,7 +36,7 @@ class HomeScreen extends ConsumerWidget {
 
     var now = DateTime.now();
 
-    if (activeSession != null) {
+    if (activeSession != null && _pendingFinishDuration == null) {
       now = ref.watch(timerNowProvider).value ?? now;
     }
 
@@ -57,10 +65,50 @@ class HomeScreen extends ConsumerWidget {
                       _ActivePlaySessionCard(
                         coverUrl: activeGame.coverUrl,
                         gameTitle: activeGame.name,
-                        playtime: now.difference(activeSession.startedAt),
-                        onStop: () => ref
-                            .read(libraryRepositoryProvider)
-                            .clearActivePlaySession(),
+                        playtime:
+                            _pendingFinishDuration ??
+                            now.difference(activeSession.startedAt),
+                        onStop: () async {
+                          final pendingDuration = now.difference(
+                            activeSession.startedAt,
+                          );
+
+                          setState(() {
+                            _pendingFinishDuration = pendingDuration;
+                          });
+
+                          try {
+                            await showModalBottomSheet<void>(
+                              context: context,
+                              isScrollControlled: true,
+                              showDragHandle: true,
+                              useSafeArea: true,
+                              backgroundColor: theme.colorScheme.surface,
+                              builder: (context) =>
+                                  FinishActivePlaySessionSheet(
+                                    onSave: (duration, note) => ref
+                                        .read(libraryRepositoryProvider)
+                                        .finishActivePlaySession(
+                                          duration,
+                                          note: note,
+                                        ),
+                                    onDelete: () => ref
+                                        .read(libraryRepositoryProvider)
+                                        .clearActivePlaySession(),
+                                    coverUrl: activeGame.coverUrl,
+                                    gameTitle: activeGame.name,
+                                    startedAt: activeSession.startedAt,
+                                    initialDuration: pendingDuration,
+                                  ),
+                            );
+                          } finally {
+                            if (mounted) {
+                              setState(() {
+                                _pendingFinishDuration = null;
+                              });
+                            }
+                          }
+                        },
                       ),
                       const SizedBox(height: 16),
                     ],

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:playtick/app/app_theme.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
@@ -74,7 +73,7 @@ class GameDetailsScreen extends ConsumerWidget {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(e.localizeLibraryError(appLoc)),
-                                backgroundColor: AppTheme.danger,
+                                backgroundColor: theme.colorScheme.error,
                               ),
                             );
                           }
@@ -83,7 +82,10 @@ class GameDetailsScreen extends ConsumerWidget {
                     ),
                   );
                 },
-                icon: const Icon(Icons.delete, color: AppTheme.danger),
+                icon: Icon(
+                  Icons.delete,
+                  color: theme.colorScheme.error,
+                ),
               );
             },
             error: (error, stackTrace) => const SizedBox.shrink(),

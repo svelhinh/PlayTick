@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift/drift.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
 import 'package:playtick/features/library/domain/active_play_session.dart';
@@ -360,5 +362,29 @@ class DriftLibraryRepository implements LibraryRepository {
   @override
   Future<void> clearActivePlaySession() async {
     await _database.delete(_database.activePlaySessions).go();
+  }
+
+  @override
+  Future<void> finishActivePlaySession(
+    Duration duration, {
+    String? note,
+  }) async {
+    await _database.transaction(() async {
+      final activePlaySession = await _database
+          .select(_database.activePlaySessions)
+          .getSingleOrNull();
+
+      if (activePlaySession == null) {
+        throw const ActivePlaySessionNotFoundException();
+      }
+
+      await addPlaySession(
+        activePlaySession.gameId,
+        activePlaySession.startedAt,
+        duration,
+        note: note,
+      );
+      await clearActivePlaySession();
+    });
   }
 }

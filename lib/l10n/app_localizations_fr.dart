@@ -37,6 +37,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get validate => 'Valider';
 
   @override
+  String get save => 'Enregistrer';
+
+  @override
   String get gameAlreadyInLibrary => 'Ce jeu est déjà dans votre bibliothèque.';
 
   @override
@@ -70,6 +73,27 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get homeActivePlaySessionStopButton => 'Arrêter';
+
+  @override
+  String get homeFinishActivePlaySession => 'Session terminée';
+
+  @override
+  String get homeFinishActivePlaySessionEditDurationButton =>
+      'Modifier la durée';
+
+  @override
+  String get homeFinishActivePlaySessionDurationLabel => 'Durée';
+
+  @override
+  String get homeFinishActivePlaySessionDeleteTitle =>
+      'Supprimer la session en cours';
+
+  @override
+  String get homeFinishActivePlaySessionDeleteDescription =>
+      'Voulez-vous vraiment supprimer la session en cours ?\n\nLa session et sa note seront retirées de cet appareil. Cette action est irréversible.';
+
+  @override
+  String get homeFinishActivePlaySessionDeleteButton => 'Supprimer la session';
 
   @override
   String get libraryTitle => 'Bibliothèque';

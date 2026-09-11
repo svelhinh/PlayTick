@@ -33,3 +33,7 @@ final class InvalidActivePlaySessionException implements Exception {
 final class DuplicateActivePlaySessionException implements Exception {
   const DuplicateActivePlaySessionException();
 }
+
+final class ActivePlaySessionNotFoundException implements Exception {
+  const ActivePlaySessionNotFoundException();
+}

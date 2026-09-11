@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:playtick/features/library/presentation/game_details/hold_step_button.dart';
+import 'package:playtick/features/library/presentation/widgets/hold_step_button.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 final class DurationPickerDialog extends StatefulWidget {
@@ -17,6 +17,10 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
 
   void _decreaseHours() {
     setState(() {
+      if (_hours == 1 && _minutes == 0) {
+        return;
+      }
+
       final next = _hours - 1;
       _hours = next < 0 ? 0 : next;
     });
@@ -29,6 +33,11 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
   void _decreaseMinutes() {
     setState(() {
       final next = _minutes - 1;
+
+      if (_hours == 0 && next == 0) {
+        return;
+      }
+
       if (next < 0) {
         _decreaseHours();
         _minutes = 59;
@@ -53,8 +62,11 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
   @override
   void initState() {
     super.initState();
-    _hours = widget.duration.inHours;
-    _minutes = widget.duration.inMinutes.remainder(60);
+    final initialDuration = widget.duration < const Duration(minutes: 1)
+        ? const Duration(minutes: 1)
+        : widget.duration;
+    _hours = initialDuration.inHours;
+    _minutes = initialDuration.inMinutes.remainder(60);
   }
 
   @override
@@ -153,7 +165,7 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
                       color: theme.colorScheme.surface,
                       padding: const EdgeInsets.all(8),
                       child: Text(
-                        _minutes.toString(),
+                        _minutes.toString().padLeft(2, '0'),
                         style: theme.textTheme.titleLarge,
                         textAlign: TextAlign.center,
                       ),

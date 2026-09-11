@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:playtick/app/app_theme.dart';
 import 'package:playtick/features/library/domain/play_session.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
-import 'package:playtick/features/library/presentation/game_details/delete_play_session_dialog.dart';
-import 'package:playtick/features/library/presentation/game_details/duration_picker_dialog.dart';
-import 'package:playtick/features/library/presentation/game_details/hold_step_button.dart';
-import 'package:playtick/features/library/presentation/game_details/session_duration_step.dart';
+import 'package:playtick/features/library/presentation/widgets/delete_play_session_dialog.dart';
+import 'package:playtick/features/library/presentation/widgets/duration_picker_dialog.dart';
+import 'package:playtick/features/library/presentation/widgets/hold_step_button.dart';
+import 'package:playtick/features/library/presentation/widgets/session_duration_step.dart';
+import 'package:playtick/features/library/presentation/widgets/session_note_text_field.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 final class PlaySessionSheet extends StatefulWidget {
@@ -51,16 +51,20 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
   }
 
   Future<void> _onDeletePressed() async {
+    final appLoc = AppLocalizations.of(context)!;
+
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => const DeletePlaySessionDialog(),
+      builder: (context) => DeletePlaySessionDialog(
+        title: appLoc.gameDetailsPlaySessionsDeleteTitle,
+        description: appLoc.gameDetailsPlaySessionsDeleteDescription,
+        deleteButtonText: appLoc.gameDetailsPlaySessionsDeleteButton,
+      ),
     );
 
     if (confirmed != true || !mounted) {
       return;
     }
-
-    final appLoc = AppLocalizations.of(context)!;
 
     try {
       await widget.onDelete!();
@@ -73,7 +77,7 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.localizeLibraryError(appLoc)),
-            backgroundColor: AppTheme.danger,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }
@@ -111,9 +115,9 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
                   IconButton(
                     onPressed: _onDeletePressed,
                     tooltip: appLoc.gameDetailsPlaySessionsDeleteButton,
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.delete,
-                      color: AppTheme.danger,
+                      color: theme.colorScheme.error,
                     ),
                   ),
               ],
@@ -224,24 +228,7 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            TextFormField(
-              controller: _noteController,
-              style: theme.textTheme.bodyMedium!.copyWith(
-                color: theme.colorScheme.onSurface,
-              ),
-              decoration: InputDecoration(
-                labelText: appLoc.gameDetailsPlaySessionsNoteLabel,
-                fillColor: theme.colorScheme.surface,
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                contentPadding: const EdgeInsets.all(8),
-                hintText: appLoc.gameDetailsPlaySessionsHintText,
-                hintStyle: theme.textTheme.bodyMedium!.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                ),
-              ),
-              minLines: 4,
-              maxLines: 4,
-            ),
+            SessionNoteTextField(controller: _noteController),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -262,7 +249,7 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(e.localizeLibraryError(appLoc)),
-                          backgroundColor: AppTheme.danger,
+                          backgroundColor: theme.colorScheme.error,
                         ),
                       );
                     }

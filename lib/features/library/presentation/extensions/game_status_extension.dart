@@ -15,7 +15,7 @@ extension GameStatusExtension on GameStatus {
       case GameStatus.completed:
         return AppTheme.success;
       case GameStatus.dropped:
-        return AppTheme.danger;
+        return theme.colorScheme.error;
     }
   }
 
