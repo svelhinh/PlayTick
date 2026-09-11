@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
+import 'package:playtick/features/home/presentation/finish_active_play_session_sheet.dart';
 import 'package:playtick/features/home/presentation/providers/active_play_session_provider.dart';
 import 'package:playtick/features/home/presentation/providers/timer_now_provider.dart';
 import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
@@ -210,5 +211,56 @@ void main() {
     expect(sessions, hasLength(1));
     expect(sessions.single.duration, const Duration(minutes: 5).inSeconds);
     expect(sessions.single.note, 'Boss defeated');
+  });
+
+  testWidgets('dismissing the finish sheet resumes the active timer', (
+    tester,
+  ) async {
+    final startedAt = DateTime(2026, 9, 10, 14);
+    var now = startedAt.add(const Duration(minutes: 5));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          weeklyPlaytimeProvider.overrideWith(
+            (_) => Stream.value(Duration.zero),
+          ),
+          activePlaySessionProvider.overrideWith(
+            (_) => Stream.value(
+              ActivePlaySession(gameId: 1, startedAt: startedAt),
+            ),
+          ),
+          libraryGamesProvider.overrideWith(
+            (_) => Stream.value(const [
+              LibraryGame(
+                gameId: 1,
+                name: 'Celeste',
+                status: GameStatus.playing,
+              ),
+            ]),
+          ),
+          timerNowProvider.overrideWith((_) async* {
+            yield now;
+          }),
+        ],
+        child: const PlayTick(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('00:05:00'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Stop'));
+    await tester.pumpAndSettle();
+
+    now = startedAt.add(const Duration(minutes: 10));
+    Navigator.of(
+      tester.element(find.byType(FinishActivePlaySessionSheet)),
+    ).pop();
+    await tester.pumpAndSettle();
+
+    expect(find.byType(FinishActivePlaySessionSheet), findsNothing);
+    expect(find.text('Active session'), findsOneWidget);
+    expect(find.text('00:10:00'), findsOneWidget);
   });
 }
