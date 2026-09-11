@@ -11,10 +11,10 @@ import 'package:playtick/features/library/data/database/database_provider.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
-import 'package:playtick/features/library/presentation/game_details/delete_play_session_dialog.dart';
 import 'package:playtick/features/library/presentation/game_details/game_details_screen.dart';
 import 'package:playtick/features/library/presentation/game_details/play_session_sheet.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
+import 'package:playtick/features/library/presentation/widgets/delete_play_session_dialog.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 

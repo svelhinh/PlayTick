@@ -242,6 +242,24 @@ abstract class AppLocalizations {
   /// **'Duration'**
   String get homeFinishActivePlaySessionDurationLabel;
 
+  /// The title of the delete active session dialog in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the active session'**
+  String get homeFinishActivePlaySessionDeleteTitle;
+
+  /// The description of the delete active session dialog in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete the active session?\n\nThe session and its note will be removed from this device. This action is irreversible.'**
+  String get homeFinishActivePlaySessionDeleteDescription;
+
+  /// The text of the button to delete the active session in the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Delete session'**
+  String get homeFinishActivePlaySessionDeleteButton;
+
   /// The title of the library screen
   ///
   /// In en, this message translates to:

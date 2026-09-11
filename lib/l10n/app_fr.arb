@@ -120,6 +120,21 @@
         "type": "text",
         "description": "Le label de la durée de la session en cours dans l'écran d'accueil"
     },
+    "homeFinishActivePlaySessionDeleteTitle": "Supprimer la session en cours",
+    "@homeFinishActivePlaySessionDeleteTitle": {
+        "type": "text",
+        "description": "Le titre de la boîte de dialogue de suppression de la session en cours dans l'écran d'accueil"
+    },
+    "homeFinishActivePlaySessionDeleteDescription": "Voulez-vous vraiment supprimer la session en cours ?\n\nLa session et sa note seront retirées de cet appareil. Cette action est irréversible.",
+    "@homeFinishActivePlaySessionDeleteDescription": {
+        "type": "text",
+        "description": "La description de la boîte de dialogue de suppression de la session en cours dans l'écran d'accueil"
+    },
+    "homeFinishActivePlaySessionDeleteButton": "Supprimer la session",
+    "@homeFinishActivePlaySessionDeleteButton": {
+        "type": "text",
+        "description": "Le texte du bouton pour supprimer la session en cours dans l'écran d'accueil"
+    },
     "libraryTitle": "Bibliothèque",
     "@libraryTitle": {
         "type": "text",

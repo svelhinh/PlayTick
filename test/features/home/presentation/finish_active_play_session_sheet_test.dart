@@ -9,6 +9,7 @@ void main() {
   ) async {
     Duration? savedDuration;
     String? savedNote;
+    var deleteCalls = 0;
 
     await tester.pumpWidget(
       MaterialApp(
@@ -24,6 +25,9 @@ void main() {
                   onSave: (duration, note) async {
                     savedDuration = duration;
                     savedNote = note;
+                  },
+                  onDelete: () async {
+                    deleteCalls++;
                   },
                   coverUrl: null,
                   gameTitle: 'Celeste',
@@ -42,6 +46,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('1 min'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.delete));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+
+    expect(deleteCalls, 0);
+    expect(find.byType(FinishActivePlaySessionSheet), findsOneWidget);
 
     await tester.tap(find.text('Edit duration'));
     await tester.pumpAndSettle();

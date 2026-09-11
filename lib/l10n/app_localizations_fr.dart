@@ -85,6 +85,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get homeFinishActivePlaySessionDurationLabel => 'Durée';
 
   @override
+  String get homeFinishActivePlaySessionDeleteTitle =>
+      'Supprimer la session en cours';
+
+  @override
+  String get homeFinishActivePlaySessionDeleteDescription =>
+      'Voulez-vous vraiment supprimer la session en cours ?\n\nLa session et sa note seront retirées de cet appareil. Cette action est irréversible.';
+
+  @override
+  String get homeFinishActivePlaySessionDeleteButton => 'Supprimer la session';
+
+  @override
   String get libraryTitle => 'Bibliothèque';
 
   @override

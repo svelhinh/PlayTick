@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:playtick/app/app_theme.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
+import 'package:playtick/features/library/presentation/widgets/delete_play_session_dialog.dart';
 import 'package:playtick/features/library/presentation/widgets/duration_picker_dialog.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/features/library/presentation/widgets/session_note_text_field.dart';
@@ -11,6 +11,7 @@ import 'package:playtick/l10n/app_localizations.dart';
 final class FinishActivePlaySessionSheet extends StatefulWidget {
   const FinishActivePlaySessionSheet({
     required this.onSave,
+    required this.onDelete,
     required this.coverUrl,
     required this.gameTitle,
     required this.startedAt,
@@ -19,6 +20,7 @@ final class FinishActivePlaySessionSheet extends StatefulWidget {
   });
 
   final Future<void> Function(Duration duration, String? note) onSave;
+  final Future<void> Function() onDelete;
 
   final String? coverUrl;
   final String gameTitle;
@@ -60,9 +62,53 @@ class _FinishActivePlaySessionSheetState
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              appLoc.homeFinishActivePlaySession,
-              style: theme.textTheme.titleLarge,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  appLoc.homeFinishActivePlaySession,
+                  style: theme.textTheme.titleLarge,
+                ),
+                IconButton(
+                  onPressed: () async {
+                    final confirmed = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => DeletePlaySessionDialog(
+                        title: appLoc.homeFinishActivePlaySessionDeleteTitle,
+                        description:
+                            appLoc.homeFinishActivePlaySessionDeleteDescription,
+                        deleteButtonText:
+                            appLoc.homeFinishActivePlaySessionDeleteButton,
+                      ),
+                    );
+
+                    if (confirmed != true || !mounted) {
+                      return;
+                    }
+
+                    try {
+                      await widget.onDelete();
+
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                    } on Exception catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e.localizeLibraryError(appLoc)),
+                            backgroundColor: theme.colorScheme.error,
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             Row(
@@ -159,7 +205,7 @@ class _FinishActivePlaySessionSheetState
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(e.localizeLibraryError(appLoc)),
-                          backgroundColor: AppTheme.danger,
+                          backgroundColor: theme.colorScheme.error,
                         ),
                       );
                     }

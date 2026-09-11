@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:playtick/app/app_theme.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -33,10 +32,12 @@ final class DeleteGameSheet extends StatelessWidget {
                 children: [
                   IconCircle(
                     icon: Icons.delete_outline,
-                    backgroundColor: AppTheme.danger.withValues(alpha: 0.1),
+                    backgroundColor: theme.colorScheme.error.withValues(
+                      alpha: 0.1,
+                    ),
                     radius: 24,
                     iconSize: 32,
-                    iconColor: AppTheme.danger,
+                    iconColor: theme.colorScheme.error,
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -55,17 +56,17 @@ final class DeleteGameSheet extends StatelessWidget {
                         const SizedBox(height: 16),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.warning_outlined,
                               size: 16,
-                              color: AppTheme.danger,
+                              color: theme.colorScheme.error,
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 appLoc.gameDetailsDeleteWarning,
                                 style: theme.textTheme.bodySmall?.copyWith(
-                                  color: AppTheme.danger,
+                                  color: theme.colorScheme.error,
                                 ),
                               ),
                             ),
@@ -81,7 +82,7 @@ final class DeleteGameSheet extends StatelessWidget {
                 width: double.infinity,
                 child: FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: AppTheme.danger,
+                    backgroundColor: theme.colorScheme.error,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40),
                     ),
@@ -95,7 +96,7 @@ final class DeleteGameSheet extends StatelessWidget {
                 child: Text(
                   appLoc.cancel,
                   style: theme.textTheme.bodyMedium!.copyWith(
-                    color: AppTheme.danger,
+                    color: theme.colorScheme.error,
                   ),
                 ),
               ),

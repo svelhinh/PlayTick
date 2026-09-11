@@ -22,6 +22,7 @@ abstract final class AppTheme {
           surface: surface,
           onSurface: textPrimary,
           outline: outline,
+          error: danger,
         );
 
     return ThemeData(

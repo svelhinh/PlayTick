@@ -263,4 +263,62 @@ void main() {
     expect(find.text('Active session'), findsOneWidget);
     expect(find.text('00:10:00'), findsOneWidget);
   });
+
+  testWidgets('confirming cancellation discards the active session', (
+    tester,
+  ) async {
+    final startedAt = DateTime(2026, 9, 10, 14);
+    final database = AppDatabase(NativeDatabase.memory());
+    final repository = DriftLibraryRepository(
+      database,
+      now: () => startedAt,
+    );
+    final container = ProviderContainer(
+      overrides: [
+        libraryRepositoryProvider.overrideWith((_) => repository),
+        timerNowProvider.overrideWith(
+          (_) => Stream.value(startedAt.add(const Duration(minutes: 5))),
+        ),
+      ],
+    );
+    addTearDown(() {
+      container.dispose();
+      unawaited(database.close());
+    });
+
+    await repository.addGame(
+      Game(id: 1, name: 'Celeste'),
+      status: GameStatus.playing,
+    );
+    await repository.startActivePlaySession(1);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const PlayTick(),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Stop'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.tap(find.byIcon(Icons.delete));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete session'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.byType(FinishActivePlaySessionSheet), findsNothing);
+    expect(find.text('Active session'), findsNothing);
+    expect(
+      await database.select(database.activePlaySessions).get(),
+      isEmpty,
+    );
+    expect(
+      await database.select(database.playSessions).get(),
+      isEmpty,
+    );
+  });
 }

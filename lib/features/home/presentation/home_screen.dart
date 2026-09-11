@@ -92,6 +92,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                           duration,
                                           note: note,
                                         ),
+                                    onDelete: () => ref
+                                        .read(libraryRepositoryProvider)
+                                        .clearActivePlaySession(),
                                     coverUrl: activeGame.coverUrl,
                                     gameTitle: activeGame.name,
                                     startedAt: activeSession.startedAt,
