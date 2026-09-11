@@ -35,7 +35,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final playtime = ref.watch(weeklyPlaytimeProvider);
     final activeSession = ref.watch(activePlaySessionProvider).value;
 
-    final games = ref.watch(libraryGamesProvider);
+    final gamesAsync = ref.watch(libraryGamesProvider);
 
     var now = DateTime.now();
 
@@ -43,7 +43,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       now = ref.watch(timerNowProvider).value ?? now;
     }
 
-    final loadedGames = games.value ?? [];
+    final loadedGames = gamesAsync.value ?? [];
     final playingGames = loadedGames
         .where((game) => game.status == GameStatus.playing)
         .toList();
@@ -139,7 +139,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    games.when(
+                    gamesAsync.when(
                       data: (games) {
                         if (playingGames.isEmpty) {
                           return EmptyStateCard(
