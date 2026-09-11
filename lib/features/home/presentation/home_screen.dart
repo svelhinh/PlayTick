@@ -4,11 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
-import 'package:playtick/features/home/presentation/finish_active_play_session_sheet.dart';
 import 'package:playtick/features/home/presentation/providers/active_play_session_provider.dart';
 import 'package:playtick/features/home/presentation/providers/timer_now_provider.dart';
 import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
+import 'package:playtick/features/home/presentation/widgets/finish_active_play_session_sheet.dart';
+import 'package:playtick/features/home/presentation/widgets/home_games_list.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
+import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
@@ -151,7 +153,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           );
                         }
 
-                        return const SizedBox.shrink();
+                        if (activeSession != null) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return GamesList(
+                          games: playingGames,
+                          onGamePressed: (game) async {
+                            try {
+                              await ref
+                                  .read(libraryRepositoryProvider)
+                                  .startActivePlaySession(game.gameId);
+                            } on Exception catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      e.localizeLibraryError(appLoc),
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                        );
                       },
                       error: (error, stackTrace) => EmptyStateCard(
                         icon: Icons.sports_esports_outlined,

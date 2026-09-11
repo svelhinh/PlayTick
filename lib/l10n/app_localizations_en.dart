@@ -94,6 +94,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeFinishActivePlaySessionDeleteButton => 'Delete session';
 
   @override
+  String get homeGamesListTitle => 'Continue';
+
+  @override
+  String get homeGamesListButtonText => 'Launch';
+
+  @override
   String get libraryTitle => 'Library';
 
   @override

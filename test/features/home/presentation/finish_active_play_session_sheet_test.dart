@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:playtick/features/home/presentation/finish_active_play_session_sheet.dart';
+import 'package:playtick/features/home/presentation/widgets/finish_active_play_session_sheet.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 void main() {

@@ -96,6 +96,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get homeFinishActivePlaySessionDeleteButton => 'Supprimer la session';
 
   @override
+  String get homeGamesListTitle => 'Continuer';
+
+  @override
+  String get homeGamesListButtonText => 'Lancer';
+
+  @override
   String get libraryTitle => 'Bibliothèque';
 
   @override
