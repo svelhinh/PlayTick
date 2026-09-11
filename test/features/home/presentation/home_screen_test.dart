@@ -144,7 +144,9 @@ void main() {
     },
   );
 
-  testWidgets('stopping the active session removes its card', (tester) async {
+  testWidgets('saving the finished session records it and removes its card', (
+    tester,
+  ) async {
     final startedAt = DateTime(2026, 9, 10, 14);
     final database = AppDatabase(NativeDatabase.memory());
     final repository = DriftLibraryRepository(
@@ -176,18 +178,36 @@ void main() {
         child: const PlayTick(),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Active session'), findsOneWidget);
     expect(find.text('00:05:00'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(FilledButton, 'Stop'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.text('Finished session'), findsOneWidget);
+    expect(
+      await database.select(database.activePlaySessions).get(),
+      hasLength(1),
+    );
+
+    await tester.enterText(find.byType(TextFormField), '  Boss defeated  ');
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Active session'), findsNothing);
     expect(
       await database.select(database.activePlaySessions).get(),
       isEmpty,
     );
+
+    final sessions = await database.select(database.playSessions).get();
+    expect(sessions, hasLength(1));
+    expect(sessions.single.duration, const Duration(minutes: 5).inSeconds);
+    expect(sessions.single.note, 'Boss defeated');
   });
 }

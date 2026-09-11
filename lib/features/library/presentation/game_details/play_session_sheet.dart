@@ -4,9 +4,10 @@ import 'package:playtick/features/library/domain/play_session.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/game_details/delete_play_session_dialog.dart';
-import 'package:playtick/features/library/presentation/game_details/duration_picker_dialog.dart';
-import 'package:playtick/features/library/presentation/game_details/hold_step_button.dart';
-import 'package:playtick/features/library/presentation/game_details/session_duration_step.dart';
+import 'package:playtick/features/library/presentation/widgets/duration_picker_dialog.dart';
+import 'package:playtick/features/library/presentation/widgets/hold_step_button.dart';
+import 'package:playtick/features/library/presentation/widgets/session_duration_step.dart';
+import 'package:playtick/features/library/presentation/widgets/session_note_text_field.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 final class PlaySessionSheet extends StatefulWidget {
@@ -224,24 +225,7 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            TextFormField(
-              controller: _noteController,
-              style: theme.textTheme.bodyMedium!.copyWith(
-                color: theme.colorScheme.onSurface,
-              ),
-              decoration: InputDecoration(
-                labelText: appLoc.gameDetailsPlaySessionsNoteLabel,
-                fillColor: theme.colorScheme.surface,
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                contentPadding: const EdgeInsets.all(8),
-                hintText: appLoc.gameDetailsPlaySessionsHintText,
-                hintStyle: theme.textTheme.bodyMedium!.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                ),
-              ),
-              minLines: 4,
-              maxLines: 4,
-            ),
+            SessionNoteTextField(controller: _noteController),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,

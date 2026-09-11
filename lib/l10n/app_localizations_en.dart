@@ -37,6 +37,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validate => 'Validate';
 
   @override
+  String get save => 'Save';
+
+  @override
   String get gameAlreadyInLibrary => 'This game is already in your library.';
 
   @override
@@ -69,6 +72,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeActivePlaySessionStopButton => 'Stop';
+
+  @override
+  String get homeFinishActivePlaySession => 'Finished session';
+
+  @override
+  String get homeFinishActivePlaySessionEditDurationButton => 'Edit duration';
+
+  @override
+  String get homeFinishActivePlaySessionDurationLabel => 'Duration';
 
   @override
   String get libraryTitle => 'Library';

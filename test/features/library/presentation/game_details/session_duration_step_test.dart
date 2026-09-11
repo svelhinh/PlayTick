@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:playtick/features/library/presentation/game_details/session_duration_step.dart';
+import 'package:playtick/features/library/presentation/widgets/session_duration_step.dart';
 
 void main() {
   group('nextQuarterHour', () {
