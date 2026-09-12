@@ -10,7 +10,9 @@ import 'package:playtick/features/library/presentation/extensions/game_subtitle_
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/game_details/delete_game_sheet.dart';
+import 'package:playtick/features/library/presentation/game_details/game_notes_card.dart';
 import 'package:playtick/features/library/presentation/game_details/play_sessions_card.dart';
+import 'package:playtick/features/library/presentation/providers/game_notes_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_game_provider.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/features/library/presentation/widgets/game_status_row.dart';
@@ -37,6 +39,7 @@ class GameDetailsScreen extends ConsumerWidget {
     }
 
     final gameAsync = ref.watch(libraryGameProvider(gameIdInt));
+    final notesAsync = ref.watch(gameNotesProvider(gameIdInt));
 
     return Scaffold(
       appBar: AppBar(
@@ -135,6 +138,16 @@ class GameDetailsScreen extends ConsumerWidget {
                     publisher: game.publisher,
                     platforms: game.platforms,
                     estimatedPlaytimes: game.estimatedPlaytimes,
+                  ),
+                  const SizedBox(height: 16),
+                  notesAsync.when(
+                    data: (notes) => GameNotesCard(
+                      notes: notes,
+                      gameId: game.id,
+                    ),
+                    error: (error, stackTrace) => const SizedBox.shrink(),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                   ),
                   const SizedBox(height: 16),
                   PlaySessionsCard(

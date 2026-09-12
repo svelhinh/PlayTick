@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/app/router/app_router.dart';
+import 'package:playtick/core/presentation/widgets/delete_dialog.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
 import 'package:playtick/features/library/data/database/database_provider.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
@@ -14,7 +15,6 @@ import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/presentation/game_details/game_details_screen.dart';
 import 'package:playtick/features/library/presentation/game_details/play_session_sheet.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
-import 'package:playtick/features/library/presentation/widgets/delete_play_session_dialog.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 
@@ -217,6 +217,89 @@ void main() {
     expect(find.text('Something went wrong'), findsOneWidget);
   });
 
+  testWidgets('adds a general note from game details', (tester) async {
+    await seedLibrary();
+    await pumpApp(tester);
+    await openLibrary(tester);
+    await tester.tap(seeDetailsOnCard('Hollow Knight'));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('Add a note'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Add a note'));
+    await tester.pumpAndSettle();
+
+    var saveButton = tester.widget<FilledButton>(
+      find.widgetWithText(FilledButton, 'Add note'),
+    );
+    expect(saveButton.onPressed, isNull);
+
+    await tester.enterText(
+      find.byType(TextFormField),
+      '  Upgrade the Nail before the boss  ',
+    );
+    await tester.pump();
+
+    saveButton = tester.widget<FilledButton>(
+      find.widgetWithText(FilledButton, 'Add note'),
+    );
+    expect(saveButton.onPressed, isNotNull);
+
+    final addNoteButton = find.widgetWithText(FilledButton, 'Add note');
+    await tester.ensureVisible(addNoteButton);
+    await tester.pump();
+    await tester.tap(addNoteButton);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.text('Upgrade the Nail before the boss'), findsOneWidget);
+    final notes = await database.select(database.gameNotes).get();
+    expect(notes, hasLength(1));
+    expect(notes.single.content, 'Upgrade the Nail before the boss');
+  });
+
+  testWidgets('edits and deletes a general note from game details', (
+    tester,
+  ) async {
+    await seedLibrary();
+    final repository = container.read(libraryRepositoryProvider);
+    await repository.addGameNote(200, 'Initial note');
+    await pumpApp(tester);
+    await openLibrary(tester);
+    await tester.tap(seeDetailsOnCard('Hollow Knight'));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.byIcon(Icons.edit));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.edit));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Updated note');
+    final saveNoteButton = find.widgetWithText(FilledButton, 'Save note');
+    await tester.ensureVisible(saveNoteButton);
+    await tester.pump();
+    await tester.tap(saveNoteButton);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.text('Updated note'), findsOneWidget);
+    expect(
+      (await database.select(database.gameNotes).get()).single.content,
+      'Updated note',
+    );
+
+    await tester.ensureVisible(find.byIcon(Icons.edit));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.edit));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Delete note'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete note'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Updated note'), findsNothing);
+    expect(await database.select(database.gameNotes).get(), isEmpty);
+  });
+
   testWidgets(
     'adds a manual play session from game details',
     (tester) async {
@@ -345,7 +428,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(DeletePlaySessionDialog), findsOneWidget);
+      expect(find.byType(DeleteConfirmationDialog), findsOneWidget);
       expect(find.text('Delete this session'), findsOneWidget);
 
       await tester.tap(find.text('Delete session'));
@@ -404,13 +487,13 @@ void main() {
 
       await tester.tap(
         find.descendant(
-          of: find.byType(DeletePlaySessionDialog),
+          of: find.byType(DeleteConfirmationDialog),
           matching: find.text('Cancel'),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(DeletePlaySessionDialog), findsNothing);
+      expect(find.byType(DeleteConfirmationDialog), findsNothing);
       expect(find.text('Edit a session'), findsOneWidget);
 
       await tester.tap(

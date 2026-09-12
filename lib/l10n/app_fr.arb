@@ -401,6 +401,61 @@
             }
         }
     },
+    "gameDetailsNotesTitle": "Notes",
+    "@gameDetailsNotesTitle": {
+        "type": "text",
+        "description": "Le titre de la section 'Notes' dans les détails du jeu"
+    },
+    "gameDetailsNotesAddButton": "Ajouter une note",
+    "@gameDetailsNotesAddButton": {
+        "type": "text",
+        "description": "Le texte du bouton pour ajouter une note dans les détails du jeu"
+    },
+    "gameDetailsNotesAddTitle": "Ajouter une note",
+    "@gameDetailsNotesAddTitle": {
+        "type": "text",
+        "description": "Le titre de la fiche d'ajout de note"
+    },
+    "gameDetailsNotesEditTitle": "Modifier la note",
+    "@gameDetailsNotesEditTitle": {
+        "type": "text",
+        "description": "Le titre de la fiche de modification de note"
+    },
+    "gameDetailsNotesDeleteTitle": "Supprimer cette note",
+    "@gameDetailsNotesDeleteTitle": {
+        "type": "text",
+        "description": "Le titre de la boîte de dialogue de suppression de note"
+    },
+    "gameDetailsNotesDeleteDescription": "Voulez-vous vraiment supprimer cette note ?\n\nLa note sera retirée de cet appareil. Cette action est irréversible.",
+    "@gameDetailsNotesDeleteDescription": {
+        "type": "text",
+        "description": "La description de la boîte de dialogue de suppression de note"
+    },
+    "gameDetailsNotesDeleteButton": "Supprimer la note",
+    "@gameDetailsNotesDeleteButton": {
+        "type": "text",
+        "description": "Le texte du bouton pour supprimer une note"
+    },
+    "gameDetailsNotesAddSaveButton": "Ajouter la note",
+    "@gameDetailsNotesAddSaveButton": {
+        "type": "text",
+        "description": "Le texte du bouton pour ajouter une note dans la fiche de notes"
+    },
+    "gameDetailsNotesEditSaveButton": "Enregistrer la note",
+    "@gameDetailsNotesEditSaveButton": {
+        "type": "text",
+        "description": "Le texte du bouton pour enregistrer une note dans la fiche de notes"
+    },
+    "gameDetailsNotesNoteLabel": "Note",
+    "@gameDetailsNotesNoteLabel": {
+        "type": "text",
+        "description": "Le label de la note dans la fiche de notes"
+    },
+    "gameDetailsNotesNoteHintText": "Écrivez votre note ici...",
+    "@gameDetailsNotesNoteHintText": {
+        "type": "text",
+        "description": "Le hint text de la note dans la fiche de notes"
+    },
     "gameDetailsPlaySessionsTitle": "Sessions",
     "@gameDetailsPlaySessionsTitle": {
         "type": "text",

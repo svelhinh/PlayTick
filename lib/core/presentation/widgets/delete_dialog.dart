@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
-final class DeletePlaySessionDialog extends StatelessWidget {
-  const DeletePlaySessionDialog({
+final class DeleteConfirmationDialog extends StatelessWidget {
+  const DeleteConfirmationDialog({
     required this.title,
     required this.description,
     required this.deleteButtonText,

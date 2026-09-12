@@ -173,8 +173,8 @@ final class _PlaySessionItem extends ConsumerWidget {
             ),
             if (session.note != null && session.note!.isNotEmpty) ...[
               const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
+              Align(
+                alignment: Alignment.centerLeft,
                 child: Text(
                   session.note!,
                   style: theme.textTheme.bodySmall,
