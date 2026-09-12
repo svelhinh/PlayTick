@@ -5,6 +5,7 @@ import 'package:playtick/features/library/data/database/app_database.dart';
 import 'package:playtick/features/library/domain/active_play_session.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
+import 'package:playtick/features/library/domain/game_note.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_exception.dart';
 import 'package:playtick/features/library/domain/library_game.dart';
@@ -22,6 +23,7 @@ class DriftLibraryRepository implements LibraryRepository {
   final AppDatabase _database;
   final DateTime Function() _now;
 
+  // Library Games
   @override
   Stream<List<LibraryGame>> watchLibraryGames() {
     final query =
@@ -108,7 +110,28 @@ class DriftLibraryRepository implements LibraryRepository {
       }
 
       return LibraryGameDetails(
-        game: _toGame(game),
+        game: Game(
+          id: game.id,
+          name: game.name,
+          coverUrl: game.coverUrl,
+          summary: game.summary,
+          releaseDate: game.releaseDate,
+          genres: game.genres,
+          platforms: game.platforms,
+          developer: game.developer,
+          publisher: game.publisher,
+          estimatedPlaytimes: EstimatedPlaytimes(
+            story: game.estimatedPlaytimesStory != null
+                ? Duration(seconds: game.estimatedPlaytimesStory!)
+                : null,
+            main: game.estimatedPlaytimesMain != null
+                ? Duration(seconds: game.estimatedPlaytimesMain!)
+                : null,
+            completion: game.estimatedPlaytimesCompletion != null
+                ? Duration(seconds: game.estimatedPlaytimesCompletion!)
+                : null,
+          ),
+        ),
         status: userGame.status,
         playSessions: playSessions,
         totalPlaytime: playSessions.fold(
@@ -194,6 +217,7 @@ class DriftLibraryRepository implements LibraryRepository {
     }
   }
 
+  // Play Sessions
   @override
   Future<void> addPlaySession(
     int gameId,
@@ -201,13 +225,7 @@ class DriftLibraryRepository implements LibraryRepository {
     Duration duration, {
     String? note,
   }) async {
-    final userGame = await (_database.select(
-      _database.userGames,
-    )..where((row) => row.gameId.equals(gameId))).getSingleOrNull();
-
-    if (userGame == null) {
-      throw const GameNotFoundException();
-    }
+    await _requireUserGame(gameId);
 
     if (duration <= Duration.zero) {
       throw const InvalidPlaySessionException();
@@ -229,41 +247,7 @@ class DriftLibraryRepository implements LibraryRepository {
         );
   }
 
-  Game _toGame(GameRow game) {
-    return Game(
-      id: game.id,
-      name: game.name,
-      coverUrl: game.coverUrl,
-      summary: game.summary,
-      releaseDate: game.releaseDate,
-      genres: game.genres,
-      platforms: game.platforms,
-      developer: game.developer,
-      publisher: game.publisher,
-      estimatedPlaytimes: EstimatedPlaytimes(
-        story: game.estimatedPlaytimesStory != null
-            ? Duration(seconds: game.estimatedPlaytimesStory!)
-            : null,
-        main: game.estimatedPlaytimesMain != null
-            ? Duration(seconds: game.estimatedPlaytimesMain!)
-            : null,
-        completion: game.estimatedPlaytimesCompletion != null
-            ? Duration(seconds: game.estimatedPlaytimesCompletion!)
-            : null,
-      ),
-    );
-  }
-
-  PlaySession _toPlaySession(PlaySessionRow session) {
-    return PlaySession(
-      id: session.id,
-      gameId: session.gameId,
-      date: session.date,
-      duration: Duration(seconds: session.duration),
-      note: session.note,
-    );
-  }
-
+  // Play Sessions
   @override
   Future<void> updatePlaySession(
     int sessionId,
@@ -306,6 +290,7 @@ class DriftLibraryRepository implements LibraryRepository {
     }
   }
 
+  // Weekly Playtime
   @override
   Stream<Duration> watchWeeklyPlaytime() {
     return _database.select(_database.playSessions).watch().map((rows) {
@@ -313,6 +298,7 @@ class DriftLibraryRepository implements LibraryRepository {
     });
   }
 
+  // Active Play Sessions
   @override
   Stream<ActivePlaySession?> watchActivePlaySession() {
     return _database.select(_database.activePlaySessions).watch().map((rows) {
@@ -329,13 +315,7 @@ class DriftLibraryRepository implements LibraryRepository {
 
   @override
   Future<void> startActivePlaySession(int gameId) async {
-    final userGame = await (_database.select(
-      _database.userGames,
-    )..where((row) => row.gameId.equals(gameId))).getSingleOrNull();
-
-    if (userGame == null) {
-      throw const GameNotFoundException();
-    }
+    final userGame = await _requireUserGame(gameId);
 
     if (userGame.status != GameStatus.playing) {
       throw const InvalidActivePlaySessionException();
@@ -386,5 +366,107 @@ class DriftLibraryRepository implements LibraryRepository {
       );
       await clearActivePlaySession();
     });
+  }
+
+  // Game Notes
+  @override
+  Stream<List<GameNote>> watchGameNotes(int gameId) {
+    final query = _database.select(_database.gameNotes)
+      ..where((row) => row.gameId.equals(gameId))
+      ..orderBy([(row) => OrderingTerm.desc(row.createdAt)]);
+
+    return query.watch().map((rows) {
+      if (rows.isEmpty) {
+        return [];
+      }
+
+      return rows.map((row) {
+        return GameNote(
+          id: row.id,
+          gameId: row.gameId,
+          content: row.content,
+          createdAt: row.createdAt,
+        );
+      }).toList();
+    });
+  }
+
+  @override
+  Future<void> addGameNote(int gameId, String content) async {
+    await _requireUserGame(gameId);
+
+    final validatedContent = _validateGameNoteContent(content);
+
+    await _database
+        .into(_database.gameNotes)
+        .insert(
+          GameNotesCompanion.insert(
+            gameId: gameId,
+            content: validatedContent,
+            createdAt: _now(),
+          ),
+        );
+  }
+
+  @override
+  Future<void> updateGameNote(int noteId, String content) async {
+    final validatedContent = _validateGameNoteContent(content);
+
+    final updatedRows =
+        await (_database.update(
+          _database.gameNotes,
+        )..where((row) => row.id.equals(noteId))).write(
+          GameNotesCompanion(
+            content: Value(validatedContent),
+          ),
+        );
+
+    if (updatedRows == 0) {
+      throw const GameNoteNotFoundException();
+    }
+  }
+
+  @override
+  Future<void> removeGameNote(int noteId) async {
+    final deletedRows = await (_database.delete(
+      _database.gameNotes,
+    )..where((row) => row.id.equals(noteId))).go();
+
+    if (deletedRows == 0) {
+      throw const GameNoteNotFoundException();
+    }
+  }
+
+  // Utils
+  Future<UserGameRow> _requireUserGame(int gameId) async {
+    final userGame = await (_database.select(
+      _database.userGames,
+    )..where((row) => row.gameId.equals(gameId))).getSingleOrNull();
+
+    if (userGame == null) {
+      throw const GameNotFoundException();
+    }
+
+    return userGame;
+  }
+
+  String _validateGameNoteContent(String content) {
+    final trimmedContent = content.trim();
+
+    if (trimmedContent.isEmpty) {
+      throw const InvalidGameNoteException();
+    }
+
+    return trimmedContent;
+  }
+
+  PlaySession _toPlaySession(PlaySessionRow session) {
+    return PlaySession(
+      id: session.id,
+      gameId: session.gameId,
+      date: session.date,
+      duration: Duration(seconds: session.duration),
+      note: session.note,
+    );
   }
 }

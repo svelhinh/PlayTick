@@ -825,5 +825,90 @@ void main() {
         expect(await repository.watchActivePlaySession().first, isNotNull);
       },
     );
+
+    test(
+      'game notes are trimmed, isolated by game, and newest first',
+      () async {
+        final otherGame = Game(id: 201, name: 'Celeste');
+        await repository.addGame(game);
+        await repository.addGame(otherGame);
+
+        now = DateTime(2026, 8, 27, 10);
+        await repository.addGameNote(game.id, '  First note  ');
+        now = DateTime(2026, 8, 27, 11);
+        await repository.addGameNote(otherGame.id, 'Other game note');
+        now = DateTime(2026, 8, 27, 12);
+        await repository.addGameNote(game.id, 'Latest note');
+
+        final notes = await repository.watchGameNotes(game.id).first;
+
+        expect(notes.map((note) => note.content), [
+          'Latest note',
+          'First note',
+        ]);
+        expect(notes.every((note) => note.gameId == game.id), isTrue);
+        expect(notes.first.createdAt, DateTime(2026, 8, 27, 12));
+      },
+    );
+
+    test('adding a game note validates its game and content', () async {
+      await expectLater(
+        repository.addGameNote(999, 'Note'),
+        throwsA(isA<GameNotFoundException>()),
+      );
+
+      await repository.addGame(game);
+
+      await expectLater(
+        repository.addGameNote(game.id, '   '),
+        throwsA(isA<InvalidGameNoteException>()),
+      );
+      expect(await repository.watchGameNotes(game.id).first, isEmpty);
+    });
+
+    test('updates a game note without changing its creation date', () async {
+      await repository.addGame(game);
+      await repository.addGameNote(game.id, 'Initial note');
+      final initial = (await repository.watchGameNotes(game.id).first).single;
+
+      now = now.add(const Duration(days: 1));
+      await repository.updateGameNote(initial.id, '  Updated note  ');
+
+      final updated = (await repository.watchGameNotes(game.id).first).single;
+      expect(updated.content, 'Updated note');
+      expect(updated.createdAt, initial.createdAt);
+
+      await expectLater(
+        repository.updateGameNote(initial.id, '   '),
+        throwsA(isA<InvalidGameNoteException>()),
+      );
+      await expectLater(
+        repository.updateGameNote(999, 'Missing'),
+        throwsA(isA<GameNoteNotFoundException>()),
+      );
+    });
+
+    test('removes a game note and reports a missing note', () async {
+      await repository.addGame(game);
+      await repository.addGameNote(game.id, 'Temporary note');
+      final note = (await repository.watchGameNotes(game.id).first).single;
+
+      await repository.removeGameNote(note.id);
+
+      expect(await repository.watchGameNotes(game.id).first, isEmpty);
+      await expectLater(
+        repository.removeGameNote(note.id),
+        throwsA(isA<GameNoteNotFoundException>()),
+      );
+    });
+
+    test('deleting a game cascades its general notes', () async {
+      await repository.addGame(game);
+      await repository.addGameNote(game.id, 'Persisted note');
+
+      await repository.removeGame(game.id);
+
+      expect(await database.select(database.gameNotes).get(), isEmpty);
+    });
   });
 }
