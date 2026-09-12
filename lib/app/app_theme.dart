@@ -58,6 +58,11 @@ abstract final class AppTheme {
           fontSize: 14,
           height: 1.4,
         ),
+        bodySmall: TextStyle(
+          color: textSecondary,
+          fontSize: 12,
+          height: 1.3,
+        ),
         labelLarge: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,

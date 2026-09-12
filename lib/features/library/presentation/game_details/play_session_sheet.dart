@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:playtick/core/presentation/widgets/delete_dialog.dart';
 import 'package:playtick/features/library/domain/play_session.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
-import 'package:playtick/features/library/presentation/widgets/delete_play_session_dialog.dart';
 import 'package:playtick/features/library/presentation/widgets/duration_picker_dialog.dart';
 import 'package:playtick/features/library/presentation/widgets/hold_step_button.dart';
 import 'package:playtick/features/library/presentation/widgets/session_duration_step.dart';
@@ -55,7 +55,7 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => DeletePlaySessionDialog(
+      builder: (context) => DeleteConfirmationDialog(
         title: appLoc.gameDetailsPlaySessionsDeleteTitle,
         description: appLoc.gameDetailsPlaySessionsDeleteDescription,
         deleteButtonText: appLoc.gameDetailsPlaySessionsDeleteButton,
@@ -228,7 +228,11 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            SessionNoteTextField(controller: _noteController),
+            NoteTextField(
+              controller: _noteController,
+              label: appLoc.gameDetailsPlaySessionsNoteLabel,
+              hintText: appLoc.gameDetailsPlaySessionsHintText,
+            ),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,

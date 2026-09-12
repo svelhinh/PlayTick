@@ -257,6 +257,40 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get gameDetailsNotesTitle => 'Notes';
+
+  @override
+  String get gameDetailsNotesAddButton => 'Ajouter une note';
+
+  @override
+  String get gameDetailsNotesAddTitle => 'Ajouter une note';
+
+  @override
+  String get gameDetailsNotesEditTitle => 'Modifier la note';
+
+  @override
+  String get gameDetailsNotesDeleteTitle => 'Supprimer cette note';
+
+  @override
+  String get gameDetailsNotesDeleteDescription =>
+      'Voulez-vous vraiment supprimer cette note ?\n\nLa note sera retirée de cet appareil. Cette action est irréversible.';
+
+  @override
+  String get gameDetailsNotesDeleteButton => 'Supprimer la note';
+
+  @override
+  String get gameDetailsNotesAddSaveButton => 'Ajouter la note';
+
+  @override
+  String get gameDetailsNotesEditSaveButton => 'Enregistrer la note';
+
+  @override
+  String get gameDetailsNotesNoteLabel => 'Note';
+
+  @override
+  String get gameDetailsNotesNoteHintText => 'Écrivez votre note ici...';
+
+  @override
   String get gameDetailsPlaySessionsTitle => 'Sessions';
 
   @override

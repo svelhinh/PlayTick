@@ -524,6 +524,72 @@ abstract class AppLocalizations {
   /// **'Completion: {playtime}'**
   String gameDetailsEstimatedPlaytimesCompletion(String playtime);
 
+  /// The title of the section 'Notes' in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get gameDetailsNotesTitle;
+
+  /// The text of the button to add a note in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Add a note'**
+  String get gameDetailsNotesAddButton;
+
+  /// The title of the add note sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Add a note'**
+  String get gameDetailsNotesAddTitle;
+
+  /// The title of the edit note sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Edit a note'**
+  String get gameDetailsNotesEditTitle;
+
+  /// The title of the delete note dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this note'**
+  String get gameDetailsNotesDeleteTitle;
+
+  /// The description of the delete note dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this note?\n\nThe note will be removed from this device. This action is irreversible.'**
+  String get gameDetailsNotesDeleteDescription;
+
+  /// The text of the button to delete a note
+  ///
+  /// In en, this message translates to:
+  /// **'Delete note'**
+  String get gameDetailsNotesDeleteButton;
+
+  /// The text of the button to add a note in the game notes sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Add note'**
+  String get gameDetailsNotesAddSaveButton;
+
+  /// The text of the button to edit a note in the game notes sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Save note'**
+  String get gameDetailsNotesEditSaveButton;
+
+  /// The label of the note field in the game notes sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get gameDetailsNotesNoteLabel;
+
+  /// The hint text of the note field in the game notes sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Write your note here...'**
+  String get gameDetailsNotesNoteHintText;
+
   /// The title of the section 'Sessions' in the game details
   ///
   /// In en, this message translates to:

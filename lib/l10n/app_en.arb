@@ -401,6 +401,61 @@
             }
         }
     },
+    "gameDetailsNotesTitle": "Notes",
+    "@gameDetailsNotesTitle": {
+        "type": "text",
+        "description": "The title of the section 'Notes' in the game details"
+    },
+    "gameDetailsNotesAddButton": "Add a note",
+    "@gameDetailsNotesAddButton": {
+        "type": "text",
+        "description": "The text of the button to add a note in the game details"
+    },
+    "gameDetailsNotesAddTitle": "Add a note",
+    "@gameDetailsNotesAddTitle": {
+        "type": "text",
+        "description": "The title of the add note sheet"
+    },
+    "gameDetailsNotesEditTitle": "Edit a note",
+    "@gameDetailsNotesEditTitle": {
+        "type": "text",
+        "description": "The title of the edit note sheet"
+    },
+    "gameDetailsNotesDeleteTitle": "Delete this note",
+    "@gameDetailsNotesDeleteTitle": {
+        "type": "text",
+        "description": "The title of the delete note dialog"
+    },
+    "gameDetailsNotesDeleteDescription": "Are you sure you want to delete this note?\n\nThe note will be removed from this device. This action is irreversible.",
+    "@gameDetailsNotesDeleteDescription": {
+        "type": "text",
+        "description": "The description of the delete note dialog"
+    },
+    "gameDetailsNotesDeleteButton": "Delete note",
+    "@gameDetailsNotesDeleteButton": {
+        "type": "text",
+        "description": "The text of the button to delete a note"
+    },
+    "gameDetailsNotesAddSaveButton": "Add note",
+    "@gameDetailsNotesAddSaveButton": {
+        "type": "text",
+        "description": "The text of the button to add a note in the game notes sheet"
+    },
+    "gameDetailsNotesEditSaveButton": "Save note",
+    "@gameDetailsNotesEditSaveButton": {
+        "type": "text",
+        "description": "The text of the button to edit a note in the game notes sheet"
+    },
+    "gameDetailsNotesNoteLabel": "Note",
+    "@gameDetailsNotesNoteLabel": {
+        "type": "text",
+        "description": "The label of the note field in the game notes sheet"
+    },
+    "gameDetailsNotesNoteHintText": "Write your note here...",
+    "@gameDetailsNotesNoteHintText": {
+        "type": "text",
+        "description": "The hint text of the note field in the game notes sheet"
+    },
     "gameDetailsPlaySessionsTitle": "Sessions",
     "@gameDetailsPlaySessionsTitle": {
         "type": "text",
