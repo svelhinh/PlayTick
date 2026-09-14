@@ -1,356 +1,69 @@
 {
     "@@locale": "fr",
     "appName": "Play Tick",
-    "@appName": {
-        "type": "text",
-        "description": "Le nom de l'application"
-    },
     "add": "Ajouter",
-    "@add": {
-        "type": "text",
-        "description": "Le texte du bouton pour ajouter un item"
-    },
     "cancel": "Annuler",
-    "@cancel": {
-        "type": "text",
-        "description": "Le texte du bouton d'annulation d'une action"
-    },
     "retry": "Réessayer",
-    "@retry": {
-        "type": "text",
-        "description": "Le texte du bouton pour réessayer une action"
-    },
     "somethingWentWrong": "Une erreur est survenue",
-    "@somethingWentWrong": {
-        "type": "text",
-        "description": "Le message d'erreur général"
-    },
     "date": "Date",
-    "@date": {
-        "type": "text",
-        "description": "Le label de la date dans la fiche d'ajout de session"
-    },
     "save": "Enregistrer",
-    "@save": {
-        "type": "text",
-        "description": "Le texte du bouton pour enregistrer une action"
-    },
     "hours": "heures",
-    "@hours": {
-        "type": "text",
-        "description": "Le label de la durée de la session en heures dans la fiche d'ajout de session"
-    },
     "minutes": "minutes",
-    "@minutes": {
-        "type": "text",
-        "description": "Le label de la durée de la session en minutes dans la fiche d'ajout de session"
-    },
     "validate": "Valider",
-    "@validate": {
-        "type": "text",
-        "description": "Le texte du bouton pour valider une action"
-    },
     "gameAlreadyInLibrary": "Ce jeu est déjà dans votre bibliothèque.",
-    "@gameAlreadyInLibrary": {
-        "type": "text",
-        "description": "Le message d'erreur quand un jeu est déjà dans la bibliothèque"
-    },
     "gameNotFoundInLibrary": "Ce jeu n'est pas dans votre bibliothèque.",
-    "@gameNotFoundInLibrary": {
-        "type": "text",
-        "description": "Le message d'erreur quand un jeu n'est pas dans la bibliothèque"
-    },
     "navigationLabelHome": "Accueil",
-    "@navigationLabelHome": {
-        "type": "text",
-        "description": "Le label de l'élément de navigation de l'accueil"
-    },
     "navigationLabelLibrary": "Bibliothèque",
-    "@navigationLabelLibrary": {
-        "type": "text",
-        "description": "Le label de l'élément de navigation de la bibliothèque"
-    },
     "homeEmptyCardTitle": "Aucun jeu en cours",
-    "@homeEmptyCardTitle": {
-        "type": "text",
-        "description": "Le titre de la carte vide dans l'écran d'accueil"
-    },
     "homeEmptyCardDescription": "Ajoutez un jeu à votre bibliothèque pour commencer à suivre vos sessions.",
-    "@homeEmptyCardDescription": {
-        "type": "text",
-        "description": "La description de la carte vide dans l'écran d'accueil"
-    },
     "homeEmptyCardButtonText": "Aller à la bibliothèque",
-    "@homeEmptyCardButtonText": {
-        "type": "text",
-        "description": "Le texte du bouton de la carte vide dans l'écran d'accueil"
-    },
     "homeWeeklyPlaytime": "Temps cette semaine",
-    "@homeWeeklyPlaytime": {
-        "type": "text",
-        "description": "Le titre de la section de temps de jeu hebdomadaire dans l'écran d'accueil"
-    },
     "homeTotalGames": "Jeux en cours",
-    "@homeTotalGames": {
-        "type": "text",
-        "description": "Le titre de la section de jeux en cours dans l'écran d'accueil"
-    },
     "homeActivePlaySession": "Session en cours",
-    "@homeActivePlaySession": {
-        "type": "text",
-        "description": "Le titre de la section de session en cours dans l'écran d'accueil"
-    },
     "homeActivePlaySessionStopButton": "Arrêter",
-    "@homeActivePlaySessionStopButton": {
-        "type": "text",
-        "description": "Le texte du bouton pour arrêter la session en cours dans l'écran d'accueil"
-    },
     "homeFinishActivePlaySession": "Session terminée",
-    "@homeFinishActivePlaySession": {
-        "type": "text",
-        "description": "Le titre de la section de session terminée dans l'écran d'accueil"
-    },
     "homeFinishActivePlaySessionEditDurationButton": "Modifier la durée",
-    "@homeFinishActivePlaySessionEditDurationButton": {
-        "type": "text",
-        "description": "Le texte du bouton pour modifier la durée de la session en cours dans l'écran d'accueil"
-    },
     "homeFinishActivePlaySessionDurationLabel": "Durée",
-    "@homeFinishActivePlaySessionDurationLabel": {
-        "type": "text",
-        "description": "Le label de la durée de la session en cours dans l'écran d'accueil"
-    },
     "homeFinishActivePlaySessionDeleteTitle": "Supprimer la session en cours",
-    "@homeFinishActivePlaySessionDeleteTitle": {
-        "type": "text",
-        "description": "Le titre de la boîte de dialogue de suppression de la session en cours dans l'écran d'accueil"
-    },
     "homeFinishActivePlaySessionDeleteDescription": "Voulez-vous vraiment supprimer la session en cours ?\n\nLa session et sa note seront retirées de cet appareil. Cette action est irréversible.",
-    "@homeFinishActivePlaySessionDeleteDescription": {
-        "type": "text",
-        "description": "La description de la boîte de dialogue de suppression de la session en cours dans l'écran d'accueil"
-    },
     "homeFinishActivePlaySessionDeleteButton": "Supprimer la session",
-    "@homeFinishActivePlaySessionDeleteButton": {
-        "type": "text",
-        "description": "Le texte du bouton pour supprimer la session en cours dans l'écran d'accueil"
-    },
     "homeGamesListTitle": "Continuer",
-    "@homeGamesListTitle": {
-        "type": "text",
-        "description": "Le titre de la liste de jeux dans l'écran d'accueil"
-    },
     "homeGamesListButtonText": "Lancer",
-    "@homeGamesListButtonText": {
-        "type": "text",
-        "description": "Le texte du bouton pour lancer un jeu dans l'écran d'accueil"
-    },
     "libraryTitle": "Bibliothèque",
-    "@libraryTitle": {
-        "type": "text",
-        "description": "Le titre de l'écran de la bibliothèque"
-    },
     "librarySubtitle": "Votre collection de jeux",
-    "@librarySubtitle": {
-        "type": "text",
-        "description": "Le sous-titre de l'écran de la bibliothèque"
-    },
     "libraryEmptyStateTitle": "Votre bibliothèque est vide",
-    "@libraryEmptyStateTitle": {
-        "type": "text",
-        "description": "Le titre de la carte vide dans l'écran de la bibliothèque"
-    },
     "libraryEmptyStateDescription": "Ajoutez votre premier jeu pour commencer à suivre votre progression.",
-    "@libraryEmptyStateDescription": {
-        "type": "text",
-        "description": "La description de la carte vide dans l'écran de la bibliothèque"
-    },
     "libraryFilterEmptyStateTitle": "Aucun jeu trouvé",
-    "@libraryFilterEmptyStateTitle": {
-        "type": "text",
-        "description": "Le titre de la carte vide dans l'écran de la bibliothèque"
-    },
     "libraryFilterEmptyStateDescription": "Essayez un autre filtre pour trouver vos jeux.",
-    "@libraryFilterEmptyStateDescription": {
-        "type": "text",
-        "description": "La description de la carte vide dans l'écran de la bibliothèque"
-    },
     "libraryFilterEmptyStateButtonText": "Voir tous mes jeux",
-    "@libraryFilterEmptyStateButtonText": {
-        "type": "text",
-        "description": "Le texte du bouton de la carte vide dans l'écran de la bibliothèque pour voir tous les jeux"
-    },
     "libraryFilterAll": "Tous",
-    "@libraryFilterAll": {
-        "type": "text",
-        "description": "Le filtre pour tous les jeux dans la bibliothèque"
-    },
     "libraryFilterWantToPlay": "À jouer",
-    "@libraryFilterWantToPlay": {
-        "type": "text",
-        "description": "Le filtre pour les jeux à jouer dans la bibliothèque"
-    },
     "libraryFilterPlaying": "En cours",
-    "@libraryFilterPlaying": {
-        "type": "text",
-        "description": "Le filtre pour les jeux en cours dans la bibliothèque"
-    },
     "libraryFilterCompleted": "Terminé",
-    "@libraryFilterCompleted": {
-        "type": "text",
-        "description": "Le filtre pour les jeux terminés dans la bibliothèque"
-    },
     "libraryFilterDropped": "Abandonné",
-    "@libraryFilterDropped": {
-        "type": "text",
-        "description": "Le filtre pour les jeux abandonnés dans la bibliothèque"
-    },
     "librarySearchHintText": "Rechercher un jeu",
-    "@librarySearchHintText": {
-        "type": "text",
-        "description": "Le hint text de la barre de recherche dans l'écran de la bibliothèque"
-    },
     "librarySearchResultsTitle": "Dans votre bibliothèque",
-    "@librarySearchResultsTitle": {
-        "type": "text",
-        "description": "Le titre des résultats de recherche dans l'écran de la bibliothèque pour les jeux dans votre bibliothèque"
-    },
     "librarySearchNoResultsTitle": "Aucun jeu trouvé",
-    "@librarySearchNoResultsTitle": {
-        "type": "text",
-        "description": "Le titre de la carte vide dans l'écran de la bibliothèque pour les jeux non trouvés"
-    },
     "librarySearchNoResultsDescription": "Aucun jeu ne correspond à votre recherche dans votre bibliothèque ou sur IGDB.\n\nEssayez un autre nom ou vérifiez l'orthographe.",
-    "@librarySearchNoResultsDescription": {
-        "type": "text",
-        "description": "La description de la carte vide dans l'écran de la bibliothèque pour les jeux non trouvés"
-    },
     "igdbSearchResultsTitle": "Résultats IGDB",
-    "@igdbSearchResultsTitle": {
-        "type": "text",
-        "description": "Le titre des résultats de recherche dans l'écran de la bibliothèque pour les jeux sur IGDB"
-    },
     "igdbSearchCardErrorTitle": "Impossible de récupérer les résultats externes pour le moment.",
-    "@igdbSearchCardErrorTitle": {
-        "type": "text",
-        "description": "Le titre de la carte d'erreur dans les résultats de recherche IGDB"
-    },
     "igdbSearchCardErrorDescription": "Vérifiez votre connexion ou réessayez plus tard.",
-    "@igdbSearchCardErrorDescription": {
-        "type": "text",
-        "description": "La description de la carte d'erreur dans les résultats de recherche IGDB"
-    },
     "addGameSheetSelectStatus": "Ajouter comme",
-    "@addGameSheetSelectStatus": {
-        "type": "text",
-        "description": "Le label de la sélection de statut dans la fiche d'ajout de jeu"
-    },
     "gameStatusWantToPlay": "À jouer",
-    "@gameStatusWantToPlay": {
-        "type": "text",
-        "description": "Le statut de jeu 'À jouer'"
-    },
     "gameStatusPlaying": "En cours",
-    "@gameStatusPlaying": {
-        "type": "text",
-        "description": "Le statut de jeu 'En cours'"
-    },
     "gameStatusCompleted": "Terminé",
-    "@gameStatusCompleted": {
-        "type": "text",
-        "description": "Le statut de jeu 'Terminé'"
-    },
     "gameStatusDropped": "Abandonné",
-    "@gameStatusDropped": {
-        "type": "text",
-        "description": "Le statut de jeu 'Abandonné'"
-    },
     "gamePlaytime": "{hours} h {minutes}",
-    "@gamePlaytime": {
-        "type": "text",
-        "description": "Le temps de jeu du jeu en heures et minutes",
-        "placeholders": {
-            "hours": {
-                "type": "int"
-            },
-            "minutes": {
-                "type": "String"
-            }
-        }
-    },
     "gamePlaytimeMinutes": "{minutes} min",
-    "@gamePlaytimeMinutes": {
-        "type": "text",
-        "description": "Le temps de jeu du jeu en minutes",
-        "placeholders": {
-            "minutes": {
-                "type": "String"
-            }
-        }
-    },
     "gamePlaytimeHoursMinutes": "{hours} h {minutes} min",
-    "@gamePlaytimeHoursMinutes": {
-        "type": "text",
-        "description": "Le temps de jeu du jeu en heures et minutes",
-        "placeholders": {
-            "hours": {
-                "type": "int"
-            },
-            "minutes": {
-                "type": "String"
-            }
-        }
-    },
     "libraryGamesCount": "{count, plural, =0{Aucun jeu} =1{1 jeu} other{{count} jeux}}",
-    "@libraryGamesCount": {
-        "type": "text",
-        "description": "Nombre de jeux dans la bibliothèque",
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
     "libraryGameCardSeeDetails": "Voir",
-    "@libraryGameCardSeeDetails": {
-        "type": "text",
-        "description": "Le texte du bouton pour voir les détails du jeu dans la carte de la bibliothèque"
-    },
     "gameDetailsDeleteGameTitle": "Supprimer le jeu",
-    "@gameDetailsDeleteGameTitle": {
-        "type": "text",
-        "description": "Le titre de la fenêtre de suppression de jeu"
-    },
     "gameDetailsDeleteGameDescription": "Voulez-vous vraiment supprimer \"{name}\" de votre bibliothèque ?\n\nLe jeu, ses notes et toutes les sessions enregistrées seront supprimés de cet appareil. Cette action est irréversible.",
-    "@gameDetailsDeleteGameDescription": {
-        "type": "text",
-        "description": "La description de la fenêtre de suppression de jeu",
-        "placeholders": {
-            "name": {
-                "type": "String"
-            }
-        }
-    },
     "gameDetailsDeleteWarning": "Aucune donnée ne sera conservée localement.",
-    "@gameDetailsDeleteWarning": {
-        "type": "text",
-        "description": "Le warning de la fenêtre de suppression de jeu"
-    },
     "gameDetailsDeleteButton": "Supprimer le jeu",
-    "@gameDetailsDeleteButton": {
-        "type": "text",
-        "description": "Le texte du bouton de suppression de jeu"
-    },
     "gameDetailsAboutGameTitle": "À propos du jeu",
-    "@gameDetailsAboutGameTitle": {
-        "type": "text",
-        "description": "Le titre de la section 'À propos du jeu' dans les détails du jeu"
-    },
     "gameDetailsGenresTitle": "Genres",
-    "@gameDetailsGenresTitle": {
-        "type": "text",
-        "description": "Le titre de la section 'Genres' dans les détails du jeu"
-    },
     "igdbGenrePinball": "Flipper",
     "igdbGenreAdventure": "Aventure",
     "igdbGenreIndie": "Indépendant",
@@ -375,178 +88,35 @@
     "igdbGenreHackAndSlash": "Hack and slash/Beat 'em up",
     "igdbGenreQuizTrivia": "Quiz / Questions-réponses",
     "gameDetailsDeveloperTitle": "Développeur",
-    "@gameDetailsDeveloperTitle": {
-        "type": "text",
-        "description": "Le titre de la section 'Développeur' dans les détails du jeu"
-    },
     "gameDetailsPublisherTitle": "Éditeur",
-    "@gameDetailsPublisherTitle": {
-        "type": "text",
-        "description": "Le titre de la section 'Éditeur' dans les détails du jeu"
-    },
     "gameDetailsPlatformsTitle": "Plateformes",
-    "@gameDetailsPlatformsTitle": {
-        "type": "text",
-        "description": "Le titre de la section 'Plateformes' dans les détails du jeu"
-    },
     "gameDetailsEstimatedPlaytimesTitle": "Temps de jeu estimé",
-    "@gameDetailsEstimatedPlaytimesTitle": {
-        "type": "text",
-        "description": "Le titre de la section 'Temps de jeu estimé' dans les détails du jeu"
-    },
     "gameDetailsEstimatedPlaytimesStory": "Histoire: {playtime}",
-    "@gameDetailsEstimatedPlaytimesStory": {
-        "type": "text",
-        "description": "Le label de la section 'Histoire' dans les détails du jeu",
-        "placeholders": {
-            "playtime": {
-                "type": "String"
-            }
-        }
-    },
     "gameDetailsEstimatedPlaytimesMain": "Principal: {playtime}",
-    "@gameDetailsEstimatedPlaytimesMain": {
-        "type": "text",
-        "description": "Le label de la section 'Principal' dans les détails du jeu",
-        "placeholders": {
-            "playtime": {
-                "type": "String"
-            }
-        }
-    },
     "gameDetailsEstimatedPlaytimesCompletion": "Complétion: {playtime}",
-    "@gameDetailsEstimatedPlaytimesCompletion": {
-        "type": "text",
-        "description": "Le label de la section 'Complétion' dans les détails du jeu",
-        "placeholders": {
-            "playtime": {
-                "type": "String"
-            }
-        }
-    },
     "gameDetailsNotesTitle": "Notes",
-    "@gameDetailsNotesTitle": {
-        "type": "text",
-        "description": "Le titre de la section 'Notes' dans les détails du jeu"
-    },
     "gameDetailsNotesAddButton": "Ajouter une note",
-    "@gameDetailsNotesAddButton": {
-        "type": "text",
-        "description": "Le texte du bouton pour ajouter une note dans les détails du jeu"
-    },
     "gameDetailsNotesAddTitle": "Ajouter une note",
-    "@gameDetailsNotesAddTitle": {
-        "type": "text",
-        "description": "Le titre de la fiche d'ajout de note"
-    },
     "gameDetailsNotesEditTitle": "Modifier la note",
-    "@gameDetailsNotesEditTitle": {
-        "type": "text",
-        "description": "Le titre de la fiche de modification de note"
-    },
     "gameDetailsNotesDeleteTitle": "Supprimer cette note",
-    "@gameDetailsNotesDeleteTitle": {
-        "type": "text",
-        "description": "Le titre de la boîte de dialogue de suppression de note"
-    },
     "gameDetailsNotesDeleteDescription": "Voulez-vous vraiment supprimer cette note ?\n\nLa note sera retirée de cet appareil. Cette action est irréversible.",
-    "@gameDetailsNotesDeleteDescription": {
-        "type": "text",
-        "description": "La description de la boîte de dialogue de suppression de note"
-    },
     "gameDetailsNotesDeleteButton": "Supprimer la note",
-    "@gameDetailsNotesDeleteButton": {
-        "type": "text",
-        "description": "Le texte du bouton pour supprimer une note"
-    },
     "gameDetailsNotesAddSaveButton": "Ajouter la note",
-    "@gameDetailsNotesAddSaveButton": {
-        "type": "text",
-        "description": "Le texte du bouton pour ajouter une note dans la fiche de notes"
-    },
     "gameDetailsNotesEditSaveButton": "Enregistrer la note",
-    "@gameDetailsNotesEditSaveButton": {
-        "type": "text",
-        "description": "Le texte du bouton pour enregistrer une note dans la fiche de notes"
-    },
     "gameDetailsNotesNoteLabel": "Note",
-    "@gameDetailsNotesNoteLabel": {
-        "type": "text",
-        "description": "Le label de la note dans la fiche de notes"
-    },
     "gameDetailsNotesNoteHintText": "Écrivez votre note ici...",
-    "@gameDetailsNotesNoteHintText": {
-        "type": "text",
-        "description": "Le hint text de la note dans la fiche de notes"
-    },
     "gameDetailsPlaySessionsTitle": "Sessions",
-    "@gameDetailsPlaySessionsTitle": {
-        "type": "text",
-        "description": "Le titre de la section 'Sessions' dans les détails du jeu"
-    },
     "gameDetailsPlaySessionsAddButton": "Ajouter une session",
-    "@gameDetailsPlaySessionsAddButton": {
-        "type": "text",
-        "description": "Le texte du bouton pour ajouter une session dans les détails du jeu"
-    },
     "gameDetailsPlaySessionsAddTitle": "Ajouter une session",
-    "@gameDetailsPlaySessionsAddTitle": {
-        "type": "text",
-        "description": "Le titre de la fiche d'ajout de session"
-    },
     "gameDetailsPlaySessionsEditTitle": "Modifier la session",
-    "@gameDetailsPlaySessionsEditTitle": {
-        "type": "text",
-        "description": "Le titre de la fiche de modification de session"
-    },
     "gameDetailsPlaySessionsDurationLabel": "Durée de la session",
-    "@gameDetailsPlaySessionsDurationLabel": {
-        "type": "text",
-        "description": "Le label de la durée de la session dans la fiche d'ajout de session"
-    },
     "gameDetailsPlaySessionsNoteLabel": "Note (facultatif)",
-    "@gameDetailsPlaySessionsNoteLabel": {
-        "type": "text",
-        "description": "Le label de la note dans la fiche d'ajout de session"
-    },
     "gameDetailsPlaySessionsHintText": "Que s'est-il passé pendant cette session ?",
-    "@gameDetailsPlaySessionsHintText": {
-        "type": "text",
-        "description": "Le hint text de la fiche d'ajout de session"
-    },
     "gameDetailsPlaySessionsAddSaveButton": "Ajouter la session",
-    "@gameDetailsPlaySessionsAddSaveButton": {
-        "type": "text",
-        "description": "Le texte du bouton pour ajouter une session dans la fiche d'ajout de session"
-    },
     "gameDetailsPlaySessionsEditSaveButton": "Enregistrer la session",
-    "@gameDetailsPlaySessionsEditSaveButton": {
-        "type": "text",
-        "description": "Le texte du bouton pour enregistrer une session dans la fiche de modification de session"
-    },
     "gameDetailsPlaySessionsDeleteTitle": "Supprimer cette session",
-    "@gameDetailsPlaySessionsDeleteTitle": {
-        "type": "text",
-        "description": "Le titre de la boîte de dialogue de suppression de session"
-    },
     "gameDetailsPlaySessionsDeleteDescription": "Voulez-vous vraiment supprimer cette session ?\n\nLa session et sa note seront retirées de cet appareil. Cette action est irréversible.",
-    "@gameDetailsPlaySessionsDeleteDescription": {
-        "type": "text",
-        "description": "La description de la boîte de dialogue de suppression de session"
-    },
     "gameDetailsPlaySessionsDeleteButton": "Supprimer la session",
-    "@gameDetailsPlaySessionsDeleteButton": {
-        "type": "text",
-        "description": "Le texte du bouton pour supprimer une session"
-    },
     "invalidPlaySessionException": "Session de jeu invalide.",
-    "@invalidPlaySessionException": {
-        "type": "text",
-        "description": "Le message d'erreur quand une session de jeu invalide est fournie"
-    },
-    "playSessionNotFoundException": "Session de jeu introuvable.",
-    "@playSessionNotFoundException": {
-        "type": "text",
-        "description": "Le message d'erreur quand une session de jeu est introuvable"
-    }
+    "playSessionNotFoundException": "Session de jeu introuvable."
 }
