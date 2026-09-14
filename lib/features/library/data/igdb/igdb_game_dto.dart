@@ -1,3 +1,5 @@
+import 'package:playtick/features/library/data/igdb/igdb_cover_url.dart';
+import 'package:playtick/features/library/data/igdb/igdb_game_localization_dto.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 
@@ -13,6 +15,7 @@ final class IgdbGameDto {
     this.publisher,
     this.firstReleaseDate,
     this.gameTimeToBeat,
+    this.localizations = const [],
   });
 
   final int id;
@@ -25,6 +28,7 @@ final class IgdbGameDto {
   final String? publisher;
   final DateTime? firstReleaseDate;
   final EstimatedPlaytimes? gameTimeToBeat;
+  final List<IgdbGameLocalizationDto> localizations;
 
   static IgdbGameDto? fromJson(Map<String, dynamic> json) {
     if (json['id'] is! int || json['name'] is! String) {
@@ -35,47 +39,38 @@ final class IgdbGameDto {
       id: json['id'] as int,
       name: json['name'] as String,
       summary: json['summary'] as String?,
-      coverUrl: _coverUrl(json['cover']),
+      coverUrl: igdbCoverUrl(json['cover']),
       genres: _names(json['genres']),
       platforms: _names(json['platforms']),
       developer: _companyName(json['involved_companies'], 'developer'),
       publisher: _companyName(json['involved_companies'], 'publisher'),
       firstReleaseDate: _firstReleaseDate(json['first_release_date']),
       gameTimeToBeat: _gameTimeToBeat(json['game_time_to_beat']),
+      localizations: _localizations(json['game_localizations']),
     );
   }
 
-  Game toGame() => Game(
-    id: id,
-    name: name,
-    summary: summary,
-    coverUrl: coverUrl,
-    genres: genres,
-    platforms: platforms,
-    developer: developer,
-    publisher: publisher,
-    releaseDate: firstReleaseDate,
-    estimatedPlaytimes: gameTimeToBeat,
-  );
-}
+  Game toGame({String? preferredRegionIdentifier}) {
+    final localization = localizations
+        .where(
+          (localization) =>
+              localization.regionIdentifier == preferredRegionIdentifier,
+        )
+        .firstOrNull;
 
-String? _coverUrl(Object? cover) {
-  if (cover is! Map<String, dynamic> ||
-      cover['url'] is! String ||
-      cover['url'] == null) {
-    return null;
+    return Game(
+      id: id,
+      name: localization?.name ?? name,
+      summary: summary,
+      coverUrl: localization?.coverUrl ?? coverUrl,
+      genres: genres,
+      platforms: platforms,
+      developer: developer,
+      publisher: publisher,
+      releaseDate: firstReleaseDate,
+      estimatedPlaytimes: gameTimeToBeat,
+    );
   }
-
-  final coverBig = (cover['url'] as String).replaceAll(
-    't_thumb',
-    't_cover_big',
-  );
-
-  if (coverBig.startsWith('https:')) {
-    return coverBig;
-  }
-
-  return 'https:$coverBig';
 }
 
 DateTime? _firstReleaseDate(Object? value) {
@@ -124,4 +119,14 @@ EstimatedPlaytimes? _gameTimeToBeat(Object? value) {
   );
 
   return playtimes.hasValues ? playtimes : null;
+}
+
+List<IgdbGameLocalizationDto> _localizations(Object? value) {
+  if (value is! List<dynamic>) return const [];
+
+  return value
+      .whereType<Map<String, dynamic>>()
+      .map(IgdbGameLocalizationDto.fromJson)
+      .whereType<IgdbGameLocalizationDto>()
+      .toList();
 }
