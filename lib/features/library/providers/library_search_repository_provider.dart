@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:http/http.dart' as http;
 import 'package:playtick/features/library/data/igdb/igdb_client.dart';
 import 'package:playtick/features/library/data/igdb/igdb_credentials.dart';
@@ -16,5 +18,7 @@ LibrarySearchRepository librarySearchRepository(Ref ref) {
     credentials: IgdbCredentials.fromEnvironment(),
     tokenUrl: 'https://id.twitch.tv',
     searchUrl: 'https://api.igdb.com/v4',
+    preferredRegionIdentifier:
+        PlatformDispatcher.instance.locale.languageCode == 'fr' ? 'EU' : null,
   );
 }

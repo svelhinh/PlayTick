@@ -13,12 +13,14 @@ final class IgdbClient implements LibrarySearchRepository {
     required this.credentials,
     required this.tokenUrl,
     required this.searchUrl,
+    this.preferredRegionIdentifier,
   });
 
   final http.Client client;
   final IgdbCredentials credentials;
   final String tokenUrl;
   final String searchUrl;
+  final String? preferredRegionIdentifier;
 
   Future<String> fetchToken() async {
     if (!credentials.isConfigured) {
@@ -71,7 +73,8 @@ final class IgdbClient implements LibrarySearchRepository {
           'search "$query"; fields id, name, summary, cover.url, '
           'genres.name, platforms.name, involved_companies.company.name, '
           'involved_companies.developer, involved_companies.publisher, '
-          'first_release_date; limit 20;',
+          'first_release_date, game_localizations.region.identifier, '
+          'game_localizations.name, game_localizations.cover.url; limit 20;',
       headers: {
         'Client-ID': credentials.clientId,
         'Authorization': 'Bearer $accessToken',
@@ -135,7 +138,10 @@ final class IgdbClient implements LibrarySearchRepository {
     return games
         .map(IgdbGameDto.fromJson)
         .whereType<IgdbGameDto>()
-        .map((dto) => dto.toGame())
+        .map(
+          (dto) =>
+              dto.toGame(preferredRegionIdentifier: preferredRegionIdentifier),
+        )
         .toList();
   }
 }

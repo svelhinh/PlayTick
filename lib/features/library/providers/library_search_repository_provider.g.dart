@@ -55,4 +55,4 @@ final class LibrarySearchRepositoryProvider
 }
 
 String _$librarySearchRepositoryHash() =>
-    r'a98b4e2d02077d4aaffac2f4e87307c07c2333ec';
+    r'7efe9f5f17a175e3ee4e6e02c7b5e6bef9fb522a';
