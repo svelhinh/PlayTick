@@ -482,6 +482,144 @@ abstract class AppLocalizations {
   /// **'Genres'**
   String get gameDetailsGenresTitle;
 
+  /// No description provided for @igdbGenrePinball.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinball'**
+  String get igdbGenrePinball;
+
+  /// No description provided for @igdbGenreAdventure.
+  ///
+  /// In en, this message translates to:
+  /// **'Adventure'**
+  String get igdbGenreAdventure;
+
+  /// No description provided for @igdbGenreIndie.
+  ///
+  /// In en, this message translates to:
+  /// **'Indie'**
+  String get igdbGenreIndie;
+
+  /// No description provided for @igdbGenreArcade.
+  ///
+  /// In en, this message translates to:
+  /// **'Arcade'**
+  String get igdbGenreArcade;
+
+  /// No description provided for @igdbGenreVisualNovel.
+  ///
+  /// In en, this message translates to:
+  /// **'Visual Novel'**
+  String get igdbGenreVisualNovel;
+
+  /// No description provided for @igdbGenreCardAndBoardGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Card & Board Game'**
+  String get igdbGenreCardAndBoardGame;
+
+  /// No description provided for @igdbGenreMoba.
+  ///
+  /// In en, this message translates to:
+  /// **'MOBA'**
+  String get igdbGenreMoba;
+
+  /// No description provided for @igdbGenrePointAndClick.
+  ///
+  /// In en, this message translates to:
+  /// **'Point-and-click'**
+  String get igdbGenrePointAndClick;
+
+  /// No description provided for @igdbGenreFighting.
+  ///
+  /// In en, this message translates to:
+  /// **'Fighting'**
+  String get igdbGenreFighting;
+
+  /// No description provided for @igdbGenreShooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Shooter'**
+  String get igdbGenreShooter;
+
+  /// No description provided for @igdbGenreMusic.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get igdbGenreMusic;
+
+  /// No description provided for @igdbGenrePlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get igdbGenrePlatform;
+
+  /// No description provided for @igdbGenrePuzzle.
+  ///
+  /// In en, this message translates to:
+  /// **'Puzzle'**
+  String get igdbGenrePuzzle;
+
+  /// No description provided for @igdbGenreRacing.
+  ///
+  /// In en, this message translates to:
+  /// **'Racing'**
+  String get igdbGenreRacing;
+
+  /// No description provided for @igdbGenreRealTimeStrategy.
+  ///
+  /// In en, this message translates to:
+  /// **'Real Time Strategy (RTS)'**
+  String get igdbGenreRealTimeStrategy;
+
+  /// No description provided for @igdbGenreRolePlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Role-playing (RPG)'**
+  String get igdbGenreRolePlaying;
+
+  /// No description provided for @igdbGenreSimulator.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulator'**
+  String get igdbGenreSimulator;
+
+  /// No description provided for @igdbGenreSport.
+  ///
+  /// In en, this message translates to:
+  /// **'Sport'**
+  String get igdbGenreSport;
+
+  /// No description provided for @igdbGenreStrategy.
+  ///
+  /// In en, this message translates to:
+  /// **'Strategy'**
+  String get igdbGenreStrategy;
+
+  /// No description provided for @igdbGenreTurnBasedStrategy.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn-based strategy (TBS)'**
+  String get igdbGenreTurnBasedStrategy;
+
+  /// No description provided for @igdbGenreTactical.
+  ///
+  /// In en, this message translates to:
+  /// **'Tactical'**
+  String get igdbGenreTactical;
+
+  /// No description provided for @igdbGenreHackAndSlash.
+  ///
+  /// In en, this message translates to:
+  /// **'Hack and slash/Beat \'em up'**
+  String get igdbGenreHackAndSlash;
+
+  /// No description provided for @igdbGenreQuizTrivia.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz/Trivia'**
+  String get igdbGenreQuizTrivia;
+
   /// The title of the section 'Developer' in the game details
   ///
   /// In en, this message translates to:
