@@ -126,60 +126,146 @@ void main() {
     expect(games[1].name, 'Game 2');
   });
 
-  test('searchGames requests and uses the preferred localization', () async {
-    final httpClient = MockClient((request) async {
-      if (request.url.toString() == '$tokenUrl/oauth2/token') {
-        return Response('{"access_token": "abc"}', 200);
-      }
+  test(
+    'searchGames applies localization fallbacks without changing metadata',
+    () async {
+      final httpClient = MockClient((request) async {
+        if (request.url.toString() == '$tokenUrl/oauth2/token') {
+          return Response('{"access_token": "abc"}', 200);
+        }
 
-      if (request.url.toString() == '$searchUrl/games') {
-        expect(
-          request.body,
-          contains('game_localizations.region.identifier'),
-        );
-        expect(request.body, contains('game_localizations.name'));
-        expect(request.body, contains('game_localizations.cover.url'));
+        if (request.url.toString() == '$searchUrl/games') {
+          expect(
+            request.body,
+            contains('game_localizations.region.identifier'),
+          );
+          expect(request.body, contains('game_localizations.name'));
+          expect(request.body, contains('game_localizations.cover.url'));
 
-        return Response(
-          jsonEncode([
-            {
-              'id': 1,
-              'name': 'Default name',
-              'cover': {
-                'url':
-                    '//images.igdb.com/igdb/image/upload/t_thumb/default.jpg',
-              },
-              'game_localizations': [
-                {
-                  'name': 'European name',
-                  'region': {'identifier': 'EU'},
-                  'cover': {
-                    'url': '//images.igdb.com/igdb/image/upload/t_thumb/eu.jpg',
-                  },
+          return Response(
+            jsonEncode([
+              {
+                'id': 1,
+                'name': 'Default one',
+                'summary': 'English summary one.',
+                'cover': {
+                  'url': '//images.igdb.com/igdb/image/upload/t_thumb/default1.jpg',
                 },
-              ],
-            },
-          ]),
-          200,
-        );
-      }
+                'platforms': [
+                  {'name': 'PlayStation 5'},
+                ],
+                'involved_companies': [
+                  {
+                    'developer': true,
+                    'publisher': false,
+                    'company': {'name': 'Original Developer'},
+                  },
+                  {
+                    'developer': false,
+                    'publisher': true,
+                    'company': {'name': 'Original Publisher'},
+                  },
+                ],
+                'game_localizations': [
+                  {
+                    'name': 'European one',
+                    'region': {'identifier': 'EU'},
+                    'cover': {
+                      'url':
+                          '//images.igdb.com/igdb/image/upload/t_thumb/eu1.jpg',
+                    },
+                  },
+                ],
+              },
+              {
+                'id': 2,
+                'name': 'Default two',
+                'summary': 'English summary two.',
+                'cover': {
+                  'url': '//images.igdb.com/igdb/image/upload/t_thumb/default2.jpg',
+                },
+                'game_localizations': [
+                  {
+                    'name': 'Japanese two',
+                    'region': {'identifier': 'ja-JP'},
+                  },
+                ],
+              },
+              {
+                'id': 3,
+                'name': 'Default three',
+                'cover': {
+                  'url': '//images.igdb.com/igdb/image/upload/t_thumb/default3.jpg',
+                },
+                'game_localizations': [
+                  {
+                    'name': 'European three',
+                    'region': {'identifier': 'EU'},
+                  },
+                ],
+              },
+              {
+                'id': 4,
+                'name': 'Default four',
+                'cover': {
+                  'url': '//images.igdb.com/igdb/image/upload/t_thumb/default4.jpg',
+                },
+                'game_localizations': [
+                  {
+                    'region': {'identifier': 'EU'},
+                    'cover': {
+                      'url':
+                          '//images.igdb.com/igdb/image/upload/t_thumb/eu4.jpg',
+                    },
+                  },
+                ],
+              },
+            ]),
+            200,
+          );
+        }
 
-      return Response('not found', 404);
-    });
-    addTearDown(httpClient.close);
+        return Response('not found', 404);
+      });
+      addTearDown(httpClient.close);
 
-    final games = await createClient(
-      httpClient,
-      preferredRegionIdentifier: 'EU',
-    ).searchGames('Game');
+      final games = await createClient(
+        httpClient,
+        preferredRegionIdentifier: 'EU',
+      ).searchGames('Game');
 
-    expect(games, hasLength(1));
-    expect(games.single.name, 'European name');
-    expect(
-      games.single.coverUrl,
-      'https://images.igdb.com/igdb/image/upload/t_cover_big/eu.jpg',
-    );
-  });
+      expect(games, hasLength(4));
+
+      expect(games[0].name, 'European one');
+      expect(
+        games[0].coverUrl,
+        'https://images.igdb.com/igdb/image/upload/t_cover_big/eu1.jpg',
+      );
+      expect(games[0].summary, 'English summary one.');
+      expect(games[0].developer, 'Original Developer');
+      expect(games[0].publisher, 'Original Publisher');
+      expect(games[0].platforms, ['PlayStation 5']);
+
+      expect(games[1].name, 'Default two');
+      expect(
+        games[1].coverUrl,
+        'https://images.igdb.com/igdb/image/upload/t_cover_big/default2.jpg',
+      );
+      expect(games[1].summary, 'English summary two.');
+
+      expect(games[2].name, 'European three');
+      expect(
+        games[2].coverUrl,
+        'https://images.igdb.com/igdb/image/upload/t_cover_big/default3.jpg',
+      );
+
+      expect(games[3].name, 'Default four');
+      expect(
+        games[3].coverUrl,
+        'https://images.igdb.com/igdb/image/upload/t_cover_big/eu4.jpg',
+      );
+    },
+  );
 
   test(
     'searchGames returns nothing without HTTP when the query is empty',

@@ -67,8 +67,11 @@ void main() {
     );
   }
 
-  Future<void> pumpApp(WidgetTester tester) async {
-    tester.binding.platformDispatcher.localesTestValue = const [Locale('en')];
+  Future<void> pumpApp(
+    WidgetTester tester, {
+    Locale locale = const Locale('en'),
+  }) async {
+    tester.binding.platformDispatcher.localesTestValue = [locale];
     addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
 
     await tester.pumpWidget(
@@ -166,6 +169,58 @@ void main() {
       expect(find.text('Hollow Knight'), findsNothing);
       expect(find.text('Cocoon'), findsOneWidget);
       expect(find.text('1 game'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'localizes PlayTick labels and genres without translating IGDB metadata',
+    (tester) async {
+      final repository = container.read(libraryRepositoryProvider);
+      await repository.addGame(
+        Game(
+          id: 202,
+          name: 'External Game Name',
+          summary: 'An English summary supplied by IGDB.',
+          genres: ['Adventure', 'Future IGDB genre'],
+          developer: 'English Developer',
+          publisher: 'English Publisher',
+          platforms: ['PC', 'Xbox Series X|S'],
+        ),
+      );
+
+      await pumpApp(tester, locale: const Locale('fr'));
+      await openLibrary(tester);
+
+      await tester.tap(
+        find.descendant(
+          of: find.byType(LibraryGameCard),
+          matching: find.text('Voir'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(GameDetailsScreen), findsOneWidget);
+      expect(find.text('À propos du jeu'), findsOneWidget);
+      expect(find.text('Genres'), findsOneWidget);
+      expect(find.text('Développeur'), findsOneWidget);
+      expect(find.text('Éditeur'), findsOneWidget);
+      expect(find.text('Plateformes'), findsOneWidget);
+      expect(find.text('À jouer'), findsOneWidget);
+
+      expect(find.text('External Game Name'), findsWidgets);
+      expect(
+        find.text('An English summary supplied by IGDB.'),
+        findsOneWidget,
+      );
+      expect(find.text('Aventure, Future IGDB genre'), findsOneWidget);
+      expect(find.text('English Developer'), findsWidgets);
+      expect(find.text('English Publisher'), findsOneWidget);
+      expect(find.text('PC, Xbox Series X|S'), findsOneWidget);
+
+      expect(find.text('About the game'), findsNothing);
+      expect(find.text('Developer'), findsNothing);
+      expect(find.text('Publisher'), findsNothing);
+      expect(find.text('Platforms'), findsNothing);
     },
   );
 
