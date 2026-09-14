@@ -7,6 +7,7 @@ import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/presentation/extensions/game_subtitle_extension.dart';
+import 'package:playtick/features/library/presentation/extensions/igdb_genre_localization.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/game_details/delete_game_sheet.dart';
@@ -303,7 +304,7 @@ final class _GameInfoCard extends StatelessWidget {
         _InfoItem(
           icon: Icons.category,
           label: appLoc.gameDetailsGenresTitle,
-          values: genres,
+          values: genres.map(appLoc.localizeIgdbGenre).toList(),
         ),
       if (developer != null && developer!.isNotEmpty)
         _InfoItem(

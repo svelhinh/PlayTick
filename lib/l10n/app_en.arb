@@ -351,6 +351,121 @@
         "type": "text",
         "description": "The title of the section 'Genres' in the game details"
     },
+    "igdbGenrePinball": "Pinball",
+    "@igdbGenrePinball": {
+        "type": "text",
+        "description": "The name of the genre 'Pinball'"
+    },
+    "igdbGenreAdventure": "Adventure",
+    "@igdbGenreAdventure": {
+        "type": "text",
+        "description": "The name of the genre 'Adventure'"
+    },
+    "igdbGenreIndie": "Indie",
+    "@igdbGenreIndie": {
+        "type": "text",
+        "description": "The name of the genre 'Indie'"
+    },
+    "igdbGenreArcade": "Arcade",
+    "@igdbGenreArcade": {
+        "type": "text",
+        "description": "The name of the genre 'Arcade'"
+    },
+    "igdbGenreVisualNovel": "Visual Novel",
+    "@igdbGenreVisualNovel": {
+        "type": "text",
+        "description": "The name of the genre 'Visual Novel'"
+    },
+    "igdbGenreCardAndBoardGame": "Card & Board Game",
+    "@igdbGenreCardAndBoardGame": {
+        "type": "text",
+        "description": "The name of the genre 'Card & Board Game'"
+    },
+    "igdbGenreMoba": "MOBA",
+    "@igdbGenreMoba": {
+        "type": "text",
+        "description": "The name of the genre 'MOBA'"
+    },
+    "igdbGenrePointAndClick": "Point-and-click",
+    "@igdbGenrePointAndClick": {
+        "type": "text",
+        "description": "The name of the genre 'Point-and-click'"
+    },
+    "igdbGenreFighting": "Fighting",
+    "@igdbGenreFighting": {
+        "type": "text",
+        "description": "The name of the genre 'Fighting'"
+    },
+    "igdbGenreShooter": "Shooter",
+    "@igdbGenreShooter": {
+        "type": "text",
+        "description": "The name of the genre 'Shooter'"
+    },
+    "igdbGenreMusic": "Music",
+    "@igdbGenreMusic": {
+        "type": "text",
+        "description": "The name of the genre 'Music'"
+    },
+    "igdbGenrePlatform": "Platform",
+    "@igdbGenrePlatform": {
+        "type": "text",
+        "description": "The name of the genre 'Platform'"
+    },
+    "igdbGenrePuzzle": "Puzzle",
+    "@igdbGenrePuzzle": {
+        "type": "text",
+        "description": "The name of the genre 'Puzzle'"
+    },
+    "igdbGenreRacing": "Racing",
+    "@igdbGenreRacing": {
+        "type": "text",
+        "description": "The name of the genre 'Racing'"
+    },
+    "igdbGenreRealTimeStrategy": "Real Time Strategy (RTS)",
+    "@igdbGenreRealTimeStrategy": {
+        "type": "text",
+        "description": "The name of the genre 'Real Time Strategy (RTS)'"
+    },
+    "igdbGenreRolePlaying": "Role-playing (RPG)",
+    "@igdbGenreRolePlaying": {
+        "type": "text",
+        "description": "The name of the genre 'Role-playing (RPG)'"
+    },
+    "igdbGenreSimulator": "Simulator",
+    "@igdbGenreSimulator": {
+        "type": "text",
+        "description": "The name of the genre 'Simulator'"
+    },
+    "igdbGenreSport": "Sport",
+    "@igdbGenreSport": {
+        "type": "text",
+        "description": "The name of the genre 'Sport'"
+    },
+    "igdbGenreStrategy": "Strategy",
+    "@igdbGenreStrategy": {
+        "type": "text",
+        "description": "The name of the genre 'Strategy'"
+    },
+    "igdbGenreTurnBasedStrategy": "Turn-based strategy (TBS)",
+    "@igdbGenreTurnBasedStrategy": {
+        "type": "text",
+        "description": "The name of the genre 'Turn-based strategy (TBS)'"
+    },
+    "igdbGenreTactical": "Tactical",
+    "@igdbGenreTactical": {
+        "type": "text",
+        "description": "The name of the genre 'Tactical'"
+    },
+    "igdbGenreHackAndSlash": "Hack and slash/Beat 'em up",
+    "@igdbGenreHackAndSlash": {
+        "type": "text",
+        "description": "The name of the genre 'Hack and slash/Beat 'em up'"
+    },
+    "igdbGenreQuizTrivia": "Quiz/Trivia",
+    "@igdbGenreQuizTrivia": {
+        "type": "text",
+        "description": "The name of the genre 'Quiz/Trivia'"
+    },
     "gameDetailsDeveloperTitle": "Developer",
     "@gameDetailsDeveloperTitle": {
         "type": "text",

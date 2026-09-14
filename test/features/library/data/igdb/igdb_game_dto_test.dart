@@ -102,6 +102,91 @@ void main() {
     expect(game.estimatedPlaytimes, isNull);
   });
 
+  test('toGame uses the requested localized name and cover', () {
+    final game = IgdbGameDto.fromJson({
+      ...completeJson,
+      'game_localizations': [
+        {
+          'name': 'The Witcher 3 : Wild Hunt',
+          'region': {'identifier': 'EU'},
+          'cover': {
+            'url': '//images.igdb.com/igdb/image/upload/t_thumb/eu-cover.jpg',
+          },
+        },
+      ],
+    })?.toGame(preferredRegionIdentifier: 'EU');
+
+    expect(game, isNotNull);
+    expect(game!.name, 'The Witcher 3 : Wild Hunt');
+    expect(
+      game.coverUrl,
+      'https://images.igdb.com/igdb/image/upload/t_cover_big/eu-cover.jpg',
+    );
+    expect(game.summary, 'A story-driven open world RPG.');
+  });
+
+  test('toGame applies localized name and cover fallbacks independently', () {
+    final localizedCoverOnly = IgdbGameDto.fromJson({
+      ...completeJson,
+      'game_localizations': [
+        {
+          'region': {'identifier': 'EU'},
+          'cover': {
+            'url': '//images.igdb.com/igdb/image/upload/t_thumb/eu-cover.jpg',
+          },
+        },
+      ],
+    })?.toGame(preferredRegionIdentifier: 'EU');
+
+    expect(localizedCoverOnly?.name, 'The Witcher 3');
+    expect(
+      localizedCoverOnly?.coverUrl,
+      'https://images.igdb.com/igdb/image/upload/t_cover_big/eu-cover.jpg',
+    );
+
+    final localizedNameOnly = IgdbGameDto.fromJson({
+      ...completeJson,
+      'game_localizations': [
+        {
+          'name': 'The Witcher 3 : Wild Hunt',
+          'region': {'identifier': 'EU'},
+        },
+      ],
+    })?.toGame(preferredRegionIdentifier: 'EU');
+
+    expect(localizedNameOnly?.name, 'The Witcher 3 : Wild Hunt');
+    expect(
+      localizedNameOnly?.coverUrl,
+      'https://images.igdb.com/igdb/image/upload/t_cover_big/co1wyy.jpg',
+    );
+  });
+
+  test('toGame ignores malformed and unmatched localizations', () {
+    final dto = IgdbGameDto.fromJson({
+      ...completeJson,
+      'game_localizations': [
+        42,
+        {
+          'name': 'Invalid',
+          'region': {'identifier': '   '},
+        },
+        {
+          'name': 'Japanese title',
+          'region': {'identifier': 'ja-JP'},
+        },
+      ],
+    });
+
+    expect(dto?.localizations, hasLength(1));
+
+    final game = dto?.toGame(preferredRegionIdentifier: 'EU');
+    expect(game?.name, 'The Witcher 3');
+    expect(
+      game?.coverUrl,
+      'https://images.igdb.com/igdb/image/upload/t_cover_big/co1wyy.jpg',
+    );
+  });
+
   test('fromJson returns null without a valid id and name', () {
     expect(IgdbGameDto.fromJson({'name': 'No id'}), isNull);
     expect(IgdbGameDto.fromJson({'id': 1}), isNull);

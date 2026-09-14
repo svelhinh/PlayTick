@@ -18,12 +18,14 @@ void main() {
   IgdbClient createClient(
     MockClient httpClient, {
     IgdbCredentials igdbCredentials = credentials,
+    String? preferredRegionIdentifier,
   }) {
     return IgdbClient(
       client: httpClient,
       credentials: igdbCredentials,
       tokenUrl: tokenUrl,
       searchUrl: searchUrl,
+      preferredRegionIdentifier: preferredRegionIdentifier,
     );
   }
 
@@ -122,6 +124,61 @@ void main() {
     expect(games[0].name, 'Game 1');
     expect(games[1].id, 2);
     expect(games[1].name, 'Game 2');
+  });
+
+  test('searchGames requests and uses the preferred localization', () async {
+    final httpClient = MockClient((request) async {
+      if (request.url.toString() == '$tokenUrl/oauth2/token') {
+        return Response('{"access_token": "abc"}', 200);
+      }
+
+      if (request.url.toString() == '$searchUrl/games') {
+        expect(
+          request.body,
+          contains('game_localizations.region.identifier'),
+        );
+        expect(request.body, contains('game_localizations.name'));
+        expect(request.body, contains('game_localizations.cover.url'));
+
+        return Response(
+          jsonEncode([
+            {
+              'id': 1,
+              'name': 'Default name',
+              'cover': {
+                'url':
+                    '//images.igdb.com/igdb/image/upload/t_thumb/default.jpg',
+              },
+              'game_localizations': [
+                {
+                  'name': 'European name',
+                  'region': {'identifier': 'EU'},
+                  'cover': {
+                    'url': '//images.igdb.com/igdb/image/upload/t_thumb/eu.jpg',
+                  },
+                },
+              ],
+            },
+          ]),
+          200,
+        );
+      }
+
+      return Response('not found', 404);
+    });
+    addTearDown(httpClient.close);
+
+    final games = await createClient(
+      httpClient,
+      preferredRegionIdentifier: 'EU',
+    ).searchGames('Game');
+
+    expect(games, hasLength(1));
+    expect(games.single.name, 'European name');
+    expect(
+      games.single.coverUrl,
+      'https://images.igdb.com/igdb/image/upload/t_cover_big/eu.jpg',
+    );
   });
 
   test(

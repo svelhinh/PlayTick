@@ -482,6 +482,144 @@ abstract class AppLocalizations {
   /// **'Genres'**
   String get gameDetailsGenresTitle;
 
+  /// The name of the genre 'Pinball'
+  ///
+  /// In en, this message translates to:
+  /// **'Pinball'**
+  String get igdbGenrePinball;
+
+  /// The name of the genre 'Adventure'
+  ///
+  /// In en, this message translates to:
+  /// **'Adventure'**
+  String get igdbGenreAdventure;
+
+  /// The name of the genre 'Indie'
+  ///
+  /// In en, this message translates to:
+  /// **'Indie'**
+  String get igdbGenreIndie;
+
+  /// The name of the genre 'Arcade'
+  ///
+  /// In en, this message translates to:
+  /// **'Arcade'**
+  String get igdbGenreArcade;
+
+  /// The name of the genre 'Visual Novel'
+  ///
+  /// In en, this message translates to:
+  /// **'Visual Novel'**
+  String get igdbGenreVisualNovel;
+
+  /// The name of the genre 'Card & Board Game'
+  ///
+  /// In en, this message translates to:
+  /// **'Card & Board Game'**
+  String get igdbGenreCardAndBoardGame;
+
+  /// The name of the genre 'MOBA'
+  ///
+  /// In en, this message translates to:
+  /// **'MOBA'**
+  String get igdbGenreMoba;
+
+  /// The name of the genre 'Point-and-click'
+  ///
+  /// In en, this message translates to:
+  /// **'Point-and-click'**
+  String get igdbGenrePointAndClick;
+
+  /// The name of the genre 'Fighting'
+  ///
+  /// In en, this message translates to:
+  /// **'Fighting'**
+  String get igdbGenreFighting;
+
+  /// The name of the genre 'Shooter'
+  ///
+  /// In en, this message translates to:
+  /// **'Shooter'**
+  String get igdbGenreShooter;
+
+  /// The name of the genre 'Music'
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get igdbGenreMusic;
+
+  /// The name of the genre 'Platform'
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get igdbGenrePlatform;
+
+  /// The name of the genre 'Puzzle'
+  ///
+  /// In en, this message translates to:
+  /// **'Puzzle'**
+  String get igdbGenrePuzzle;
+
+  /// The name of the genre 'Racing'
+  ///
+  /// In en, this message translates to:
+  /// **'Racing'**
+  String get igdbGenreRacing;
+
+  /// The name of the genre 'Real Time Strategy (RTS)'
+  ///
+  /// In en, this message translates to:
+  /// **'Real Time Strategy (RTS)'**
+  String get igdbGenreRealTimeStrategy;
+
+  /// The name of the genre 'Role-playing (RPG)'
+  ///
+  /// In en, this message translates to:
+  /// **'Role-playing (RPG)'**
+  String get igdbGenreRolePlaying;
+
+  /// The name of the genre 'Simulator'
+  ///
+  /// In en, this message translates to:
+  /// **'Simulator'**
+  String get igdbGenreSimulator;
+
+  /// The name of the genre 'Sport'
+  ///
+  /// In en, this message translates to:
+  /// **'Sport'**
+  String get igdbGenreSport;
+
+  /// The name of the genre 'Strategy'
+  ///
+  /// In en, this message translates to:
+  /// **'Strategy'**
+  String get igdbGenreStrategy;
+
+  /// The name of the genre 'Turn-based strategy (TBS)'
+  ///
+  /// In en, this message translates to:
+  /// **'Turn-based strategy (TBS)'**
+  String get igdbGenreTurnBasedStrategy;
+
+  /// The name of the genre 'Tactical'
+  ///
+  /// In en, this message translates to:
+  /// **'Tactical'**
+  String get igdbGenreTactical;
+
+  /// The name of the genre 'Hack and slash/Beat 'em up'
+  ///
+  /// In en, this message translates to:
+  /// **'Hack and slash/Beat \'em up'**
+  String get igdbGenreHackAndSlash;
+
+  /// The name of the genre 'Quiz/Trivia'
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz/Trivia'**
+  String get igdbGenreQuizTrivia;
+
   /// The title of the section 'Developer' in the game details
   ///
   /// In en, this message translates to:

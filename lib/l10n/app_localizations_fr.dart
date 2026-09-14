@@ -230,6 +230,75 @@ class AppLocalizationsFr extends AppLocalizations {
   String get gameDetailsGenresTitle => 'Genres';
 
   @override
+  String get igdbGenrePinball => 'Flipper';
+
+  @override
+  String get igdbGenreAdventure => 'Aventure';
+
+  @override
+  String get igdbGenreIndie => 'Indépendant';
+
+  @override
+  String get igdbGenreArcade => 'Arcade';
+
+  @override
+  String get igdbGenreVisualNovel => 'Roman visuel';
+
+  @override
+  String get igdbGenreCardAndBoardGame => 'Jeu de cartes et de plateau';
+
+  @override
+  String get igdbGenreMoba => 'MOBA';
+
+  @override
+  String get igdbGenrePointAndClick => 'Point-and-click';
+
+  @override
+  String get igdbGenreFighting => 'Combat';
+
+  @override
+  String get igdbGenreShooter => 'Tir';
+
+  @override
+  String get igdbGenreMusic => 'Musique';
+
+  @override
+  String get igdbGenrePlatform => 'Plateforme';
+
+  @override
+  String get igdbGenrePuzzle => 'Réflexion';
+
+  @override
+  String get igdbGenreRacing => 'Course';
+
+  @override
+  String get igdbGenreRealTimeStrategy => 'Stratégie en temps réel (RTS)';
+
+  @override
+  String get igdbGenreRolePlaying => 'Jeu de rôle (RPG)';
+
+  @override
+  String get igdbGenreSimulator => 'Simulation';
+
+  @override
+  String get igdbGenreSport => 'Sport';
+
+  @override
+  String get igdbGenreStrategy => 'Stratégie';
+
+  @override
+  String get igdbGenreTurnBasedStrategy => 'Stratégie au tour par tour (TBS)';
+
+  @override
+  String get igdbGenreTactical => 'Tactique';
+
+  @override
+  String get igdbGenreHackAndSlash => 'Hack and slash/Beat \'em up';
+
+  @override
+  String get igdbGenreQuizTrivia => 'Quiz / Questions-réponses';
+
+  @override
   String get gameDetailsDeveloperTitle => 'Développeur';
 
   @override
