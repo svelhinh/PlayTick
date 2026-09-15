@@ -453,19 +453,9 @@ final class _IgdbGamesList extends ConsumerWidget {
                     isScrollControlled: true,
                     builder: (context) => _AddGameSheet(
                       onAdd: (game, status) async {
-                        try {
-                          await ref
-                              .read(libraryRepositoryProvider)
-                              .addGame(game, status: status);
-
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                          }
-                        } on Exception catch (e) {
-                          if (context.mounted) {
-                            context.showLibraryErrorSnackBar(e);
-                          }
-                        }
+                        await ref
+                            .read(libraryRepositoryProvider)
+                            .addGame(game, status: status);
                       },
                       game: games[index],
                     ),
@@ -482,10 +472,13 @@ final class _IgdbGamesList extends ConsumerWidget {
 }
 
 class _AddGameSheet extends StatefulWidget {
-  const _AddGameSheet({required this.game, required this.onAdd});
+  const _AddGameSheet({
+    required this.game,
+    required this.onAdd,
+  });
 
   final Game game;
-  final void Function(Game, GameStatus) onAdd;
+  final Future<void> Function(Game, GameStatus) onAdd;
 
   @override
   State<_AddGameSheet> createState() => _AddGameSheetState();
@@ -493,6 +486,7 @@ class _AddGameSheet extends StatefulWidget {
 
 class _AddGameSheetState extends State<_AddGameSheet> {
   GameStatus _selectedStatus = GameStatus.wantToPlay;
+  bool _isSubmitting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -557,8 +551,30 @@ class _AddGameSheetState extends State<_AddGameSheet> {
           SizedBox(
             width: double.infinity,
             child: FilledButton(
-              onPressed: () => widget.onAdd(widget.game, _selectedStatus),
-              child: Text(appLoc.add),
+              onPressed: _isSubmitting
+                  ? null
+                  : () async {
+                      setState(() => _isSubmitting = true);
+
+                      try {
+                        await widget.onAdd(widget.game, _selectedStatus);
+                      } on Exception catch (e) {
+                        if (context.mounted) {
+                          context.showLibraryErrorSnackBar(e);
+                        }
+                      } finally {
+                        if (mounted) setState(() => _isSubmitting = false);
+                      }
+                    },
+              child: _isSubmitting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Text(appLoc.add),
             ),
           ),
         ],
