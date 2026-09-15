@@ -121,5 +121,10 @@
     "gameDetailsPlaySessionsDeleteDescription": "Voulez-vous vraiment supprimer cette session ?\n\nLa session et sa note seront retirées de cet appareil. Cette action est irréversible.",
     "gameDetailsPlaySessionsDeleteButton": "Supprimer la session",
     "invalidPlaySessionException": "Session de jeu invalide.",
-    "playSessionNotFoundException": "Session de jeu introuvable."
+    "playSessionNotFoundException": "Session de jeu introuvable.",
+    "invalidActivePlaySessionException": "Session en cours invalide.",
+    "duplicateActivePlaySessionException": "Session en cours déjà existante.",
+    "activePlaySessionNotFoundException": "Session en cours introuvable.",
+    "invalidGameNoteException": "Note de jeu invalide.",
+    "gameNoteNotFoundException": "Note de jeu introuvable."
 }

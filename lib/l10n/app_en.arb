@@ -655,5 +655,30 @@
     "@playSessionNotFoundException": {
         "type": "text",
         "description": "The error message when a play session is not found"
+    },
+    "invalidActivePlaySessionException": "Invalid active play session.",
+    "@invalidActivePlaySessionException": {
+        "type": "text",
+        "description": "The error message when an invalid active play session is provided"
+    },
+    "duplicateActivePlaySessionException": "Duplicate active play session.",
+    "@duplicateActivePlaySessionException": {
+        "type": "text",
+        "description": "The error message when a duplicate active play session is provided"
+    },
+    "activePlaySessionNotFoundException": "Active play session not found.",
+    "@activePlaySessionNotFoundException": {
+        "type": "text",
+        "description": "The error message when an active play session is not found"
+    },
+    "invalidGameNoteException": "Invalid game note.",
+    "@invalidGameNoteException": {
+        "type": "text",
+        "description": "The error message when an invalid game note is provided"
+    },
+    "gameNoteNotFoundException": "Game note not found.",
+    "@gameNoteNotFoundException": {
+        "type": "text",
+        "description": "The error message when a game note is not found"
     }
 }

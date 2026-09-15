@@ -74,12 +74,7 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
       }
     } on Exception catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.localizeLibraryError(appLoc)),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        context.showLibraryErrorSnackBar(e);
       }
     }
   }
@@ -250,12 +245,7 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
                     }
                   } on Exception catch (e) {
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.localizeLibraryError(appLoc)),
-                          backgroundColor: theme.colorScheme.error,
-                        ),
-                      );
+                      context.showLibraryErrorSnackBar(e);
                     }
                   }
                 },

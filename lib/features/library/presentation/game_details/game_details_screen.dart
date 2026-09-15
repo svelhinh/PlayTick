@@ -80,12 +80,7 @@ class GameDetailsScreen extends ConsumerWidget {
                           }
                         } on Exception catch (e) {
                           if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(e.localizeLibraryError(appLoc)),
-                                backgroundColor: theme.colorScheme.error,
-                              ),
-                            );
+                            context.showLibraryErrorSnackBar(e);
                           }
                         }
                       },
@@ -133,11 +128,7 @@ class GameDetailsScreen extends ConsumerWidget {
                             .updateGameStatus(game.id, status);
                       } on Exception catch (e) {
                         if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(e.localizeLibraryError(appLoc)),
-                            ),
-                          );
+                          context.showLibraryErrorSnackBar(e);
                         }
                       }
                     },

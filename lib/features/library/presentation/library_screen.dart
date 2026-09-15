@@ -463,11 +463,7 @@ final class _IgdbGamesList extends ConsumerWidget {
                           }
                         } on Exception catch (e) {
                           if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(e.localizeLibraryError(appLoc)),
-                              ),
-                            );
+                            context.showLibraryErrorSnackBar(e);
                           }
                         }
                       },

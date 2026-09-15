@@ -94,12 +94,7 @@ class _FinishActivePlaySessionSheetState
                       }
                     } on Exception catch (e) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(e.localizeLibraryError(appLoc)),
-                            backgroundColor: theme.colorScheme.error,
-                          ),
-                        );
+                        context.showLibraryErrorSnackBar(e);
                       }
                     }
                   },
@@ -206,12 +201,7 @@ class _FinishActivePlaySessionSheetState
                     }
                   } on Exception catch (e) {
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.localizeLibraryError(appLoc)),
-                          backgroundColor: theme.colorScheme.error,
-                        ),
-                      );
+                      context.showLibraryErrorSnackBar(e);
                     }
                   }
                 },

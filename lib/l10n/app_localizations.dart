@@ -829,6 +829,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Play session not found.'**
   String get playSessionNotFoundException;
+
+  /// The error message when an invalid active play session is provided
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid active play session.'**
+  String get invalidActivePlaySessionException;
+
+  /// The error message when a duplicate active play session is provided
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate active play session.'**
+  String get duplicateActivePlaySessionException;
+
+  /// The error message when an active play session is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Active play session not found.'**
+  String get activePlaySessionNotFoundException;
+
+  /// The error message when an invalid game note is provided
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid game note.'**
+  String get invalidGameNoteException;
+
+  /// The error message when a game note is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Game note not found.'**
+  String get gameNoteNotFoundException;
 }
 
 class _AppLocalizationsDelegate

@@ -409,4 +409,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playSessionNotFoundException => 'Play session not found.';
+
+  @override
+  String get invalidActivePlaySessionException =>
+      'Invalid active play session.';
+
+  @override
+  String get duplicateActivePlaySessionException =>
+      'Duplicate active play session.';
+
+  @override
+  String get activePlaySessionNotFoundException =>
+      'Active play session not found.';
+
+  @override
+  String get invalidGameNoteException => 'Invalid game note.';
+
+  @override
+  String get gameNoteNotFoundException => 'Game note not found.';
 }
