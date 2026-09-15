@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
+import 'package:playtick/core/assets/app_assets.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/features/home/presentation/providers/active_play_session_provider.dart';
@@ -59,7 +60,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 24),
-            Text(appLoc.appName, style: theme.textTheme.headlineLarge),
+            Row(
+              children: [
+                Image.asset(
+                  AppAssets.logo,
+                  width: 26,
+                  height: 26,
+                ),
+                const SizedBox(width: 2),
+                Text(
+                  appLoc.appName.substring(1),
+                  style: theme.textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 24),
             Expanded(
               child: SingleChildScrollView(
