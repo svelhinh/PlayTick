@@ -661,4 +661,25 @@ void main() {
       expect(find.widgetWithText(TextField, 'celeste'), findsOneWidget);
     },
   );
+
+  testWidgets(
+    'Library add shows a localized SnackBar when the game is already in the library',
+    (tester) async {
+      final libraryRepository = container.read(libraryRepositoryProvider);
+      await openAddSheetForCeleste(tester);
+      await libraryRepository.addGame(celesteGame());
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Add').last);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SnackBar), findsOneWidget);
+      expect(
+        find.text('This game is already in your library.'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('DuplicateGame'), findsNothing);
+      expect(find.textContaining('Exception:'), findsNothing);
+      expect(find.text('Add as'), findsOneWidget);
+    },
+  );
 }
