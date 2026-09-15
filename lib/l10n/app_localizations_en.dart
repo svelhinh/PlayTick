@@ -25,6 +25,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get somethingWentWrong => 'Something went wrong';
 
   @override
+  String get somethingWentWrongDescription => 'Please try again later.';
+
+  @override
   String get date => 'Date';
 
   @override

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
+import 'package:playtick/core/presentation/widgets/error_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
@@ -180,8 +181,13 @@ class LibraryScreen extends ConsumerWidget {
                   ],
                 );
               },
-              error: (error, stackTrace) =>
-                  Center(child: Text(appLoc.somethingWentWrong)),
+              error: (error, stackTrace) => Center(
+                child: ErrorStateCard(
+                  title: appLoc.somethingWentWrong,
+                  description: appLoc.somethingWentWrongDescription,
+                  onRetry: () => ref.invalidate(libraryGamesProvider),
+                ),
+              ),
               loading: () => const Center(child: CircularProgressIndicator()),
             ),
           ),

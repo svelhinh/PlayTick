@@ -25,6 +25,11 @@
         "type": "text",
         "description": "The error message general"
     },
+    "somethingWentWrongDescription": "Please try again later.",
+    "@somethingWentWrongDescription": {
+        "type": "text",
+        "description": "The description of the error message general"
+    },
     "date": "Date",
     "@date": {
         "type": "text",

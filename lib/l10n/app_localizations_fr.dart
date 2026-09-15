@@ -25,6 +25,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get somethingWentWrong => 'Une erreur est survenue';
 
   @override
+  String get somethingWentWrongDescription => 'Veuillez réessayer plus tard.';
+
+  @override
   String get date => 'Date';
 
   @override

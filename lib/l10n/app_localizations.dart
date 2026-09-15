@@ -128,6 +128,12 @@ abstract class AppLocalizations {
   /// **'Something went wrong'**
   String get somethingWentWrong;
 
+  /// The description of the error message general
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again later.'**
+  String get somethingWentWrongDescription;
+
   /// The label of the date field in the add session sheet
   ///
   /// In en, this message translates to:

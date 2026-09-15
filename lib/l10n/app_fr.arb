@@ -5,6 +5,7 @@
     "cancel": "Annuler",
     "retry": "Réessayer",
     "somethingWentWrong": "Une erreur est survenue",
+    "somethingWentWrongDescription": "Veuillez réessayer plus tard.",
     "date": "Date",
     "save": "Enregistrer",
     "hours": "heures",
