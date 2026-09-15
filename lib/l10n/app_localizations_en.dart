@@ -230,6 +230,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gameDetailsGenresTitle => 'Genres';
 
   @override
+  String get gameDetailsNotFoundTitle => 'Game not found';
+
+  @override
+  String get gameDetailsNotFoundDescription =>
+      'The game you are looking for is not in your library.';
+
+  @override
   String get igdbGenrePinball => 'Pinball';
 
   @override

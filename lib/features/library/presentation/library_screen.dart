@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/error_state_card.dart';
-import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_filter.dart';
@@ -109,10 +108,14 @@ class LibraryScreen extends ConsumerWidget {
                               if (igdbGamesAsync.isLoading)
                                 const Center(child: CircularProgressIndicator())
                               else if (igdbGamesAsync.hasError)
-                                _IgdbSearchCardError(
+                                ErrorStateCard(
+                                  title: appLoc.igdbSearchCardErrorTitle,
+                                  description:
+                                      appLoc.igdbSearchCardErrorDescription,
                                   onRetry: () => ref.invalidate(
                                     librarySearchGamesProvider,
                                   ),
+                                  compact: true,
                                 )
                               else
                                 EmptyStateCard(
@@ -478,63 +481,6 @@ final class _IgdbGamesList extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-final class _IgdbSearchCardError extends StatelessWidget {
-  const _IgdbSearchCardError({
-    required this.onRetry,
-  });
-
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final appLoc = AppLocalizations.of(context)!;
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            IconCircle(
-              icon: Icons.info_outline,
-              backgroundColor: theme.colorScheme.primaryContainer,
-              iconColor: theme.colorScheme.primary,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    appLoc.igdbSearchCardErrorTitle,
-                    style: theme.textTheme.titleSmall,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    appLoc.igdbSearchCardErrorDescription,
-                    style: theme.textTheme.bodySmall,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              height: 40,
-              child: FilledButton(
-                onPressed: onRetry,
-                child: Text(appLoc.retry),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

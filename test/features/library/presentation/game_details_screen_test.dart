@@ -7,14 +7,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/delete_dialog.dart';
+import 'package:playtick/core/presentation/widgets/error_state_card.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
 import 'package:playtick/features/library/data/database/database_provider.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
+import 'package:playtick/features/library/domain/game_note.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/presentation/game_details/game_details_screen.dart';
+import 'package:playtick/features/library/presentation/game_details/game_notes_card.dart';
 import 'package:playtick/features/library/presentation/game_details/play_session_sheet.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
+import 'package:playtick/features/library/presentation/providers/game_notes_provider.dart';
+import 'package:playtick/features/library/presentation/providers/library_game_provider.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 
@@ -255,7 +260,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(GameDetailsScreen), findsOneWidget);
-    expect(find.text('Something went wrong'), findsOneWidget);
+    expect(find.byType(ErrorStateCard), findsOneWidget);
+    expect(find.text('Game not found'), findsOneWidget);
+    expect(
+      find.text('The game you are looking for is not in your library.'),
+      findsOneWidget,
+    );
+    expect(find.text('Retry'), findsNothing);
+    expect(find.byIcon(Icons.delete), findsNothing);
   });
 
   testWidgets('shows an error when the game is not in the library', (
@@ -269,7 +281,94 @@ void main() {
 
     expect(find.byIcon(Icons.delete), findsNothing);
     expect(find.byType(GameDetailsScreen), findsOneWidget);
+    expect(find.byType(ErrorStateCard), findsOneWidget);
+    expect(find.text('Game not found'), findsOneWidget);
+    expect(
+      find.text('The game you are looking for is not in your library.'),
+      findsOneWidget,
+    );
+    expect(find.text('Retry'), findsNothing);
+  });
+
+  testWidgets('retries loading game details after a failure', (tester) async {
+    await seedLibrary();
+
+    var loadCount = 0;
+    container.dispose();
+    container = ProviderContainer(
+      retry: (_, _) => null,
+      overrides: [
+        databaseProvider.overrideWith((_) => database),
+        libraryGameProvider(200).overrideWith((ref) {
+          loadCount++;
+          return loadCount == 1
+              ? Stream.error(Exception('drift connection failed'))
+              : ref.read(libraryRepositoryProvider).watchGame(200);
+        }),
+      ],
+    );
+    await pumpApp(tester);
+    await openLibrary(tester);
+    await tester.tap(seeDetailsOnCard('Hollow Knight'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ErrorStateCard), findsOneWidget);
     expect(find.text('Something went wrong'), findsOneWidget);
+    expect(find.text('Please try again later.'), findsOneWidget);
+    expect(find.text('Retry'), findsOneWidget);
+    expect(find.textContaining('drift connection failed'), findsNothing);
+
+    await tester.tap(find.text('Retry'));
+    await tester.pumpAndSettle();
+
+    expect(loadCount, 2);
+    expect(find.text('Hollow Knight'), findsWidgets);
+    expect(find.byType(ErrorStateCard), findsNothing);
+  });
+
+  testWidgets('retries loading notes after a failure', (tester) async {
+    await seedLibrary();
+
+    var loadCount = 0;
+    container.dispose();
+    container = ProviderContainer(
+      retry: (_, _) => null,
+      overrides: [
+        databaseProvider.overrideWith((_) => database),
+        gameNotesProvider(200).overrideWith((ref) {
+          loadCount++;
+          return loadCount == 1
+              ? Stream.error(Exception('notes failed'))
+              : Stream.value([
+                  GameNote(
+                    id: 1,
+                    gameId: 200,
+                    content: 'Recovered note',
+                    createdAt: DateTime.utc(2024),
+                  ),
+                ]);
+        }),
+      ],
+    );
+    await pumpApp(tester);
+    await openLibrary(tester);
+    await tester.tap(seeDetailsOnCard('Hollow Knight'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Hollow Knight'), findsWidgets);
+    expect(find.byType(GameNotesCard), findsNothing);
+    expect(find.byType(ErrorStateCard), findsOneWidget);
+    expect(find.text('Something went wrong'), findsOneWidget);
+    expect(find.text('Retry'), findsOneWidget);
+
+    await tester.ensureVisible(find.text('Retry'));
+    await tester.tap(find.text('Retry'));
+    await tester.pumpAndSettle();
+
+    expect(loadCount, 2);
+    expect(find.byType(ErrorStateCard), findsNothing);
+    expect(find.byType(GameNotesCard), findsOneWidget);
+    expect(find.text('Recovered note'), findsOneWidget);
   });
 
   testWidgets('adds a general note from game details', (tester) async {

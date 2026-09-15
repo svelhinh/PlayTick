@@ -488,6 +488,18 @@ abstract class AppLocalizations {
   /// **'Genres'**
   String get gameDetailsGenresTitle;
 
+  /// The title of the error card in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Game not found'**
+  String get gameDetailsNotFoundTitle;
+
+  /// The description of the error card in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'The game you are looking for is not in your library.'**
+  String get gameDetailsNotFoundDescription;
+
   /// The name of the genre 'Pinball'
   ///
   /// In en, this message translates to:

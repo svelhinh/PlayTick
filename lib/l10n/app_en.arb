@@ -356,6 +356,16 @@
         "type": "text",
         "description": "The title of the section 'Genres' in the game details"
     },
+    "gameDetailsNotFoundTitle": "Game not found",
+    "@gameDetailsNotFoundTitle": {
+        "type": "text",
+        "description": "The title of the error card in the game details"
+    },
+    "gameDetailsNotFoundDescription": "The game you are looking for is not in your library.",
+    "@gameDetailsNotFoundDescription": {
+        "type": "text",
+        "description": "The description of the error card in the game details"
+    },
     "igdbGenrePinball": "Pinball",
     "@igdbGenrePinball": {
         "type": "text",

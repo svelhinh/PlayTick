@@ -65,6 +65,8 @@
     "gameDetailsDeleteButton": "Supprimer le jeu",
     "gameDetailsAboutGameTitle": "À propos du jeu",
     "gameDetailsGenresTitle": "Genres",
+    "gameDetailsNotFoundTitle": "Jeu non trouvé",
+    "gameDetailsNotFoundDescription": "Le jeu que vous cherchez n'est pas dans votre bibliothèque.",
     "igdbGenrePinball": "Flipper",
     "igdbGenreAdventure": "Aventure",
     "igdbGenreIndie": "Indépendant",

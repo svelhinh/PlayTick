@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
+import 'package:playtick/core/presentation/widgets/error_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
@@ -35,7 +36,12 @@ class GameDetailsScreen extends ConsumerWidget {
     if (gameIdInt == null) {
       return Scaffold(
         appBar: AppBar(),
-        body: const _GameDetailsError(),
+        body: Center(
+          child: ErrorStateCard(
+            title: appLoc.gameDetailsNotFoundTitle,
+            description: appLoc.gameDetailsNotFoundDescription,
+          ),
+        ),
       );
     }
 
@@ -100,7 +106,12 @@ class GameDetailsScreen extends ConsumerWidget {
       body: gameAsync.when(
         data: (details) {
           if (details == null) {
-            return const _GameDetailsError();
+            return Center(
+              child: ErrorStateCard(
+                title: appLoc.gameDetailsNotFoundTitle,
+                description: appLoc.gameDetailsNotFoundDescription,
+              ),
+            );
           }
 
           final game = details.game;
@@ -146,7 +157,12 @@ class GameDetailsScreen extends ConsumerWidget {
                       notes: notes,
                       gameId: game.id,
                     ),
-                    error: (error, stackTrace) => const SizedBox.shrink(),
+                    error: (error, stackTrace) => ErrorStateCard(
+                      title: appLoc.somethingWentWrong,
+                      description: appLoc.somethingWentWrongDescription,
+                      compact: true,
+                      onRetry: () => ref.invalidate(gameNotesProvider(game.id)),
+                    ),
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
                   ),
@@ -160,21 +176,16 @@ class GameDetailsScreen extends ConsumerWidget {
             ),
           );
         },
-        error: (error, stackTrace) => const _GameDetailsError(),
+        error: (error, stackTrace) => Center(
+          child: ErrorStateCard(
+            title: appLoc.somethingWentWrong,
+            description: appLoc.somethingWentWrongDescription,
+            onRetry: () => ref.invalidate(libraryGameProvider(gameIdInt)),
+          ),
+        ),
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );
-  }
-}
-
-final class _GameDetailsError extends StatelessWidget {
-  const _GameDetailsError();
-
-  @override
-  Widget build(BuildContext context) {
-    final appLoc = AppLocalizations.of(context)!;
-
-    return Center(child: Text(appLoc.somethingWentWrong));
   }
 }
 
