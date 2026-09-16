@@ -132,27 +132,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                       const SizedBox(height: 16),
                     ],
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _InfoCard(
-                            title: appLoc.homeWeeklyPlaytime,
-                            info: (playtime.value ?? Duration.zero).localize(
-                              appLoc,
-                              withMinutes: false,
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: _InfoCard(
+                              title: appLoc.homeWeeklyPlaytime,
+                              info: (playtime.value ?? Duration.zero).localize(
+                                appLoc,
+                                withMinutes: false,
+                              ),
+                              icon: Icons.access_time_outlined,
                             ),
-                            icon: Icons.access_time_outlined,
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _InfoCard(
-                            title: appLoc.homeTotalGames,
-                            info: playingGames.length.toString(),
-                            icon: Icons.sports_esports_outlined,
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: _InfoCard(
+                              title: appLoc.homeTotalGames,
+                              info: playingGames.length.toString(),
+                              icon: Icons.sports_esports_outlined,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 16),
                     gamesAsync.when(
@@ -232,6 +235,7 @@ final class _InfoCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -240,16 +244,20 @@ final class _InfoCard extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  info,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: theme.colorScheme.primary,
+                Expanded(
+                  child: Text(
+                    info,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
                 ),
+                const SizedBox(width: 8),
                 IconCircle(
                   icon: icon,
                   backgroundColor: theme.colorScheme.secondary.withValues(
@@ -300,33 +308,45 @@ final class _ActivePlaySessionCard extends StatelessWidget {
                 children: [
                   GameCoverImage(coverUrl: coverUrl),
                   const SizedBox(width: 16),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(gameTitle, style: theme.textTheme.titleLarge),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          IconCircle(
-                            icon: Icons.access_time_outlined,
-                            iconSize: 16,
-                            radius: 14,
-                            backgroundColor: theme.colorScheme.secondary
-                                .withValues(alpha: 0.1),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          gameTitle,
+                          style: theme.textTheme.titleLarge,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 12),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconCircle(
+                                icon: Icons.access_time_outlined,
+                                iconSize: 16,
+                                radius: 14,
+                                backgroundColor: theme.colorScheme.secondary
+                                    .withValues(alpha: 0.1),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                playtime.formatTimer(),
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            playtime.formatTimer(),
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 8),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [

@@ -503,17 +503,26 @@ class _AddGameSheetState extends State<_AddGameSheet> {
             children: [
               GameCoverImage(coverUrl: widget.game.coverUrl),
               const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.game.name, style: theme.textTheme.titleMedium),
-                  if (widget.game.subtitle != null) ...[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      widget.game.subtitle!,
-                      style: theme.textTheme.bodySmall,
+                      widget.game.name,
+                      style: theme.textTheme.titleMedium,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    if (widget.game.subtitle != null) ...[
+                      Text(
+                        widget.game.subtitle!,
+                        style: theme.textTheme.bodySmall,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ],
           ),
@@ -558,6 +567,10 @@ class _AddGameSheetState extends State<_AddGameSheet> {
 
                       try {
                         await widget.onAdd(widget.game, _selectedStatus);
+
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
                       } on Exception catch (e) {
                         if (context.mounted) {
                           context.showLibraryErrorSnackBar(e);
