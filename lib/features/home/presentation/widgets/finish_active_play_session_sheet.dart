@@ -65,11 +65,14 @@ class _FinishActivePlaySessionSheetState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  appLoc.homeFinishActivePlaySession,
-                  style: theme.textTheme.titleLarge,
+                Expanded(
+                  child: Text(
+                    appLoc.homeFinishActivePlaySession,
+                    style: theme.textTheme.titleLarge,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 if (!_isSubmitting)
                   IconButton(
@@ -113,17 +116,24 @@ class _FinishActivePlaySessionSheetState
               children: [
                 GameCoverImage(coverUrl: widget.coverUrl),
                 const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(widget.gameTitle, style: theme.textTheme.titleLarge),
-                    const SizedBox(height: 8),
-                    Text(
-                      MaterialLocalizations.of(context)
-                          .formatShortDate(widget.startedAt),
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.gameTitle,
+                        style: theme.textTheme.titleLarge,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        MaterialLocalizations.of(context)
+                            .formatShortDate(widget.startedAt),
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -144,38 +154,46 @@ class _FinishActivePlaySessionSheetState
                     backgroundColor: theme.colorScheme.surfaceContainerHigh,
                   ),
                   const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        appLoc.homeFinishActivePlaySessionDurationLabel,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                      Text(
-                        _duration.localize(appLoc),
-                        style: theme.textTheme.titleMedium!.copyWith(
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          appLoc.homeFinishActivePlaySessionDurationLabel,
+                          style: theme.textTheme.bodyMedium,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          _duration.localize(appLoc),
+                          style: theme.textTheme.titleMedium!.copyWith(
+                            color: theme.colorScheme.primary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: TextButton(
+                      onPressed: () async {
+                        final picked = await showDialog<Duration>(
+                          context: context,
+                          builder: (context) =>
+                              DurationPickerDialog(duration: _duration),
+                        );
+
+                        if (picked != null && mounted) {
+                          setState(() => _duration = picked);
+                        }
+                      },
+                      child: Text(
+                        appLoc.homeFinishActivePlaySessionEditDurationButton,
+                        style: theme.textTheme.titleSmall!.copyWith(
                           color: theme.colorScheme.primary,
                         ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () async {
-                      final picked = await showDialog<Duration>(
-                        context: context,
-                        builder: (context) =>
-                            DurationPickerDialog(duration: _duration),
-                      );
-
-                      if (picked != null && mounted) {
-                        setState(() => _duration = picked);
-                      }
-                    },
-                    child: Text(
-                      appLoc.homeFinishActivePlaySessionEditDurationButton,
-                      style: theme.textTheme.titleSmall!.copyWith(
-                        color: theme.colorScheme.primary,
                       ),
                     ),
                   ),

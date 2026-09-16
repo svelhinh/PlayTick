@@ -20,6 +20,16 @@ import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 
+const _longGameName =
+    'Super Ultra Extra Long Role Playing Adventure Chronicles of the Forgotten Kingdom';
+
+void _useNarrowPhone(WidgetTester tester) {
+  tester.view.physicalSize = const Size(360, 800);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+}
+
 void main() {
   testWidgets('Home screen Empty Card button navigates to the library screen', (
     tester,
@@ -447,4 +457,87 @@ void main() {
       isEmpty,
     );
   });
+
+  testWidgets(
+    'Home continue card keeps a long title without overflowing at 360 dp',
+    (tester) async {
+      _useNarrowPhone(tester);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            weeklyPlaytimeProvider.overrideWith(
+              (_) => Stream.value(Duration.zero),
+            ),
+            libraryGamesProvider.overrideWith(
+              (_) => Stream.value(const [
+                LibraryGame(
+                  gameId: 1,
+                  name: _longGameName,
+                  status: GameStatus.playing,
+                ),
+              ]),
+            ),
+            activePlaySessionProvider.overrideWith(
+              (_) => Stream.value(null),
+            ),
+          ],
+          child: const PlayTick(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text(_longGameName), findsOneWidget);
+      expect(find.widgetWithText(OutlinedButton, 'Launch'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'Home active session keeps a long title without overflowing at 360 dp',
+    (tester) async {
+      _useNarrowPhone(tester);
+
+      final startedAt = DateTime(2026, 9, 10, 14);
+      final now = DateTime(2026, 9, 10, 15, 2, 3);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            weeklyPlaytimeProvider.overrideWith(
+              (_) => Stream.value(Duration.zero),
+            ),
+            activePlaySessionProvider.overrideWith(
+              (_) => Stream.value(
+                ActivePlaySession(gameId: 1, startedAt: startedAt),
+              ),
+            ),
+            libraryGamesProvider.overrideWith(
+              (_) => Stream.value(const [
+                LibraryGame(
+                  gameId: 1,
+                  name: _longGameName,
+                  status: GameStatus.playing,
+                ),
+              ]),
+            ),
+            timerNowProvider.overrideWith((_) => Stream.value(now)),
+          ],
+          child: const PlayTick(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Active session'), findsOneWidget);
+      expect(find.text(_longGameName), findsOneWidget);
+      expect(find.text('01:02:03'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Stop'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(FinishActivePlaySessionSheet), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

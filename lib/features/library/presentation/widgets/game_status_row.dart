@@ -11,26 +11,31 @@ class GameStatusRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Row(
-      children: [
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: status.statusColor(context),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          status.localize(context),
-          style: theme.textTheme.bodyMedium!.copyWith(
-            color: status.statusColor(
-              context,
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: status.statusColor(context),
             ),
           ),
-        ),
-      ],
+          const SizedBox(width: 8),
+          Text(
+            status.localize(context),
+            style: theme.textTheme.bodyMedium!.copyWith(
+              color: status.statusColor(
+                context,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
