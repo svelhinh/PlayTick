@@ -25,6 +25,11 @@
         "type": "text",
         "description": "The error message general"
     },
+    "somethingWentWrongDescription": "Please try again later.",
+    "@somethingWentWrongDescription": {
+        "type": "text",
+        "description": "The description of the error message general"
+    },
     "date": "Date",
     "@date": {
         "type": "text",
@@ -351,6 +356,16 @@
         "type": "text",
         "description": "The title of the section 'Genres' in the game details"
     },
+    "gameDetailsNotFoundTitle": "Game not found",
+    "@gameDetailsNotFoundTitle": {
+        "type": "text",
+        "description": "The title of the error card in the game details"
+    },
+    "gameDetailsNotFoundDescription": "The game you are looking for is not in your library.",
+    "@gameDetailsNotFoundDescription": {
+        "type": "text",
+        "description": "The description of the error card in the game details"
+    },
     "igdbGenrePinball": "Pinball",
     "@igdbGenrePinball": {
         "type": "text",
@@ -640,5 +655,30 @@
     "@playSessionNotFoundException": {
         "type": "text",
         "description": "The error message when a play session is not found"
+    },
+    "invalidActivePlaySessionException": "Invalid active play session.",
+    "@invalidActivePlaySessionException": {
+        "type": "text",
+        "description": "The error message when an invalid active play session is provided"
+    },
+    "duplicateActivePlaySessionException": "Duplicate active play session.",
+    "@duplicateActivePlaySessionException": {
+        "type": "text",
+        "description": "The error message when a duplicate active play session is provided"
+    },
+    "activePlaySessionNotFoundException": "Active play session not found.",
+    "@activePlaySessionNotFoundException": {
+        "type": "text",
+        "description": "The error message when an active play session is not found"
+    },
+    "invalidGameNoteException": "Invalid game note.",
+    "@invalidGameNoteException": {
+        "type": "text",
+        "description": "The error message when an invalid game note is provided"
+    },
+    "gameNoteNotFoundException": "Game note not found.",
+    "@gameNoteNotFoundException": {
+        "type": "text",
+        "description": "The error message when a game note is not found"
     }
 }

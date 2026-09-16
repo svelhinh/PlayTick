@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
-import 'package:playtick/core/presentation/widgets/icon_circle.dart';
+import 'package:playtick/core/presentation/widgets/error_state_card.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_filter.dart';
@@ -108,10 +108,14 @@ class LibraryScreen extends ConsumerWidget {
                               if (igdbGamesAsync.isLoading)
                                 const Center(child: CircularProgressIndicator())
                               else if (igdbGamesAsync.hasError)
-                                _IgdbSearchCardError(
+                                ErrorStateCard(
+                                  title: appLoc.igdbSearchCardErrorTitle,
+                                  description:
+                                      appLoc.igdbSearchCardErrorDescription,
                                   onRetry: () => ref.invalidate(
                                     librarySearchGamesProvider,
                                   ),
+                                  compact: true,
                                 )
                               else
                                 EmptyStateCard(
@@ -180,8 +184,13 @@ class LibraryScreen extends ConsumerWidget {
                   ],
                 );
               },
-              error: (error, stackTrace) =>
-                  Center(child: Text(appLoc.somethingWentWrong)),
+              error: (error, stackTrace) => Center(
+                child: ErrorStateCard(
+                  title: appLoc.somethingWentWrong,
+                  description: appLoc.somethingWentWrongDescription,
+                  onRetry: () => ref.invalidate(libraryGamesProvider),
+                ),
+              ),
               loading: () => const Center(child: CircularProgressIndicator()),
             ),
           ),
@@ -444,23 +453,9 @@ final class _IgdbGamesList extends ConsumerWidget {
                     isScrollControlled: true,
                     builder: (context) => _AddGameSheet(
                       onAdd: (game, status) async {
-                        try {
-                          await ref
-                              .read(libraryRepositoryProvider)
-                              .addGame(game, status: status);
-
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                          }
-                        } on Exception catch (e) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(e.localizeLibraryError(appLoc)),
-                              ),
-                            );
-                          }
-                        }
+                        await ref
+                            .read(libraryRepositoryProvider)
+                            .addGame(game, status: status);
                       },
                       game: games[index],
                     ),
@@ -476,68 +471,14 @@ final class _IgdbGamesList extends ConsumerWidget {
   }
 }
 
-final class _IgdbSearchCardError extends StatelessWidget {
-  const _IgdbSearchCardError({
-    required this.onRetry,
+class _AddGameSheet extends StatefulWidget {
+  const _AddGameSheet({
+    required this.game,
+    required this.onAdd,
   });
 
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final appLoc = AppLocalizations.of(context)!;
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            IconCircle(
-              icon: Icons.info_outline,
-              backgroundColor: theme.colorScheme.primaryContainer,
-              iconColor: theme.colorScheme.primary,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    appLoc.igdbSearchCardErrorTitle,
-                    style: theme.textTheme.titleSmall,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    appLoc.igdbSearchCardErrorDescription,
-                    style: theme.textTheme.bodySmall,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              height: 40,
-              child: FilledButton(
-                onPressed: onRetry,
-                child: Text(appLoc.retry),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _AddGameSheet extends StatefulWidget {
-  const _AddGameSheet({required this.game, required this.onAdd});
-
   final Game game;
-  final void Function(Game, GameStatus) onAdd;
+  final Future<void> Function(Game, GameStatus) onAdd;
 
   @override
   State<_AddGameSheet> createState() => _AddGameSheetState();
@@ -545,6 +486,7 @@ class _AddGameSheet extends StatefulWidget {
 
 class _AddGameSheetState extends State<_AddGameSheet> {
   GameStatus _selectedStatus = GameStatus.wantToPlay;
+  bool _isSubmitting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -609,8 +551,30 @@ class _AddGameSheetState extends State<_AddGameSheet> {
           SizedBox(
             width: double.infinity,
             child: FilledButton(
-              onPressed: () => widget.onAdd(widget.game, _selectedStatus),
-              child: Text(appLoc.add),
+              onPressed: _isSubmitting
+                  ? null
+                  : () async {
+                      setState(() => _isSubmitting = true);
+
+                      try {
+                        await widget.onAdd(widget.game, _selectedStatus);
+                      } on Exception catch (e) {
+                        if (context.mounted) {
+                          context.showLibraryErrorSnackBar(e);
+                        }
+                      } finally {
+                        if (mounted) setState(() => _isSubmitting = false);
+                      }
+                    },
+              child: _isSubmitting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Text(appLoc.add),
             ),
           ),
         ],

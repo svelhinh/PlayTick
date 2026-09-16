@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/features/home/presentation/widgets/finish_active_play_session_sheet.dart';
@@ -70,6 +72,74 @@ void main() {
 
     expect(savedDuration, const Duration(minutes: 2));
     expect(savedNote, 'Boss defeated');
+    expect(find.byType(FinishActivePlaySessionSheet), findsNothing);
+  });
+
+  testWidgets('ignores a second save tap while the first is in flight', (
+    tester,
+  ) async {
+    final saveGate = Completer<void>();
+    var saveCalls = 0;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: FilledButton(
+              onPressed: () => showModalBottomSheet<void>(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => FinishActivePlaySessionSheet(
+                  onSave: (duration, note) async {
+                    saveCalls++;
+                    await saveGate.future;
+                  },
+                  onDelete: () async {},
+                  coverUrl: null,
+                  gameTitle: 'Celeste',
+                  startedAt: DateTime(2026, 9, 10, 14),
+                  initialDuration: const Duration(minutes: 12),
+                ),
+              ),
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+
+    final saveButton = find.descendant(
+      of: find.byType(FinishActivePlaySessionSheet),
+      matching: find.byType(FilledButton),
+    );
+
+    await tester.tap(saveButton);
+    await tester.pump();
+
+    expect(saveCalls, 1);
+    expect(tester.widget<FilledButton>(saveButton).onPressed, isNull);
+    expect(
+      find.descendant(
+        of: saveButton,
+        matching: find.byType(CircularProgressIndicator),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byIcon(Icons.delete), findsNothing);
+
+    await tester.tap(saveButton);
+    await tester.pump();
+
+    expect(saveCalls, 1);
+
+    saveGate.complete();
+    await tester.pumpAndSettle();
+
     expect(find.byType(FinishActivePlaySessionSheet), findsNothing);
   });
 }

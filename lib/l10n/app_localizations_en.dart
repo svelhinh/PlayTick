@@ -25,6 +25,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get somethingWentWrong => 'Something went wrong';
 
   @override
+  String get somethingWentWrongDescription => 'Please try again later.';
+
+  @override
   String get date => 'Date';
 
   @override
@@ -227,6 +230,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gameDetailsGenresTitle => 'Genres';
 
   @override
+  String get gameDetailsNotFoundTitle => 'Game not found';
+
+  @override
+  String get gameDetailsNotFoundDescription =>
+      'The game you are looking for is not in your library.';
+
+  @override
   String get igdbGenrePinball => 'Pinball';
 
   @override
@@ -399,4 +409,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playSessionNotFoundException => 'Play session not found.';
+
+  @override
+  String get invalidActivePlaySessionException =>
+      'Invalid active play session.';
+
+  @override
+  String get duplicateActivePlaySessionException =>
+      'Duplicate active play session.';
+
+  @override
+  String get activePlaySessionNotFoundException =>
+      'Active play session not found.';
+
+  @override
+  String get invalidGameNoteException => 'Invalid game note.';
+
+  @override
+  String get gameNoteNotFoundException => 'Game note not found.';
 }

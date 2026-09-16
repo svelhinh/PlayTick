@@ -128,6 +128,12 @@ abstract class AppLocalizations {
   /// **'Something went wrong'**
   String get somethingWentWrong;
 
+  /// The description of the error message general
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again later.'**
+  String get somethingWentWrongDescription;
+
   /// The label of the date field in the add session sheet
   ///
   /// In en, this message translates to:
@@ -482,6 +488,18 @@ abstract class AppLocalizations {
   /// **'Genres'**
   String get gameDetailsGenresTitle;
 
+  /// The title of the error card in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'Game not found'**
+  String get gameDetailsNotFoundTitle;
+
+  /// The description of the error card in the game details
+  ///
+  /// In en, this message translates to:
+  /// **'The game you are looking for is not in your library.'**
+  String get gameDetailsNotFoundDescription;
+
   /// The name of the genre 'Pinball'
   ///
   /// In en, this message translates to:
@@ -811,6 +829,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Play session not found.'**
   String get playSessionNotFoundException;
+
+  /// The error message when an invalid active play session is provided
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid active play session.'**
+  String get invalidActivePlaySessionException;
+
+  /// The error message when a duplicate active play session is provided
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate active play session.'**
+  String get duplicateActivePlaySessionException;
+
+  /// The error message when an active play session is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Active play session not found.'**
+  String get activePlaySessionNotFoundException;
+
+  /// The error message when an invalid game note is provided
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid game note.'**
+  String get invalidGameNoteException;
+
+  /// The error message when a game note is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Game note not found.'**
+  String get gameNoteNotFoundException;
 }
 
 class _AppLocalizationsDelegate

@@ -32,6 +32,8 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
   Duration _duration = const Duration(minutes: 15);
   final TextEditingController _noteController = TextEditingController();
 
+  bool _isSubmitting = false;
+
   @override
   void initState() {
     super.initState();
@@ -74,12 +76,7 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
       }
     } on Exception catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.localizeLibraryError(appLoc)),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        context.showLibraryErrorSnackBar(e);
       }
     }
   }
@@ -111,7 +108,7 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
                       : appLoc.gameDetailsPlaySessionsAddTitle,
                   style: theme.textTheme.titleLarge,
                 ),
-                if (widget.onDelete != null)
+                if (!_isSubmitting && widget.onDelete != null)
                   IconButton(
                     onPressed: _onDeletePressed,
                     tooltip: appLoc.gameDetailsPlaySessionsDeleteButton,
@@ -237,39 +234,46 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
             SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: () async {
-                  try {
-                    await widget.onSave(
-                      _date,
-                      _duration,
-                      _noteController.text.trim(),
-                    );
+                onPressed: _isSubmitting
+                    ? null
+                    : () async {
+                        setState(() => _isSubmitting = true);
 
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                    }
-                  } on Exception catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.localizeLibraryError(appLoc)),
-                          backgroundColor: theme.colorScheme.error,
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: Text(
-                  isEditing
-                      ? appLoc.gameDetailsPlaySessionsEditSaveButton
-                      : appLoc.gameDetailsPlaySessionsAddSaveButton,
-                ),
+                        try {
+                          await widget.onSave(
+                            _date,
+                            _duration,
+                            _noteController.text.trim(),
+                          );
+
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        } on Exception catch (e) {
+                          if (context.mounted) {
+                            context.showLibraryErrorSnackBar(e);
+                          }
+                        } finally {
+                          if (mounted) setState(() => _isSubmitting = false);
+                        }
+                      },
+                child: _isSubmitting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(
+                        isEditing
+                            ? appLoc.gameDetailsPlaySessionsEditSaveButton
+                            : appLoc.gameDetailsPlaySessionsAddSaveButton,
+                      ),
               ),
             ),
             SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: _isSubmitting ? null : () => Navigator.pop(context),
                 child: Text(appLoc.cancel),
               ),
             ),

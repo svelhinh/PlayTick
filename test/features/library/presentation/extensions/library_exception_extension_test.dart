@@ -25,8 +25,73 @@ void main() {
       'Play session not found.',
     );
     expect(
+      const InvalidActivePlaySessionException().localizeLibraryError(appLoc),
+      'Invalid active play session.',
+    );
+    expect(
+      const DuplicateActivePlaySessionException().localizeLibraryError(appLoc),
+      'Duplicate active play session.',
+    );
+    expect(
+      const ActivePlaySessionNotFoundException().localizeLibraryError(appLoc),
+      'Active play session not found.',
+    );
+    expect(
+      const InvalidGameNoteException().localizeLibraryError(appLoc),
+      'Invalid game note.',
+    );
+    expect(
+      const GameNoteNotFoundException().localizeLibraryError(appLoc),
+      'Game note not found.',
+    );
+    expect(
       Exception('drift connection failed').localizeLibraryError(appLoc),
       'Something went wrong',
+    );
+  });
+
+  test('localizes known library exceptions in French', () async {
+    final appLoc = await AppLocalizations.delegate.load(const Locale('fr'));
+
+    expect(
+      const DuplicateGameException().localizeLibraryError(appLoc),
+      'Ce jeu est déjà dans votre bibliothèque.',
+    );
+    expect(
+      const GameNotFoundException().localizeLibraryError(appLoc),
+      "Ce jeu n'est pas dans votre bibliothèque.",
+    );
+    expect(
+      const InvalidPlaySessionException().localizeLibraryError(appLoc),
+      'Session de jeu invalide.',
+    );
+    expect(
+      const PlaySessionNotFoundException().localizeLibraryError(appLoc),
+      'Session de jeu introuvable.',
+    );
+    expect(
+      const InvalidActivePlaySessionException().localizeLibraryError(appLoc),
+      'Session en cours invalide.',
+    );
+    expect(
+      const DuplicateActivePlaySessionException().localizeLibraryError(appLoc),
+      'Session en cours déjà existante.',
+    );
+    expect(
+      const ActivePlaySessionNotFoundException().localizeLibraryError(appLoc),
+      'Session en cours introuvable.',
+    );
+    expect(
+      const InvalidGameNoteException().localizeLibraryError(appLoc),
+      'Note de jeu invalide.',
+    );
+    expect(
+      const GameNoteNotFoundException().localizeLibraryError(appLoc),
+      'Note de jeu introuvable.',
+    );
+    expect(
+      Exception('drift connection failed').localizeLibraryError(appLoc),
+      'Une erreur est survenue',
     );
   });
 }

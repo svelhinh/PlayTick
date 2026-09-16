@@ -38,6 +38,8 @@ class _FinishActivePlaySessionSheetState
 
   final _noteController = TextEditingController();
 
+  bool _isSubmitting = false;
+
   @override
   void initState() {
     super.initState();
@@ -69,45 +71,41 @@ class _FinishActivePlaySessionSheetState
                   appLoc.homeFinishActivePlaySession,
                   style: theme.textTheme.titleLarge,
                 ),
-                IconButton(
-                  onPressed: () async {
-                    final confirmed = await showDialog<bool>(
-                      context: context,
-                      builder: (context) => DeleteConfirmationDialog(
-                        title: appLoc.homeFinishActivePlaySessionDeleteTitle,
-                        description:
-                            appLoc.homeFinishActivePlaySessionDeleteDescription,
-                        deleteButtonText:
-                            appLoc.homeFinishActivePlaySessionDeleteButton,
-                      ),
-                    );
+                if (!_isSubmitting)
+                  IconButton(
+                    onPressed: () async {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => DeleteConfirmationDialog(
+                          title: appLoc.homeFinishActivePlaySessionDeleteTitle,
+                          description: appLoc
+                              .homeFinishActivePlaySessionDeleteDescription,
+                          deleteButtonText:
+                              appLoc.homeFinishActivePlaySessionDeleteButton,
+                        ),
+                      );
 
-                    if (confirmed != true || !mounted) {
-                      return;
-                    }
-
-                    try {
-                      await widget.onDelete();
-
-                      if (context.mounted) {
-                        Navigator.pop(context);
+                      if (confirmed != true || !mounted) {
+                        return;
                       }
-                    } on Exception catch (e) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(e.localizeLibraryError(appLoc)),
-                            backgroundColor: theme.colorScheme.error,
-                          ),
-                        );
+
+                      try {
+                        await widget.onDelete();
+
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      } on Exception catch (e) {
+                        if (context.mounted) {
+                          context.showLibraryErrorSnackBar(e);
+                        }
                       }
-                    }
-                  },
-                  icon: Icon(
-                    Icons.delete,
-                    color: theme.colorScheme.error,
+                    },
+                    icon: Icon(
+                      Icons.delete,
+                      color: theme.colorScheme.error,
+                    ),
                   ),
-                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -194,28 +192,35 @@ class _FinishActivePlaySessionSheetState
             SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: () async {
-                  try {
-                    await widget.onSave(
-                      _duration,
-                      _noteController.text.trim(),
-                    );
+                onPressed: _isSubmitting
+                    ? null
+                    : () async {
+                        setState(() => _isSubmitting = true);
 
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                    }
-                  } on Exception catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.localizeLibraryError(appLoc)),
-                          backgroundColor: theme.colorScheme.error,
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: Text(appLoc.save),
+                        try {
+                          await widget.onSave(
+                            _duration,
+                            _noteController.text.trim(),
+                          );
+
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        } on Exception catch (e) {
+                          if (context.mounted) {
+                            context.showLibraryErrorSnackBar(e);
+                          }
+                        } finally {
+                          if (mounted) setState(() => _isSubmitting = false);
+                        }
+                      },
+                child: _isSubmitting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(appLoc.save),
               ),
             ),
           ],

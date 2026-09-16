@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
+import 'package:playtick/core/presentation/widgets/error_state_card.dart';
 import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
 import 'package:playtick/features/library/data/database/database_provider.dart';
@@ -164,19 +165,27 @@ void main() {
   });
 
   testWidgets(
-    'Library screen shows a localized error when loading games fails',
+    'Library screen shows a localized error and retries loading games',
     (tester) async {
       tester.binding.platformDispatcher.localesTestValue = const [Locale('en')];
       addTearDown(tester.binding.platformDispatcher.clearLocalesTestValue);
 
+      var loadCount = 0;
+
       await tester.pumpWidget(
         ProviderScope(
+          retry: (retryCount, error) => null,
           overrides: [
             weeklyPlaytimeProvider.overrideWith(
               (ref) => Stream.value(Duration.zero),
             ),
             libraryGamesProvider.overrideWith(
-              (ref) => Stream.error(Exception('drift connection failed')),
+              (ref) {
+                loadCount++;
+                return loadCount == 1
+                    ? Stream.error(Exception('drift connection failed'))
+                    : Stream.value([]);
+              },
             ),
           ],
           child: const PlayTick(),
@@ -188,8 +197,18 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(LibraryScreen), findsOneWidget);
+      expect(find.byType(ErrorStateCard), findsOneWidget);
       expect(find.text('Something went wrong'), findsOneWidget);
+      expect(find.text('Please try again later.'), findsOneWidget);
+      expect(find.text('Retry'), findsOneWidget);
       expect(find.textContaining('drift connection failed'), findsNothing);
+
+      await tester.tap(find.text('Retry'));
+      await tester.pumpAndSettle();
+
+      expect(loadCount, 2);
+      expect(find.byType(ErrorStateCard), findsNothing);
+      expect(find.byType(EmptyStateCard), findsOneWidget);
     },
   );
 
@@ -640,6 +659,27 @@ void main() {
         findsOneWidget,
       );
       expect(find.widgetWithText(TextField, 'celeste'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Library add shows a localized SnackBar when the game is already in the library',
+    (tester) async {
+      final libraryRepository = container.read(libraryRepositoryProvider);
+      await openAddSheetForCeleste(tester);
+      await libraryRepository.addGame(celesteGame());
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Add').last);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SnackBar), findsOneWidget);
+      expect(
+        find.text('This game is already in your library.'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('DuplicateGame'), findsNothing);
+      expect(find.textContaining('Exception:'), findsNothing);
+      expect(find.text('Add as'), findsOneWidget);
     },
   );
 }

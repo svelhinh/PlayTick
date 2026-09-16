@@ -26,6 +26,8 @@ class _GameNoteSheetState extends State<GameNoteSheet> {
   DateTime _date = DateTime.now();
   final TextEditingController _noteController = TextEditingController();
 
+  bool _isSubmitting = false;
+
   @override
   void initState() {
     super.initState();
@@ -59,12 +61,7 @@ class _GameNoteSheetState extends State<GameNoteSheet> {
       }
     } on Exception catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.localizeLibraryError(appLoc)),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        context.showLibraryErrorSnackBar(e);
       }
     }
   }
@@ -106,7 +103,7 @@ class _GameNoteSheetState extends State<GameNoteSheet> {
                     ),
                   ],
                 ),
-                if (widget.onDelete != null)
+                if (!_isSubmitting && widget.onDelete != null)
                   IconButton(
                     onPressed: _onDeletePressed,
                     tooltip: appLoc.gameDetailsNotesDeleteButton,
@@ -129,10 +126,12 @@ class _GameNoteSheetState extends State<GameNoteSheet> {
               child: ValueListenableBuilder<TextEditingValue>(
                 valueListenable: _noteController,
                 builder: (context, value, child) => FilledButton(
-                  onPressed: value.text.trim().isEmpty
+                  onPressed: _isSubmitting || value.text.trim().isEmpty
                       ? null
                       : () async {
                           try {
+                            setState(() => _isSubmitting = true);
+
                             await widget.onSave(_noteController.text.trim());
 
                             if (context.mounted) {
@@ -140,27 +139,30 @@ class _GameNoteSheetState extends State<GameNoteSheet> {
                             }
                           } on Exception catch (e) {
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(e.localizeLibraryError(appLoc)),
-                                  backgroundColor: theme.colorScheme.error,
-                                ),
-                              );
+                              context.showLibraryErrorSnackBar(e);
                             }
+                          } finally {
+                            if (mounted) setState(() => _isSubmitting = false);
                           }
                         },
-                  child: Text(
-                    isEditing
-                        ? appLoc.gameDetailsNotesEditSaveButton
-                        : appLoc.gameDetailsNotesAddSaveButton,
-                  ),
+                  child: _isSubmitting
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(
+                          isEditing
+                              ? appLoc.gameDetailsNotesEditSaveButton
+                              : appLoc.gameDetailsNotesAddSaveButton,
+                        ),
                 ),
               ),
             ),
             SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: _isSubmitting ? null : () => Navigator.pop(context),
                 child: Text(appLoc.cancel),
               ),
             ),

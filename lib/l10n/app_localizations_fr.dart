@@ -25,6 +25,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get somethingWentWrong => 'Une erreur est survenue';
 
   @override
+  String get somethingWentWrongDescription => 'Veuillez réessayer plus tard.';
+
+  @override
   String get date => 'Date';
 
   @override
@@ -230,6 +233,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get gameDetailsGenresTitle => 'Genres';
 
   @override
+  String get gameDetailsNotFoundTitle => 'Jeu non trouvé';
+
+  @override
+  String get gameDetailsNotFoundDescription =>
+      'Le jeu que vous cherchez n\'est pas dans votre bibliothèque.';
+
+  @override
   String get igdbGenrePinball => 'Flipper';
 
   @override
@@ -402,4 +412,21 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get playSessionNotFoundException => 'Session de jeu introuvable.';
+
+  @override
+  String get invalidActivePlaySessionException => 'Session en cours invalide.';
+
+  @override
+  String get duplicateActivePlaySessionException =>
+      'Session en cours déjà existante.';
+
+  @override
+  String get activePlaySessionNotFoundException =>
+      'Session en cours introuvable.';
+
+  @override
+  String get invalidGameNoteException => 'Note de jeu invalide.';
+
+  @override
+  String get gameNoteNotFoundException => 'Note de jeu introuvable.';
 }

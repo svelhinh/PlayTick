@@ -182,13 +182,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   .startActivePlaySession(game.gameId);
                             } on Exception catch (e) {
                               if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      e.localizeLibraryError(appLoc),
-                                    ),
-                                  ),
-                                );
+                                context.showLibraryErrorSnackBar(e);
                               }
                             }
                           },
