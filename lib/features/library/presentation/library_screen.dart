@@ -13,6 +13,7 @@ import 'package:playtick/features/library/presentation/extensions/game_status_ex
 import 'package:playtick/features/library/presentation/extensions/game_subtitle_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/library_filter_extension.dart';
+import 'package:playtick/features/library/presentation/providers/debounced_library_search_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_filter_notifier_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_search_games_provider.dart';
@@ -34,6 +35,7 @@ class LibraryScreen extends ConsumerWidget {
     final gamesAsync = ref.watch(libraryGamesProvider);
     final filter = ref.watch(libraryFilterProvider);
     final search = ref.watch(librarySearchProvider);
+    final debouncedSearch = ref.watch(debouncedLibrarySearchProvider);
     final igdbGamesAsync = ref.watch(librarySearchGamesProvider);
 
     return SafeArea(
@@ -76,6 +78,7 @@ class LibraryScreen extends ConsumerWidget {
 
                 if (search.isNotEmpty) {
                   final igdbGames = igdbGamesAsync.value ?? [];
+                  final isDebouncing = search.trim() != debouncedSearch.trim();
                   final searchResults = LibrarySearchResults.merge(
                     search,
                     games,
@@ -96,7 +99,9 @@ class LibraryScreen extends ConsumerWidget {
 
                         const SizedBox(height: 12),
 
-                        if (searchResults.igdbGames.isEmpty)
+                        if (searchResults.igdbGames.isNotEmpty)
+                          _IgdbGamesList(games: searchResults.igdbGames)
+                        else if (!isDebouncing)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -125,10 +130,7 @@ class LibraryScreen extends ConsumerWidget {
                                       appLoc.librarySearchNoResultsDescription,
                                 ),
                             ],
-                          )
-                        else if (searchResults.igdbGames.isNotEmpty) ...[
-                          _IgdbGamesList(games: searchResults.igdbGames),
-                        ],
+                          ),
                       ],
                     ),
                   );

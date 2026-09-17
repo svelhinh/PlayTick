@@ -46,4 +46,4 @@ final class LibrarySearchGamesProvider
 }
 
 String _$librarySearchGamesHash() =>
-    r'828937205f7a5d0b25b50972edd3a98df4829079';
+    r'9b0ade1c116fde5677344e2656ca049044b3200a';
