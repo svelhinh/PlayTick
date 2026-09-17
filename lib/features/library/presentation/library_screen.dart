@@ -101,7 +101,9 @@ class LibraryScreen extends ConsumerWidget {
 
                         if (searchResults.igdbGames.isNotEmpty)
                           _IgdbGamesList(games: searchResults.igdbGames)
-                        else if (!isDebouncing)
+                        else if (!isDebouncing &&
+                            (igdbGamesAsync.isLoading ||
+                                igdbGamesAsync.hasError))
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -111,8 +113,10 @@ class LibraryScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 12),
                               if (igdbGamesAsync.isLoading)
-                                const Center(child: CircularProgressIndicator())
-                              else if (igdbGamesAsync.hasError)
+                                const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              else
                                 ErrorStateCard(
                                   title: appLoc.igdbSearchCardErrorTitle,
                                   description:
@@ -121,15 +125,15 @@ class LibraryScreen extends ConsumerWidget {
                                     librarySearchGamesProvider,
                                   ),
                                   compact: true,
-                                )
-                              else
-                                EmptyStateCard(
-                                  icon: Icons.search_off_outlined,
-                                  title: appLoc.librarySearchNoResultsTitle,
-                                  description:
-                                      appLoc.librarySearchNoResultsDescription,
                                 ),
                             ],
+                          )
+                        else if (!isDebouncing)
+                          EmptyStateCard(
+                            icon: Icons.search_off_outlined,
+                            title: appLoc.librarySearchNoResultsTitle,
+                            description:
+                                appLoc.librarySearchNoResultsDescription,
                           ),
                       ],
                     ),

@@ -548,10 +548,24 @@ void main() {
       );
       expect(find.byType(IgdbGameCard), findsNothing);
       expect(find.text('No games found'), findsOneWidget);
+      expect(find.text('IGDB results'), findsNothing);
       expect(
         find.text('Unable to retrieve external results at the moment.'),
         findsNothing,
       );
+    },
+  );
+
+  testWidgets(
+    'Library search empty state does not show the IGDB results heading',
+    (tester) async {
+      searchRepository.games = [];
+
+      await openLibrary(tester);
+      await searchFor(tester, 'zzzzzz');
+
+      expect(find.text('No games found'), findsOneWidget);
+      expect(find.text('IGDB results'), findsNothing);
     },
   );
 

@@ -24,10 +24,11 @@ class ErrorStateCard extends StatelessWidget {
     return Card(
       child: Padding(
         padding: compact
-            ? const EdgeInsets.symmetric(horizontal: 12, vertical: 8)
+            ? const EdgeInsets.symmetric(horizontal: 12, vertical: 12)
             : const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
         child: compact
             ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconCircle(
                     icon: Icons.info_outline,
@@ -38,32 +39,26 @@ class ErrorStateCard extends StatelessWidget {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           title,
                           style: theme.textTheme.titleSmall,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
                         Text(
                           description,
                           style: theme.textTheme.bodySmall,
                         ),
+                        if (onRetry != null) ...[
+                          const SizedBox(height: 12),
+                          FilledButton(
+                            onPressed: onRetry,
+                            child: Text(appLoc.retry),
+                          ),
+                        ],
                       ],
                     ),
                   ),
-                  if (onRetry != null) ...[
-                    const SizedBox(width: 12),
-                    SizedBox(
-                      height: 40,
-                      child: FilledButton(
-                        onPressed: onRetry,
-                        child: Text(appLoc.retry),
-                      ),
-                    ),
-                  ],
                 ],
               )
             : Column(
