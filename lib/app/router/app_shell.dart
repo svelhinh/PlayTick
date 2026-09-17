@@ -12,6 +12,15 @@ final libraryNavigatorKey = GlobalKey<NavigatorState>(
 
 bool popGameDetailsInstantly = false;
 
+void popGameDetailsToLibrary(BuildContext context) {
+  popGameDetailsInstantly = true;
+  try {
+    GoRouter.of(context).pop();
+  } finally {
+    popGameDetailsInstantly = false;
+  }
+}
+
 void _leaveLibrary(
   BuildContext context,
   StatefulNavigationShell navigationShell,
@@ -19,12 +28,7 @@ void _leaveLibrary(
 ) {
   final libraryCanPop = libraryNavigatorKey.currentState?.canPop() ?? false;
   if (navigationShell.currentIndex == 1 && libraryCanPop) {
-    popGameDetailsInstantly = true;
-    try {
-      GoRouter.of(context).pop();
-    } finally {
-      popGameDetailsInstantly = false;
-    }
+    popGameDetailsToLibrary(context);
   }
 
   navigationShell.goBranch(index);

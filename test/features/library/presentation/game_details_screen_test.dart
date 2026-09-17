@@ -203,6 +203,10 @@ void main() {
 
       await tester.ensureVisible(find.text('Delete game'));
       await tester.tap(find.text('Delete game'));
+      await tester.pump();
+
+      expect(find.text('Game not found'), findsNothing);
+
       await tester.pumpAndSettle();
 
       expect(find.byType(LibraryScreen), findsOneWidget);
