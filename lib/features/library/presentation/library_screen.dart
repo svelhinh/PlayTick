@@ -233,6 +233,12 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
     final theme = Theme.of(context);
     final hasQuery = ref.watch(librarySearchProvider).isNotEmpty;
 
+    ref.listen(librarySearchProvider, (previous, next) {
+      if (next.isEmpty && _controller.text.isNotEmpty) {
+        _controller.clear();
+      }
+    });
+
     return Focus(
       child: Builder(
         builder: (context) {
@@ -398,7 +404,7 @@ final class _LibraryGamesList extends StatelessWidget {
               ),
               child: LibraryGameCard(
                 game: games[index],
-                onPressed: () => context.push(
+                onPressed: () => context.go(
                   AppRoutes.gameDetailsPath(
                     games[index].gameId.toString(),
                   ),
