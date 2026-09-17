@@ -745,6 +745,68 @@ void main() {
     );
 
     test(
+      'startActivePlaySession allows only one active session globally',
+      () async {
+        final otherGame = Game(id: 201, name: 'Celeste');
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.addGame(otherGame, status: GameStatus.playing);
+
+        await repository.startActivePlaySession(game.id);
+
+        await expectLater(
+          repository.startActivePlaySession(otherGame.id),
+          throwsA(isA<DuplicateActivePlaySessionException>()),
+        );
+
+        final active = await repository.watchActivePlaySession().first;
+        expect(active, isNotNull);
+        expect(active!.gameId, game.id);
+        expect(active.startedAt.isAtSameMomentAs(now), isTrue);
+      },
+    );
+
+    test(
+      'startActivePlaySession persists startedAt without a stored duration',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.startActivePlaySession(game.id);
+
+        final rows = await database.select(database.activePlaySessions).get();
+
+        expect(rows, hasLength(1));
+        expect(rows.single.gameId, game.id);
+        expect(rows.single.startedAt.isAtSameMomentAs(now), isTrue);
+        expect(await database.select(database.playSessions).get(), isEmpty);
+      },
+    );
+
+    test(
+      'removing a game cascades its active play session',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.addGameNote(game.id, 'General note');
+        await repository.addPlaySession(
+          game.id,
+          DateTime(2026, 8, 26),
+          const Duration(hours: 1),
+          note: 'Session note',
+        );
+        await repository.startActivePlaySession(game.id);
+
+        await repository.removeGame(game.id);
+
+        expect(
+          await database.select(database.activePlaySessions).get(),
+          isEmpty,
+        );
+        expect(await database.select(database.playSessions).get(), isEmpty);
+        expect(await database.select(database.gameNotes).get(), isEmpty);
+        expect(await database.select(database.userGames).get(), isEmpty);
+        expect(await repository.watchActivePlaySession().first, isNull);
+      },
+    );
+
+    test(
       'startActivePlaySession throws game not found exception if the game is '
       'not in the library',
       () async {
