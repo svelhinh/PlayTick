@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 abstract final class AppTheme {
   static const primary = Color(0xFF0B6FE8);
@@ -11,6 +12,15 @@ abstract final class AppTheme {
   static const warning = Color(0xFFF97316);
   static const success = Color(0xFF16A36A);
   static const danger = Color(0xFFDC3545);
+
+  static const systemOverlayStyle = SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+    systemStatusBarContrastEnforced: false,
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarIconBrightness: Brightness.dark,
+    systemNavigationBarContrastEnforced: false,
+  );
 
   static ThemeData get light {
     final colorScheme =
@@ -30,6 +40,13 @@ abstract final class AppTheme {
       brightness: Brightness.light,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: background,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: surface,
+        foregroundColor: textPrimary,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        systemOverlayStyle: systemOverlayStyle,
+      ),
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
           color: textPrimary,

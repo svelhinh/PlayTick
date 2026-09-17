@@ -53,13 +53,15 @@ class _FinishActivePlaySessionSheetState
     final theme = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
 
+    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
+    final bottomGap = keyboardInset > 0
+        ? 24.0
+        : 24.0 + MediaQuery.paddingOf(context).bottom;
+
     return Padding(
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        bottom: MediaQuery.viewInsetsOf(context).bottom,
-      ),
+      padding: EdgeInsets.only(bottom: keyboardInset),
       child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(16, 0, 16, bottomGap),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,6 +207,7 @@ class _FinishActivePlaySessionSheetState
               controller: _noteController,
               label: appLoc.gameDetailsPlaySessionsNoteLabel,
               hintText: appLoc.gameDetailsPlaySessionsHintText,
+              scrollPadding: const EdgeInsets.only(bottom: 88),
             ),
             const SizedBox(height: 24),
             SizedBox(

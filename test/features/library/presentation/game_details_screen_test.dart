@@ -104,6 +104,42 @@ void main() {
   }
 
   testWidgets(
+    'leaving details via Home twice does not crash and shows the library list',
+    (tester) async {
+      await seedLibrary();
+      await pumpApp(tester);
+      await openLibrary(tester);
+
+      await tester.tap(seeDetailsOnCard('Hollow Knight'));
+      await tester.pumpAndSettle();
+      expect(find.byType(GameDetailsScreen), findsOneWidget);
+
+      await tester.tap(find.byType(NavigationDestination).at(0));
+      await tester.pumpAndSettle();
+      expect(find.byType(GameDetailsScreen), findsNothing);
+
+      await tester.tap(find.byType(NavigationDestination).at(1));
+      await tester.pumpAndSettle();
+      expect(find.byType(LibraryScreen), findsOneWidget);
+      expect(find.byType(GameDetailsScreen), findsNothing);
+
+      await tester.tap(seeDetailsOnCard('Hollow Knight'));
+      await tester.pumpAndSettle();
+      expect(find.byType(GameDetailsScreen), findsOneWidget);
+
+      await tester.tap(find.byType(NavigationDestination).at(0));
+      await tester.pumpAndSettle();
+      expect(find.byType(GameDetailsScreen), findsNothing);
+
+      await tester.tap(find.byType(NavigationDestination).at(1));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LibraryScreen), findsOneWidget);
+      expect(find.byType(GameDetailsScreen), findsNothing);
+    },
+  );
+
+  testWidgets(
     'opens game details, updates status and deletes the game',
     (tester) async {
       await seedLibrary();
@@ -167,6 +203,10 @@ void main() {
 
       await tester.ensureVisible(find.text('Delete game'));
       await tester.tap(find.text('Delete game'));
+      await tester.pump();
+
+      expect(find.text('Game not found'), findsNothing);
+
       await tester.pumpAndSettle();
 
       expect(find.byType(LibraryScreen), findsOneWidget);

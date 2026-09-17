@@ -13,6 +13,7 @@ import 'package:playtick/features/library/presentation/extensions/game_status_ex
 import 'package:playtick/features/library/presentation/extensions/game_subtitle_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/library_filter_extension.dart';
+import 'package:playtick/features/library/presentation/providers/debounced_library_search_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_filter_notifier_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_search_games_provider.dart';
@@ -34,6 +35,7 @@ class LibraryScreen extends ConsumerWidget {
     final gamesAsync = ref.watch(libraryGamesProvider);
     final filter = ref.watch(libraryFilterProvider);
     final search = ref.watch(librarySearchProvider);
+    final debouncedSearch = ref.watch(debouncedLibrarySearchProvider);
     final igdbGamesAsync = ref.watch(librarySearchGamesProvider);
 
     return SafeArea(
@@ -76,6 +78,7 @@ class LibraryScreen extends ConsumerWidget {
 
                 if (search.isNotEmpty) {
                   final igdbGames = igdbGamesAsync.value ?? [];
+                  final isDebouncing = search.trim() != debouncedSearch.trim();
                   final searchResults = LibrarySearchResults.merge(
                     search,
                     games,
@@ -96,7 +99,11 @@ class LibraryScreen extends ConsumerWidget {
 
                         const SizedBox(height: 12),
 
-                        if (searchResults.igdbGames.isEmpty)
+                        if (searchResults.igdbGames.isNotEmpty)
+                          _IgdbGamesList(games: searchResults.igdbGames)
+                        else if (!isDebouncing &&
+                            (igdbGamesAsync.isLoading ||
+                                igdbGamesAsync.hasError))
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -106,8 +113,10 @@ class LibraryScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 12),
                               if (igdbGamesAsync.isLoading)
-                                const Center(child: CircularProgressIndicator())
-                              else if (igdbGamesAsync.hasError)
+                                const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              else
                                 ErrorStateCard(
                                   title: appLoc.igdbSearchCardErrorTitle,
                                   description:
@@ -116,19 +125,16 @@ class LibraryScreen extends ConsumerWidget {
                                     librarySearchGamesProvider,
                                   ),
                                   compact: true,
-                                )
-                              else
-                                EmptyStateCard(
-                                  icon: Icons.search_off_outlined,
-                                  title: appLoc.librarySearchNoResultsTitle,
-                                  description:
-                                      appLoc.librarySearchNoResultsDescription,
                                 ),
                             ],
                           )
-                        else if (searchResults.igdbGames.isNotEmpty) ...[
-                          _IgdbGamesList(games: searchResults.igdbGames),
-                        ],
+                        else if (!isDebouncing)
+                          EmptyStateCard(
+                            icon: Icons.search_off_outlined,
+                            title: appLoc.librarySearchNoResultsTitle,
+                            description:
+                                appLoc.librarySearchNoResultsDescription,
+                          ),
                       ],
                     ),
                   );
@@ -232,6 +238,12 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final hasQuery = ref.watch(librarySearchProvider).isNotEmpty;
+
+    ref.listen(librarySearchProvider, (previous, next) {
+      if (next.isEmpty && _controller.text.isNotEmpty) {
+        _controller.clear();
+      }
+    });
 
     return Focus(
       child: Builder(
@@ -398,11 +410,14 @@ final class _LibraryGamesList extends StatelessWidget {
               ),
               child: LibraryGameCard(
                 game: games[index],
-                onPressed: () => context.push(
-                  AppRoutes.gameDetailsPath(
-                    games[index].gameId.toString(),
-                  ),
-                ),
+                onPressed: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  context.go(
+                    AppRoutes.gameDetailsPath(
+                      games[index].gameId.toString(),
+                    ),
+                  );
+                },
               ),
             ),
             itemCount: games.length,

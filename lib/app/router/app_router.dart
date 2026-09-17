@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_shell.dart';
 import 'package:playtick/features/home/presentation/home_screen.dart';
@@ -31,6 +32,7 @@ GoRouter appRouter(Ref ref) {
             ],
           ),
           StatefulShellBranch(
+            navigatorKey: libraryNavigatorKey,
             routes: [
               GoRoute(
                 path: AppRoutes.library,
@@ -38,7 +40,8 @@ GoRouter appRouter(Ref ref) {
                 routes: [
                   GoRoute(
                     path: ':gameId',
-                    builder: (context, state) => GameDetailsScreen(
+                    pageBuilder: (context, state) => GameDetailsPage(
+                      key: state.pageKey,
                       gameId: state.pathParameters['gameId']!,
                     ),
                   ),
@@ -54,4 +57,46 @@ GoRouter appRouter(Ref ref) {
   ref.onDispose(router.dispose);
 
   return router;
+}
+
+class GameDetailsPage extends Page<void> {
+  const GameDetailsPage({
+    required this.gameId,
+    super.key,
+  });
+
+  final String gameId;
+
+  @override
+  Route<void> createRoute(BuildContext context) {
+    return _GameDetailsPageRoute(this);
+  }
+}
+
+class _GameDetailsPageRoute extends PageRoute<void>
+    with MaterialRouteTransitionMixin<void> {
+  _GameDetailsPageRoute(GameDetailsPage page) : super(settings: page) {
+    assert(opaque, 'Game details is an opaque page route.');
+  }
+
+  GameDetailsPage get _page => settings as GameDetailsPage;
+
+  @override
+  Widget buildContent(BuildContext context) {
+    return GameDetailsScreen(gameId: _page.gameId);
+  }
+
+  @override
+  bool get maintainState => true;
+
+  @override
+  bool get fullscreenDialog => false;
+
+  @override
+  Duration get reverseTransitionDuration {
+    if (popGameDetailsInstantly) {
+      return Duration.zero;
+    }
+    return super.reverseTransitionDuration;
+  }
 }

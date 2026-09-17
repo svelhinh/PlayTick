@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:playtick/app/router/app_router.dart';
+import 'package:playtick/app/router/app_shell.dart';
 import 'package:playtick/core/presentation/widgets/error_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
+import 'package:playtick/features/library/domain/library_game_details.dart';
 import 'package:playtick/features/library/presentation/extensions/game_subtitle_extension.dart';
 import 'package:playtick/features/library/presentation/extensions/igdb_genre_localization.dart';
 import 'package:playtick/features/library/presentation/extensions/library_exception_extension.dart';
@@ -21,17 +22,24 @@ import 'package:playtick/features/library/presentation/widgets/game_status_row.d
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
-class GameDetailsScreen extends ConsumerWidget {
+class GameDetailsScreen extends ConsumerStatefulWidget {
   const GameDetailsScreen({required this.gameId, super.key});
 
   final String gameId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GameDetailsScreen> createState() => _GameDetailsScreenState();
+}
+
+class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
+  LibraryGameDetails? _visibleDetails;
+
+  @override
+  Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    final gameIdInt = int.tryParse(gameId);
+    final gameIdInt = int.tryParse(widget.gameId);
 
     if (gameIdInt == null) {
       return Scaffold(
@@ -47,59 +55,56 @@ class GameDetailsScreen extends ConsumerWidget {
 
     final gameAsync = ref.watch(libraryGameProvider(gameIdInt));
     final notesAsync = ref.watch(gameNotesProvider(gameIdInt));
+    final latestDetails = gameAsync.asData?.value;
+    if (latestDetails != null) {
+      _visibleDetails = latestDetails;
+    }
+    final details = latestDetails ?? _visibleDetails;
 
     return Scaffold(
       appBar: AppBar(
         actions: [
-          gameAsync.when(
-            data: (details) {
-              if (details == null) {
-                return const SizedBox.shrink();
-              }
+          if (details != null)
+            IconButton(
+              onPressed: () async {
+                await showModalBottomSheet<DeleteGameSheet>(
+                  context: context,
+                  showDragHandle: true,
+                  useSafeArea: true,
+                  isScrollControlled: true,
+                  backgroundColor: theme.colorScheme.surface,
+                  builder: (sheetContext) => DeleteGameSheet(
+                    name: details.game.name,
+                    onDelete: () async {
+                      final repository = ref.read(libraryRepositoryProvider);
 
-              return IconButton(
-                onPressed: () async {
-                  await showModalBottomSheet<DeleteGameSheet>(
-                    context: context,
-                    showDragHandle: true,
-                    useSafeArea: true,
-                    isScrollControlled: true,
-                    backgroundColor: theme.colorScheme.surface,
-                    builder: (context) => DeleteGameSheet(
-                      name: details.game.name,
-                      onDelete: () async {
-                        try {
-                          await ref
-                              .read(libraryRepositoryProvider)
-                              .removeGame(gameIdInt);
+                      if (sheetContext.mounted) {
+                        Navigator.pop(sheetContext);
+                      }
 
-                          if (context.mounted) {
-                            Navigator.pop(context);
-
-                            context.go(AppRoutes.library);
-                          }
-                        } on Exception catch (e) {
-                          if (context.mounted) {
-                            context.showLibraryErrorSnackBar(e);
-                          }
+                      try {
+                        await repository.removeGame(gameIdInt);
+                        if (context.mounted && context.canPop()) {
+                          popGameDetailsToLibrary(context);
                         }
-                      },
-                    ),
-                  );
-                },
-                icon: Icon(
-                  Icons.delete,
-                  color: theme.colorScheme.error,
-                ),
-              );
-            },
-            error: (error, stackTrace) => const SizedBox.shrink(),
-            loading: () => const SizedBox.shrink(),
-          ),
+                      } on Exception catch (e) {
+                        if (context.mounted) {
+                          context.showLibraryErrorSnackBar(e);
+                        }
+                      }
+                    },
+                  ),
+                );
+              },
+              icon: Icon(
+                Icons.delete,
+                color: theme.colorScheme.error,
+              ),
+            ),
         ],
       ),
       body: gameAsync.when(
-        data: (details) {
+        data: (_) {
           if (details == null) {
             return Center(
               child: ErrorStateCard(

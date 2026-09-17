@@ -540,4 +540,58 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets(
+    'finish session sheet keeps Save fully visible above the keyboard',
+    (tester) async {
+      tester.view.physicalSize = const Size(360, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final startedAt = DateTime(2026, 9, 10, 14);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            weeklyPlaytimeProvider.overrideWith(
+              (_) => Stream.value(Duration.zero),
+            ),
+            activePlaySessionProvider.overrideWith(
+              (_) => Stream.value(
+                ActivePlaySession(gameId: 1, startedAt: startedAt),
+              ),
+            ),
+            libraryGamesProvider.overrideWith(
+              (_) => Stream.value(const [
+                LibraryGame(
+                  gameId: 1,
+                  name: 'Celeste',
+                  status: GameStatus.playing,
+                ),
+              ]),
+            ),
+            timerNowProvider.overrideWith(
+              (_) => Stream.value(startedAt.add(const Duration(minutes: 5))),
+            ),
+          ],
+          child: const PlayTick(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Stop'));
+      await tester.pumpAndSettle();
+
+      tester.view.viewInsets = const FakeViewPadding(bottom: 320);
+      addTearDown(tester.view.resetViewInsets);
+      await tester.enterText(find.byType(TextFormField), 'note');
+      await tester.pumpAndSettle();
+
+      final save = find.widgetWithText(FilledButton, 'Save');
+      await tester.ensureVisible(save);
+
+      expect(tester.getRect(save).bottom, lessThanOrEqualTo(480));
+    },
+  );
 }

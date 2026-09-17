@@ -16,6 +16,7 @@ import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_exception.dart';
 import 'package:playtick/features/library/domain/library_repository.dart';
 import 'package:playtick/features/library/domain/library_search_repository.dart';
+import 'package:playtick/features/library/presentation/game_details/game_details_screen.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/presentation/widgets/igdb_game_card.dart';
@@ -483,6 +484,48 @@ void main() {
   );
 
   testWidgets(
+    'opening game details from search dismisses the keyboard',
+    (tester) async {
+      final libraryRepository = container.read(libraryRepositoryProvider);
+      await addGamesToLibrary(libraryRepository);
+      searchRepository.games = [Game(id: 200, name: 'Hollow Knight')];
+
+      await openLibrary(tester);
+      await searchFor(tester, 'hollow');
+
+      expect(
+        Focus.of(tester.element(find.byType(TextField))).hasFocus,
+        isTrue,
+      );
+
+      await tester.tap(
+        find.descendant(
+          of: find.byType(LibraryGameCard),
+          matching: find.text('See'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(GameDetailsScreen), findsOneWidget);
+      expect(
+        Focus.of(
+          tester.element(find.byType(TextField, skipOffstage: false)),
+        ).hasFocus,
+        isFalse,
+      );
+
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LibraryScreen), findsOneWidget);
+      expect(
+        Focus.of(tester.element(find.byType(TextField))).hasFocus,
+        isFalse,
+      );
+    },
+  );
+
+  testWidgets(
     'Library search clear button restores the library list',
     (tester) async {
       final libraryRepository = container.read(libraryRepositoryProvider);
@@ -548,10 +591,24 @@ void main() {
       );
       expect(find.byType(IgdbGameCard), findsNothing);
       expect(find.text('No games found'), findsOneWidget);
+      expect(find.text('IGDB results'), findsNothing);
       expect(
         find.text('Unable to retrieve external results at the moment.'),
         findsNothing,
       );
+    },
+  );
+
+  testWidgets(
+    'Library search empty state does not show the IGDB results heading',
+    (tester) async {
+      searchRepository.games = [];
+
+      await openLibrary(tester);
+      await searchFor(tester, 'zzzzzz');
+
+      expect(find.text('No games found'), findsOneWidget);
+      expect(find.text('IGDB results'), findsNothing);
     },
   );
 
