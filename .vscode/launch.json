@@ -5,7 +5,10 @@
       "name": "playtick",
       "request": "launch",
       "type": "dart",
-      "toolArgs": ["--dart-define-from-file=.env"]
+      "toolArgs": ["--dart-define-from-file=.env"],
+      "env": {
+        "PROGRAMFILES(X86)": "C:\\Program Files (x86)"
+      }
     }
   ]
 }

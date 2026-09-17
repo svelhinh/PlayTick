@@ -1,4 +1,7 @@
 {
   "cSpell.words": ["IGDB", "igdb", "PlayTick", "playtick", "subosito"],
-  "dart.flutterGenerateLocalizationsOnSave": "allIfDirty"
+  "dart.flutterGenerateLocalizationsOnSave": "allIfDirty",
+  "dart.env": {
+    "PROGRAMFILES(X86)": "C:\\Program Files (x86)"
+  }
 }
