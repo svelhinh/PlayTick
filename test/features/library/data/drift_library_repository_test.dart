@@ -656,6 +656,53 @@ void main() {
     );
 
     test(
+      'active play session does not affect weekly or total playtime until finished',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.addPlaySession(
+          game.id,
+          DateTime(2026, 8, 26),
+          const Duration(hours: 1),
+        );
+
+        expect(
+          await repository.watchWeeklyPlaytime().first,
+          const Duration(hours: 1),
+        );
+        expect(
+          (await repository.watchGame(game.id).first)!.totalPlaytime,
+          const Duration(hours: 1),
+        );
+
+        await repository.startActivePlaySession(game.id);
+
+        expect(
+          await repository.watchWeeklyPlaytime().first,
+          const Duration(hours: 1),
+        );
+        expect(
+          (await repository.watchGame(game.id).first)!.totalPlaytime,
+          const Duration(hours: 1),
+        );
+        expect(await repository.watchActivePlaySession().first, isNotNull);
+
+        await repository.finishActivePlaySession(
+          const Duration(minutes: 30),
+        );
+
+        expect(
+          await repository.watchWeeklyPlaytime().first,
+          const Duration(hours: 1, minutes: 30),
+        );
+        expect(
+          (await repository.watchGame(game.id).first)!.totalPlaytime,
+          const Duration(hours: 1, minutes: 30),
+        );
+        expect(await repository.watchActivePlaySession().first, isNull);
+      },
+    );
+
+    test(
       'watchActivePlaySession emits after a active play session is started',
       () async {
         await repository.addGame(game, status: GameStatus.playing);
