@@ -1019,5 +1019,40 @@ void main() {
 
       expect(await database.select(database.gameNotes).get(), isEmpty);
     });
+
+    test(
+      'keeps game notes and session notes separate and deletes both with the game',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.addGameNote(game.id, 'General note');
+        await repository.addPlaySession(
+          game.id,
+          DateTime(2026, 8, 26),
+          const Duration(hours: 1),
+          note: 'Session note',
+        );
+        await repository.startActivePlaySession(game.id);
+
+        final notes = await repository.watchGameNotes(game.id).first;
+        final details = await repository.watchGame(game.id).first;
+
+        expect(notes.map((note) => note.content), ['General note']);
+        expect(details!.playSessions, hasLength(1));
+        expect(details.playSessions.single.note, 'Session note');
+        expect(await repository.watchActivePlaySession().first, isNotNull);
+
+        await repository.removeGame(game.id);
+
+        expect(await database.select(database.userGames).get(), isEmpty);
+        expect(await database.select(database.playSessions).get(), isEmpty);
+        expect(await database.select(database.gameNotes).get(), isEmpty);
+        expect(
+          await database.select(database.activePlaySessions).get(),
+          isEmpty,
+        );
+        expect(await repository.watchGameNotes(game.id).first, isEmpty);
+        expect(await repository.watchGame(game.id).first, isNull);
+      },
+    );
   });
 }
