@@ -656,6 +656,53 @@ void main() {
     );
 
     test(
+      'active play session does not affect weekly or total playtime until finished',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.addPlaySession(
+          game.id,
+          DateTime(2026, 8, 26),
+          const Duration(hours: 1),
+        );
+
+        expect(
+          await repository.watchWeeklyPlaytime().first,
+          const Duration(hours: 1),
+        );
+        expect(
+          (await repository.watchGame(game.id).first)!.totalPlaytime,
+          const Duration(hours: 1),
+        );
+
+        await repository.startActivePlaySession(game.id);
+
+        expect(
+          await repository.watchWeeklyPlaytime().first,
+          const Duration(hours: 1),
+        );
+        expect(
+          (await repository.watchGame(game.id).first)!.totalPlaytime,
+          const Duration(hours: 1),
+        );
+        expect(await repository.watchActivePlaySession().first, isNotNull);
+
+        await repository.finishActivePlaySession(
+          const Duration(minutes: 30),
+        );
+
+        expect(
+          await repository.watchWeeklyPlaytime().first,
+          const Duration(hours: 1, minutes: 30),
+        );
+        expect(
+          (await repository.watchGame(game.id).first)!.totalPlaytime,
+          const Duration(hours: 1, minutes: 30),
+        );
+        expect(await repository.watchActivePlaySession().first, isNull);
+      },
+    );
+
+    test(
       'watchActivePlaySession emits after a active play session is started',
       () async {
         await repository.addGame(game, status: GameStatus.playing);
@@ -694,6 +741,68 @@ void main() {
           repository.startActivePlaySession(game.id),
           throwsA(isA<DuplicateActivePlaySessionException>()),
         );
+      },
+    );
+
+    test(
+      'startActivePlaySession allows only one active session globally',
+      () async {
+        final otherGame = Game(id: 201, name: 'Celeste');
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.addGame(otherGame, status: GameStatus.playing);
+
+        await repository.startActivePlaySession(game.id);
+
+        await expectLater(
+          repository.startActivePlaySession(otherGame.id),
+          throwsA(isA<DuplicateActivePlaySessionException>()),
+        );
+
+        final active = await repository.watchActivePlaySession().first;
+        expect(active, isNotNull);
+        expect(active!.gameId, game.id);
+        expect(active.startedAt.isAtSameMomentAs(now), isTrue);
+      },
+    );
+
+    test(
+      'startActivePlaySession persists startedAt without a stored duration',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.startActivePlaySession(game.id);
+
+        final rows = await database.select(database.activePlaySessions).get();
+
+        expect(rows, hasLength(1));
+        expect(rows.single.gameId, game.id);
+        expect(rows.single.startedAt.isAtSameMomentAs(now), isTrue);
+        expect(await database.select(database.playSessions).get(), isEmpty);
+      },
+    );
+
+    test(
+      'removing a game cascades its active play session',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.addGameNote(game.id, 'General note');
+        await repository.addPlaySession(
+          game.id,
+          DateTime(2026, 8, 26),
+          const Duration(hours: 1),
+          note: 'Session note',
+        );
+        await repository.startActivePlaySession(game.id);
+
+        await repository.removeGame(game.id);
+
+        expect(
+          await database.select(database.activePlaySessions).get(),
+          isEmpty,
+        );
+        expect(await database.select(database.playSessions).get(), isEmpty);
+        expect(await database.select(database.gameNotes).get(), isEmpty);
+        expect(await database.select(database.userGames).get(), isEmpty);
+        expect(await repository.watchActivePlaySession().first, isNull);
       },
     );
 
@@ -910,5 +1019,40 @@ void main() {
 
       expect(await database.select(database.gameNotes).get(), isEmpty);
     });
+
+    test(
+      'keeps game notes and session notes separate and deletes both with the game',
+      () async {
+        await repository.addGame(game, status: GameStatus.playing);
+        await repository.addGameNote(game.id, 'General note');
+        await repository.addPlaySession(
+          game.id,
+          DateTime(2026, 8, 26),
+          const Duration(hours: 1),
+          note: 'Session note',
+        );
+        await repository.startActivePlaySession(game.id);
+
+        final notes = await repository.watchGameNotes(game.id).first;
+        final details = await repository.watchGame(game.id).first;
+
+        expect(notes.map((note) => note.content), ['General note']);
+        expect(details!.playSessions, hasLength(1));
+        expect(details.playSessions.single.note, 'Session note');
+        expect(await repository.watchActivePlaySession().first, isNotNull);
+
+        await repository.removeGame(game.id);
+
+        expect(await database.select(database.userGames).get(), isEmpty);
+        expect(await database.select(database.playSessions).get(), isEmpty);
+        expect(await database.select(database.gameNotes).get(), isEmpty);
+        expect(
+          await database.select(database.activePlaySessions).get(),
+          isEmpty,
+        );
+        expect(await repository.watchGameNotes(game.id).first, isEmpty);
+        expect(await repository.watchGame(game.id).first, isNull);
+      },
+    );
   });
 }
