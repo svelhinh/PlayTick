@@ -5,12 +5,14 @@ class NoteTextField extends StatelessWidget {
     required this.controller,
     required this.label,
     required this.hintText,
+    this.scrollPadding = const EdgeInsets.all(20),
     super.key,
   });
 
   final TextEditingController controller;
   final String label;
   final String hintText;
+  final EdgeInsets scrollPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,7 @@ class NoteTextField extends StatelessWidget {
 
     return TextFormField(
       controller: controller,
+      scrollPadding: scrollPadding,
       style: theme.textTheme.bodyMedium!.copyWith(
         color: theme.colorScheme.onSurface,
       ),

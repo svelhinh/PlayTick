@@ -410,11 +410,14 @@ final class _LibraryGamesList extends StatelessWidget {
               ),
               child: LibraryGameCard(
                 game: games[index],
-                onPressed: () => context.go(
-                  AppRoutes.gameDetailsPath(
-                    games[index].gameId.toString(),
-                  ),
-                ),
+                onPressed: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  context.go(
+                    AppRoutes.gameDetailsPath(
+                      games[index].gameId.toString(),
+                    ),
+                  );
+                },
               ),
             ),
             itemCount: games.length,

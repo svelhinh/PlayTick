@@ -51,6 +51,7 @@ class AppShell extends ConsumerWidget {
           selectedIndex: navigationShell.currentIndex,
           onDestinationSelected: (index) {
             if (index != 1) {
+              FocusManager.instance.primaryFocus?.unfocus();
               _leaveLibrary(context, navigationShell, index);
               ref.read(librarySearchProvider.notifier).search('');
               return;
