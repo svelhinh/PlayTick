@@ -1,4 +1,4 @@
-![PlayTick logo](assets/branding/app_logo.png)
+<img src="assets/branding/app_logo.png" width="120" alt="PlayTick logo">
 
 # PlayTick
 
@@ -12,8 +12,8 @@ This portfolio project implements a complete product flow: **pick a game → pla
 
 ## Preview
 
-| Home and session timer                                                                      | IGDB search                                                                        | Game details                                                                                                                   |
-| ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Home and session timer                                                                       | IGDB search                                                                        | Game details                                                                                    |
+| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | ![PlayTick home screen in English with an active play session](docs/screenshots/home-en.png) | ![Searching IGDB for Zelda games from the library](docs/screenshots/search-en.png) | ![Game details in English with metadata supplied by IGDB](docs/screenshots/game-details-en.png) |
 
 _Screenshots from Android v1, shown in English. The interface also supports French; see the localization section below._
