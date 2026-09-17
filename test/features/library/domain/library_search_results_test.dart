@@ -60,4 +60,32 @@ void main() {
     expect(results.libraryGames.single.name, 'The Legend of Zelda');
     expect(results.igdbGames, isEmpty);
   });
+
+  test('excludes local games whose name does not contain the query', () {
+    final results = LibrarySearchResults.merge(
+      'mario',
+      [zelda],
+      [marioIgdb],
+    );
+
+    expect(results.libraryGames, isEmpty);
+    expect(results.igdbGames, hasLength(1));
+    expect(results.igdbGames.single.id, 2);
+  });
+
+  test(
+    'drops an IGDB id already in the library even when the local name does not match',
+    () {
+      final results = LibrarySearchResults.merge(
+        'mario',
+        [zelda],
+        [zeldaIgdb, marioIgdb],
+      );
+
+      expect(results.libraryGames, isEmpty);
+      expect(results.igdbGames, hasLength(1));
+      expect(results.igdbGames.single.id, 2);
+      expect(results.igdbGames.single.name, 'Super Mario Odyssey');
+    },
+  );
 }
