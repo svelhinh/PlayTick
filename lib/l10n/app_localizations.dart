@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// The name of the app
   ///
   /// In en, this message translates to:
-  /// **'Play Tick'**
+  /// **'PlayTick'**
   String get appName;
 
   /// The text of the button to add an item
