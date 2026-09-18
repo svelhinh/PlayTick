@@ -170,3 +170,9 @@ After editing ARB files, run `flutter gen-l10n` again. After changing Drift tabl
 ## Credits
 
 Game metadata and cover art are provided by [IGDB](https://www.igdb.com/). Game names and artwork belong to their respective rights holders.
+
+## License
+
+The source code is released under the [MIT License](LICENSE).
+
+The PlayTick name and branding assets are not covered by the MIT License. Game metadata and artwork are provided by IGDB and remain the property of their respective rights holders.
