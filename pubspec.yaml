@@ -1,5 +1,5 @@
 name: playtick
-description: "A new Flutter project."
+description: "A Flutter app for managing a personal video game library and tracking playtime sessions."
 publish_to: "none"
 
 version: 1.0.0+1
