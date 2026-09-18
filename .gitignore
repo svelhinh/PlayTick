@@ -8,6 +8,11 @@
 .history
 .env*
 
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
 
 # Flutter repo-specific
 /bin/cache/
