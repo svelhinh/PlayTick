@@ -14,4 +14,5 @@ alwaysApply: true
 - A temporary visual harness must invoke the real implementation. Never add fake repositories or no-op controls.
 - Inspect the relevant Figma reference before guiding visual implementation when one is available.
 - Increase hint specificity only when the developer is blocked or explicitly asks for code.
-- After the developer completes a checkpoint, review the diff and create that checkpoint's commit. Do not wait for a separate commit request. Show the message used. Keep the commit atomic: only that checkpoint's files, never secrets, and never the next checkpoint's work. Do not push unless asked.
+- After the developer completes a checkpoint, review the diff, create that checkpoint's commit, and push the current branch (`-u` if it has no upstream). Do not wait to be asked. Show the commit message used. Keep the commit atomic: only that checkpoint's files, never secrets, and never the next checkpoint's work.
+- After that commit, state which current-task to-dos are now done and which stay open, using the task's own wording. Example: "Tu peux cocher : Lock MainActivity to portrait. Laisse ouvert : Verify on a small phone." Do not mark a to-do done if the checkpoint only covered part of it.
