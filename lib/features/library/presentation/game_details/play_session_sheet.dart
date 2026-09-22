@@ -5,6 +5,7 @@ import 'package:playtick/features/library/presentation/extensions/library_except
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/widgets/duration_picker_dialog.dart';
 import 'package:playtick/features/library/presentation/widgets/hold_step_button.dart';
+import 'package:playtick/features/library/presentation/widgets/session_date_picker.dart';
 import 'package:playtick/features/library/presentation/widgets/session_duration_step.dart';
 import 'package:playtick/features/library/presentation/widgets/session_note_text_field.dart';
 import 'package:playtick/l10n/app_localizations.dart';
@@ -122,11 +123,9 @@ class _PlaySessionSheetState extends State<PlaySessionSheet> {
             const SizedBox(height: 24),
             GestureDetector(
               onTap: () async {
-                final pickedDate = await showDatePicker(
+                final pickedDate = await showSessionDatePicker(
                   context: context,
-                  initialDate: _date,
-                  firstDate: DateTime(1970),
-                  lastDate: DateTime.now(),
+                  selectedDate: _date,
                 );
 
                 if (pickedDate != null && mounted) {

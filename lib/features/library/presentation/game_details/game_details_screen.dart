@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_shell.dart';
 import 'package:playtick/core/presentation/widgets/error_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
+import 'package:playtick/core/presentation/widgets/playtick_sheet.dart';
 import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
@@ -67,11 +68,8 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
           if (details != null)
             IconButton(
               onPressed: () async {
-                await showModalBottomSheet<DeleteGameSheet>(
+                await showPlaytickSheet<DeleteGameSheet>(
                   context: context,
-                  showDragHandle: true,
-                  useSafeArea: true,
-                  isScrollControlled: true,
                   backgroundColor: theme.colorScheme.surface,
                   builder: (sheetContext) => DeleteGameSheet(
                     name: details.game.name,

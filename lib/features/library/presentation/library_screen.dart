@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/error_state_card.dart';
+import 'package:playtick/core/presentation/widgets/playtick_sheet.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_filter.dart';
@@ -461,11 +462,8 @@ final class _IgdbGamesList extends ConsumerWidget {
               child: IgdbGameCard(
                 game: games[index],
                 onPressed: () async {
-                  await showModalBottomSheet<void>(
+                  await showPlaytickSheet<void>(
                     context: context,
-                    useSafeArea: true,
-                    showDragHandle: true,
-                    isScrollControlled: true,
                     builder: (context) => _AddGameSheet(
                       onAdd: (game, status) async {
                         await ref
