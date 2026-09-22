@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:playtick/core/presentation/widgets/playtick_sheet.dart';
 import 'package:playtick/features/library/domain/play_session.dart';
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/game_details/play_session_sheet.dart';
@@ -39,11 +40,8 @@ final class PlaySessionsCard extends ConsumerWidget {
               ),
               TextButton(
                 onPressed: () async {
-                  await showModalBottomSheet<PlaySessionSheet>(
+                  await showPlaytickSheet<PlaySessionSheet>(
                     context: context,
-                    showDragHandle: true,
-                    useSafeArea: true,
-                    isScrollControlled: true,
                     backgroundColor: theme.colorScheme.surface,
                     builder: (context) => PlaySessionSheet(
                       onSave: (date, duration, note) async {
@@ -137,11 +135,8 @@ final class _PlaySessionItem extends ConsumerWidget {
                 const SizedBox(width: 16),
                 IconButton(
                   onPressed: () async {
-                    await showModalBottomSheet<PlaySessionSheet>(
+                    await showPlaytickSheet<PlaySessionSheet>(
                       context: context,
-                      showDragHandle: true,
-                      useSafeArea: true,
-                      isScrollControlled: true,
                       backgroundColor: theme.colorScheme.surface,
                       builder: (context) => PlaySessionSheet(
                         session: session,

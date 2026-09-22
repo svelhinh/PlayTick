@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:playtick/core/presentation/widgets/playtick_sheet.dart';
 import 'package:playtick/features/home/presentation/widgets/finish_active_play_session_sheet.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -20,9 +21,8 @@ void main() {
         home: Builder(
           builder: (context) => Scaffold(
             body: FilledButton(
-              onPressed: () => showModalBottomSheet<void>(
+              onPressed: () => showPlaytickSheet<void>(
                 context: context,
-                isScrollControlled: true,
                 builder: (context) => FinishActivePlaySessionSheet(
                   onSave: (duration, note) async {
                     savedDuration = duration;
@@ -88,9 +88,8 @@ void main() {
         home: Builder(
           builder: (context) => Scaffold(
             body: FilledButton(
-              onPressed: () => showModalBottomSheet<void>(
+              onPressed: () => showPlaytickSheet<void>(
                 context: context,
-                isScrollControlled: true,
                 builder: (context) => FinishActivePlaySessionSheet(
                   onSave: (duration, note) async {
                     saveCalls++;

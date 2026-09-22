@@ -5,6 +5,7 @@ import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/assets/app_assets.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
+import 'package:playtick/core/presentation/widgets/playtick_sheet.dart';
 import 'package:playtick/features/home/presentation/providers/active_play_session_provider.dart';
 import 'package:playtick/features/home/presentation/providers/timer_now_provider.dart';
 import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
@@ -98,11 +99,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           });
 
                           try {
-                            await showModalBottomSheet<void>(
+                            await showPlaytickSheet<void>(
                               context: context,
-                              isScrollControlled: true,
-                              showDragHandle: true,
-                              useSafeArea: true,
                               backgroundColor: theme.colorScheme.surface,
                               builder: (context) =>
                                   FinishActivePlaySessionSheet(

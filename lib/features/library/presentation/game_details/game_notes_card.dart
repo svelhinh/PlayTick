@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:playtick/core/presentation/widgets/playtick_sheet.dart';
 import 'package:playtick/features/library/domain/game_note.dart';
 import 'package:playtick/features/library/presentation/game_details/game_note_sheet.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
@@ -38,11 +39,8 @@ final class GameNotesCard extends ConsumerWidget {
               ),
               TextButton(
                 onPressed: () async {
-                  await showModalBottomSheet<GameNoteSheet>(
+                  await showPlaytickSheet<GameNoteSheet>(
                     context: context,
-                    showDragHandle: true,
-                    useSafeArea: true,
-                    isScrollControlled: true,
                     backgroundColor: theme.colorScheme.surface,
                     builder: (context) => GameNoteSheet(
                       onSave: (content) async {
@@ -126,11 +124,8 @@ final class _GameNoteItem extends ConsumerWidget {
                   height: 40,
                   child: IconButton(
                     onPressed: () async {
-                      await showModalBottomSheet<GameNoteSheet>(
+                      await showPlaytickSheet<GameNoteSheet>(
                         context: context,
-                        showDragHandle: true,
-                        useSafeArea: true,
-                        isScrollControlled: true,
                         backgroundColor: theme.colorScheme.surface,
                         builder: (context) => GameNoteSheet(
                           note: note,
