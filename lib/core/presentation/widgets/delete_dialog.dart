@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -17,6 +18,24 @@ final class DeleteConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
+
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      return CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(description),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(appLoc.cancel),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          CupertinoDialogAction(
+            onPressed: () => Navigator.pop(context, true),
+            isDestructiveAction: true,
+            child: Text(deleteButtonText),
+          ),
+        ],
+      );
+    }
 
     return AlertDialog(
       title: Text(title, style: theme.textTheme.titleLarge),
