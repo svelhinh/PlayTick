@@ -294,9 +294,13 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
     });
 
     if (theme.platform == TargetPlatform.iOS) {
+      final expandedWidth = MediaQuery.sizeOf(context).width - 48;
+
       return Align(
-        child: SizedBox(
-          width: _editing ? double.infinity : 150,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+          width: _editing ? expandedWidth : 150,
           height: 56,
           child: UiKitView(
             viewType: 'playtick-liquid-glass-search',
