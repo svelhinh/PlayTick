@@ -22,11 +22,14 @@ final class LiquidGlassSearchBar: UIView {
   }
 }
 
-final class LiquidGlassSearchBarPlatformView: NSObject, FlutterPlatformView {
+final class LiquidGlassSearchBarPlatformView: NSObject, FlutterPlatformView, UISearchBarDelegate {
   private let searchBarView = LiquidGlassSearchBar()
+  private let channel: FlutterMethodChannel
 
   init(channel: FlutterMethodChannel) {
+    self.channel = channel
     super.init()
+    searchBarView.searchBar.delegate = self
     channel.setMethodCallHandler { [searchBarView] call, result in
       if call.method == "unfocus" {
         searchBarView.searchBar.resignFirstResponder()
@@ -34,6 +37,16 @@ final class LiquidGlassSearchBarPlatformView: NSObject, FlutterPlatformView {
         return
       }
       result(FlutterMethodNotImplemented)
+    }
+  }
+
+  func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+    channel.invokeMethod("editing", arguments: true)
+  }
+
+  func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+    DispatchQueue.main.async { [channel] in
+      channel.invokeMethod("editing", arguments: false)
     }
   }
 

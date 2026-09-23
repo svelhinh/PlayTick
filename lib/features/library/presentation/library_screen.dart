@@ -260,6 +260,7 @@ final class _SearchBar extends ConsumerStatefulWidget {
 
 class _SearchBarState extends ConsumerState<_SearchBar> {
   late final TextEditingController _controller;
+  bool _editing = false;
 
   static MethodChannel? activeChannel;
 
@@ -293,15 +294,25 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
     });
 
     if (theme.platform == TargetPlatform.iOS) {
-      return SizedBox(
-        height: 56,
-        child: UiKitView(
-          viewType: 'playtick-liquid-glass-search',
-          onPlatformViewCreated: (viewId) {
-            activeChannel = MethodChannel(
-              'playtick-liquid-glass-search/$viewId',
-            );
-          },
+      return Align(
+        child: SizedBox(
+          width: _editing ? double.infinity : 150,
+          height: 56,
+          child: UiKitView(
+            viewType: 'playtick-liquid-glass-search',
+            onPlatformViewCreated: (viewId) {
+              final channel = MethodChannel(
+                'playtick-liquid-glass-search/$viewId',
+              );
+              activeChannel = channel;
+              channel.setMethodCallHandler((call) async {
+                if (call.method != 'editing' || !mounted) {
+                  return;
+                }
+                setState(() => _editing = call.arguments == true);
+              });
+            },
+          ),
         ),
       );
     }
