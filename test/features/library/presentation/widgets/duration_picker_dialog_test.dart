@@ -39,4 +39,15 @@ void main() {
     expect(find.text('0'), findsOneWidget);
     expect(find.text('01'), findsOneWidget);
   });
+
+  testWidgets('decreasing minutes at one hour wraps to 0h59', (tester) async {
+    await pumpDialog(tester, duration: const Duration(hours: 1));
+
+    await tester.tap(find.byIcon(Icons.remove).last);
+    await tester.pump();
+
+    expect(find.text('0'), findsOneWidget);
+    expect(find.text('59'), findsOneWidget);
+    expect(find.text('1'), findsNothing);
+  });
 }

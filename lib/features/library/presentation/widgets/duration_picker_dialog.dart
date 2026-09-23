@@ -34,16 +34,21 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
     setState(() {
       final next = _minutes - 1;
 
+      if (next < 0) {
+        if (_hours == 0) {
+          return;
+        }
+
+        _hours -= 1;
+        _minutes = 59;
+        return;
+      }
+
       if (_hours == 0 && next == 0) {
         return;
       }
 
-      if (next < 0) {
-        _decreaseHours();
-        _minutes = 59;
-      } else {
-        _minutes = next;
-      }
+      _minutes = next;
     });
   }
 
