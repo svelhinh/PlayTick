@@ -40,6 +40,10 @@ final class LiquidGlassSearchBarPlatformView: NSObject, FlutterPlatformView, UIS
     }
   }
 
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    channel.invokeMethod("search", arguments: searchText)
+  }
+
   func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
     channel.invokeMethod("editing", arguments: true)
   }

@@ -310,10 +310,16 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
               );
               activeChannel = channel;
               channel.setMethodCallHandler((call) async {
-                if (call.method != 'editing' || !mounted) {
+                if (!mounted) {
                   return;
                 }
-                setState(() => _editing = call.arguments == true);
+                if (call.method == 'editing') {
+                  setState(() => _editing = call.arguments == true);
+                } else if (call.method == 'search') {
+                  ref
+                      .read(librarySearchProvider.notifier)
+                      .search(call.arguments as String? ?? '');
+                }
               });
             },
           ),
