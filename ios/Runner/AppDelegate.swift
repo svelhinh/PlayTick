@@ -18,5 +18,8 @@ import UIKit
     }
     let factory = LiquidGlassPlatformViewFactory(messenger: registrar.messenger());
     registrar.register(factory, withId: "playtick-liquid-glass");
+
+    let searchFactory = LiquidGlassSearchBarFactory()
+    registrar.register(searchFactory, withId: "playtick-liquid-glass-search");
   }
 }
