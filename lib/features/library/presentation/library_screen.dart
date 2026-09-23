@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
@@ -198,32 +201,40 @@ class LibraryScreen extends ConsumerWidget {
           return Stack(
             fit: StackFit.expand,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 24),
-                        Text(
-                          appLoc.libraryTitle,
-                          style: theme.textTheme.headlineLarge,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          appLoc.librarySubtitle,
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                        const SizedBox(height: 12),
-                        if (theme.platform != TargetPlatform.iOS)
-                          const _SearchBar(),
-                      ],
+              Listener(
+                behavior: HitTestBehavior.translucent,
+                onPointerDown: (event) {
+                  unawaited(
+                    _SearchBarState.activeChannel?.invokeMethod('unfocus'),
+                  );
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 24),
+                          Text(
+                            appLoc.libraryTitle,
+                            style: theme.textTheme.headlineLarge,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            appLoc.librarySubtitle,
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          const SizedBox(height: 12),
+                          if (theme.platform != TargetPlatform.iOS)
+                            const _SearchBar(),
+                        ],
+                      ),
                     ),
-                  ),
-                  _buildGamesList(context, ref),
-                ],
+                    _buildGamesList(context, ref),
+                  ],
+                ),
               ),
               if (theme.platform == TargetPlatform.iOS)
                 Positioned(
@@ -249,6 +260,8 @@ final class _SearchBar extends ConsumerStatefulWidget {
 
 class _SearchBarState extends ConsumerState<_SearchBar> {
   late final TextEditingController _controller;
+
+  static MethodChannel? activeChannel;
 
   @override
   void initState() {
@@ -280,10 +293,15 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
     });
 
     if (theme.platform == TargetPlatform.iOS) {
-      return const SizedBox(
+      return SizedBox(
         height: 56,
         child: UiKitView(
           viewType: 'playtick-liquid-glass-search',
+          onPlatformViewCreated: (viewId) {
+            activeChannel = MethodChannel(
+              'playtick-liquid-glass-search/$viewId',
+            );
+          },
         ),
       );
     }

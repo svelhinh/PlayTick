@@ -23,17 +23,40 @@ final class LiquidGlassSearchBar: UIView {
 }
 
 final class LiquidGlassSearchBarPlatformView: NSObject, FlutterPlatformView {
-  private let searchBar = LiquidGlassSearchBar()
+  private let searchBarView = LiquidGlassSearchBar()
 
-  func view() -> UIView { searchBar }
+  init(channel: FlutterMethodChannel) {
+    super.init()
+    channel.setMethodCallHandler { [searchBarView] call, result in
+      if call.method == "unfocus" {
+        searchBarView.searchBar.resignFirstResponder()
+        result(nil)
+        return
+      }
+      result(FlutterMethodNotImplemented)
+    }
+  }
+
+  func view() -> UIView { searchBarView }
 }
 
 final class LiquidGlassSearchBarFactory: NSObject, FlutterPlatformViewFactory {
+  private let messenger: FlutterBinaryMessenger
+
+  init(messenger: FlutterBinaryMessenger) {
+    self.messenger = messenger
+    super.init()
+  }
+
   func create(
     withFrame frame: CGRect,
     viewIdentifier viewId: Int64,
     arguments args: Any?
   ) -> FlutterPlatformView {
-    LiquidGlassSearchBarPlatformView()
+    let channel = FlutterMethodChannel(
+      name: "playtick-liquid-glass-search/\(viewId)",
+      binaryMessenger: messenger
+    )
+    return LiquidGlassSearchBarPlatformView(channel: channel)
   }
 }
