@@ -8,6 +8,8 @@ final class LiquidGlassSearchBar: UIView {
     super.init(frame: frame)
     backgroundColor = .clear
     addSubview(searchBar)
+    searchBar.searchBarStyle = .minimal
+    searchBar.backgroundImage = UIImage()
   }
 
   required init?(coder: NSCoder) {

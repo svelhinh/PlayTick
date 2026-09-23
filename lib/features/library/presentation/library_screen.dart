@@ -28,8 +28,7 @@ import 'package:playtick/l10n/app_localizations.dart';
 class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget _buildGamesList(BuildContext context, WidgetRef ref) {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
@@ -39,170 +38,203 @@ class LibraryScreen extends ConsumerWidget {
     final debouncedSearch = ref.watch(debouncedLibrarySearchProvider);
     final igdbGamesAsync = ref.watch(librarySearchGamesProvider);
 
-    return SafeArea(
-      bottom: Theme.of(context).platform != TargetPlatform.iOS,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 24),
-                Text(appLoc.libraryTitle, style: theme.textTheme.headlineLarge),
-                const SizedBox(height: 4),
-                Text(appLoc.librarySubtitle, style: theme.textTheme.bodyMedium),
-                const SizedBox(height: 12),
-                const _SearchBar(),
-              ],
-            ),
-          ),
-          Expanded(
-            child: gamesAsync.when(
-              data: (games) {
-                if (games.isEmpty && search.isEmpty) {
-                  return Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                      child: EmptyStateCard(
-                        icon: Icons.library_books_outlined,
-                        title: appLoc.libraryEmptyStateTitle,
-                        description: appLoc.libraryEmptyStateDescription,
-                      ),
-                    ),
-                  );
-                }
-
-                if (search.isNotEmpty) {
-                  final igdbGames = igdbGamesAsync.value ?? [];
-                  final isDebouncing = search.trim() != debouncedSearch.trim();
-                  final searchResults = LibrarySearchResults.merge(
-                    search,
-                    games,
-                    igdbGames,
-                  );
-
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: ListView(
-                      children: [
-                        if (searchResults.libraryGames.isNotEmpty) ...[
-                          const SizedBox(height: 12),
-                          _LibraryGamesList(
-                            games: searchResults.libraryGames,
-                            showTitle: true,
-                          ),
-                        ],
-
-                        const SizedBox(height: 12),
-
-                        if (searchResults.igdbGames.isNotEmpty)
-                          _IgdbGamesList(games: searchResults.igdbGames)
-                        else if (!isDebouncing &&
-                            (igdbGamesAsync.isLoading ||
-                                igdbGamesAsync.hasError))
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                appLoc.igdbSearchResultsTitle,
-                                style: theme.textTheme.titleSmall,
-                              ),
-                              const SizedBox(height: 12),
-                              if (igdbGamesAsync.isLoading)
-                                const Center(
-                                  child: CircularProgressIndicator(),
-                                )
-                              else
-                                ErrorStateCard(
-                                  title: appLoc.igdbSearchCardErrorTitle,
-                                  description:
-                                      appLoc.igdbSearchCardErrorDescription,
-                                  onRetry: () => ref.invalidate(
-                                    librarySearchGamesProvider,
-                                  ),
-                                  compact: true,
-                                ),
-                            ],
-                          )
-                        else if (!isDebouncing)
-                          EmptyStateCard(
-                            icon: Icons.search_off_outlined,
-                            title: appLoc.librarySearchNoResultsTitle,
-                            description:
-                                appLoc.librarySearchNoResultsDescription,
-                          ),
-                      ],
-                    ),
-                  );
-                }
-
-                final filteredGames = filter == LibraryFilter.all
-                    ? games
-                    : games
-                          .where(
-                            (game) => filter.matchesGameStatus(game.status),
-                          )
-                          .toList();
-
-                return ListView(
-                  children: [
-                    const SizedBox(height: 12),
-                    if (search.isEmpty) ...[
-                      const _LibraryGamesFilters(),
-                      if (filteredGames.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
-                          ),
-                          child: EmptyStateCard(
-                            icon: Icons.library_books_outlined,
-                            title: appLoc.libraryFilterEmptyStateTitle,
-                            description:
-                                appLoc.libraryFilterEmptyStateDescription,
-                            action: FilledButton(
-                              onPressed: () {
-                                ref
-                                    .read(libraryFilterProvider.notifier)
-                                    .select(LibraryFilter.all);
-                              },
-                              child: Text(
-                                appLoc.libraryFilterEmptyStateButtonText,
-                              ),
-                            ),
-                          ),
-                        )
-                      else
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            right: 24,
-                            left: 24,
-                            top: 12,
-                          ),
-                          child: _LibraryGamesList(games: filteredGames),
-                        ),
-                    ],
-                    const SizedBox(height: 12),
-                  ],
-                );
-              },
-              error: (error, stackTrace) => Center(
-                child: ErrorStateCard(
-                  title: appLoc.somethingWentWrong,
-                  description: appLoc.somethingWentWrongDescription,
-                  onRetry: () => ref.invalidate(libraryGamesProvider),
+    return Expanded(
+      child: gamesAsync.when(
+        data: (games) {
+          if (games.isEmpty && search.isEmpty) {
+            return Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                child: EmptyStateCard(
+                  icon: Icons.library_books_outlined,
+                  title: appLoc.libraryEmptyStateTitle,
+                  description: appLoc.libraryEmptyStateDescription,
                 ),
               ),
-              loading: () => const Center(child: CircularProgressIndicator()),
-            ),
+            );
+          }
+
+          if (search.isNotEmpty) {
+            final igdbGames = igdbGamesAsync.value ?? [];
+            final isDebouncing = search.trim() != debouncedSearch.trim();
+            final searchResults = LibrarySearchResults.merge(
+              search,
+              games,
+              igdbGames,
+            );
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: ListView(
+                children: [
+                  if (searchResults.libraryGames.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    _LibraryGamesList(
+                      games: searchResults.libraryGames,
+                      showTitle: true,
+                    ),
+                  ],
+
+                  const SizedBox(height: 12),
+
+                  if (searchResults.igdbGames.isNotEmpty)
+                    _IgdbGamesList(games: searchResults.igdbGames)
+                  else if (!isDebouncing &&
+                      (igdbGamesAsync.isLoading || igdbGamesAsync.hasError))
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          appLoc.igdbSearchResultsTitle,
+                          style: theme.textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: 12),
+                        if (igdbGamesAsync.isLoading)
+                          const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        else
+                          ErrorStateCard(
+                            title: appLoc.igdbSearchCardErrorTitle,
+                            description: appLoc.igdbSearchCardErrorDescription,
+                            onRetry: () => ref.invalidate(
+                              librarySearchGamesProvider,
+                            ),
+                            compact: true,
+                          ),
+                      ],
+                    )
+                  else if (!isDebouncing)
+                    EmptyStateCard(
+                      icon: Icons.search_off_outlined,
+                      title: appLoc.librarySearchNoResultsTitle,
+                      description: appLoc.librarySearchNoResultsDescription,
+                    ),
+                ],
+              ),
+            );
+          }
+
+          final filteredGames = filter == LibraryFilter.all
+              ? games
+              : games
+                    .where(
+                      (game) => filter.matchesGameStatus(game.status),
+                    )
+                    .toList();
+
+          return ListView(
+            children: [
+              const SizedBox(height: 12),
+              if (search.isEmpty) ...[
+                const _LibraryGamesFilters(),
+                if (filteredGames.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    child: EmptyStateCard(
+                      icon: Icons.library_books_outlined,
+                      title: appLoc.libraryFilterEmptyStateTitle,
+                      description: appLoc.libraryFilterEmptyStateDescription,
+                      action: FilledButton(
+                        onPressed: () {
+                          ref
+                              .read(libraryFilterProvider.notifier)
+                              .select(LibraryFilter.all);
+                        },
+                        child: Text(
+                          appLoc.libraryFilterEmptyStateButtonText,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 24,
+                      left: 24,
+                      top: 12,
+                    ),
+                    child: _LibraryGamesList(games: filteredGames),
+                  ),
+              ],
+              const SizedBox(height: 12),
+            ],
+          );
+        },
+        error: (error, stackTrace) => Center(
+          child: ErrorStateCard(
+            title: appLoc.somethingWentWrong,
+            description: appLoc.somethingWentWrongDescription,
+            onRetry: () => ref.invalidate(libraryGamesProvider),
           ),
-        ],
+        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appLoc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    return SafeArea(
+      bottom: theme.platform != TargetPlatform.iOS,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final available =
+              MediaQuery.sizeOf(context).height -
+              MediaQuery.paddingOf(context).top;
+          final covered = available - constraints.maxHeight;
+          final keyboardOpen = covered > 100;
+
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 24),
+                        Text(
+                          appLoc.libraryTitle,
+                          style: theme.textTheme.headlineLarge,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          appLoc.librarySubtitle,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 12),
+                        if (theme.platform != TargetPlatform.iOS)
+                          const _SearchBar(),
+                      ],
+                    ),
+                  ),
+                  _buildGamesList(context, ref),
+                ],
+              ),
+              if (theme.platform == TargetPlatform.iOS)
+                Positioned(
+                  bottom: keyboardOpen ? 8 : 84,
+                  left: 24,
+                  right: 24,
+                  child: const _SearchBar(),
+                ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -246,6 +278,15 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
         _controller.clear();
       }
     });
+
+    if (theme.platform == TargetPlatform.iOS) {
+      return const SizedBox(
+        height: 56,
+        child: UiKitView(
+          viewType: 'playtick-liquid-glass-search',
+        ),
+      );
+    }
 
     return Focus(
       child: Builder(
