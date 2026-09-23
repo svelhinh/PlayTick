@@ -19,7 +19,7 @@ final class DeleteConfirmationDialog extends StatelessWidget {
     final theme = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
 
-    if (Theme.of(context).platform == TargetPlatform.iOS) {
+    if (theme.platform == TargetPlatform.iOS) {
       return CupertinoAlertDialog(
         title: Text(title),
         content: Text(description),
