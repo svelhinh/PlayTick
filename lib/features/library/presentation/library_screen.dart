@@ -40,6 +40,7 @@ class LibraryScreen extends ConsumerWidget {
     final igdbGamesAsync = ref.watch(librarySearchGamesProvider);
 
     return SafeArea(
+      bottom: Theme.of(context).platform != TargetPlatform.iOS,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

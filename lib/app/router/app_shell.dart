@@ -39,6 +39,22 @@ class AppShell extends ConsumerWidget {
 
   final StatefulNavigationShell navigationShell;
 
+  void _selectIndex(
+    BuildContext context,
+    WidgetRef ref,
+    StatefulNavigationShell navigationShell,
+    int index,
+  ) {
+    if (index != 1) {
+      FocusManager.instance.primaryFocus?.unfocus();
+      _leaveLibrary(context, navigationShell, index);
+      ref.read(librarySearchProvider.notifier).search('');
+      return;
+    }
+
+    navigationShell.goBranch(1, initialLocation: true);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appLoc = AppLocalizations.of(context)!;
@@ -47,29 +63,65 @@ class AppShell extends ConsumerWidget {
       value: AppTheme.systemOverlayStyle,
       child: Scaffold(
         backgroundColor: AppTheme.background,
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: navigationShell.currentIndex,
-          onDestinationSelected: (index) {
-            if (index != 1) {
-              FocusManager.instance.primaryFocus?.unfocus();
-              _leaveLibrary(context, navigationShell, index);
-              ref.read(librarySearchProvider.notifier).search('');
-              return;
-            }
+        extendBody: Theme.of(context).platform == TargetPlatform.iOS,
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (Theme.of(context).platform == TargetPlatform.iOS)
+              SizedBox(
+                height: 84,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SizedBox(
+                    width: 236,
+                    height: 84,
+                    child: UiKitView(
+                      viewType: 'playtick-liquid-glass',
+                      creationParams: {
+                        'home-label': appLoc.navigationLabelHome,
+                        'library-label': appLoc.navigationLabelLibrary,
+                      },
+                      creationParamsCodec: const StandardMessageCodec(),
+                      onPlatformViewCreated: (id) {
+                        MethodChannel(
+                          'playtick-liquid-glass/$id',
+                        ).setMethodCallHandler(
+                          (call) async {
+                            if (call.method != 'selectIndex') {
+                              return;
+                            }
 
-            navigationShell.goBranch(1, initialLocation: true);
-          },
-          destinations: [
-            NavigationDestination(
-              icon: const Icon(Icons.home_outlined),
-              selectedIcon: const Icon(Icons.home),
-              label: appLoc.navigationLabelHome,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.library_books_outlined),
-              selectedIcon: const Icon(Icons.library_books),
-              label: appLoc.navigationLabelLibrary,
-            ),
+                            _selectIndex(
+                              context,
+                              ref,
+                              navigationShell,
+                              call.arguments as int,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              )
+            else
+              NavigationBar(
+                selectedIndex: navigationShell.currentIndex,
+                onDestinationSelected: (index) =>
+                    _selectIndex(context, ref, navigationShell, index),
+                destinations: [
+                  NavigationDestination(
+                    icon: const Icon(Icons.home_outlined),
+                    selectedIcon: const Icon(Icons.home),
+                    label: appLoc.navigationLabelHome,
+                  ),
+                  NavigationDestination(
+                    icon: const Icon(Icons.library_books_outlined),
+                    selectedIcon: const Icon(Icons.library_books),
+                    label: appLoc.navigationLabelLibrary,
+                  ),
+                ],
+              ),
           ],
         ),
         body: navigationShell,

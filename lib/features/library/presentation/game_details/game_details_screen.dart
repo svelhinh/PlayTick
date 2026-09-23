@@ -116,57 +116,60 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
           final status = details.status;
 
           return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              child: Column(
-                children: [
-                  _TopInfo(
-                    game: game,
-                    status: status,
-                    totalPlaytime: details.totalPlaytime,
-                    onStatusChanged: (status) async {
-                      try {
-                        await ref
-                            .read(libraryRepositoryProvider)
-                            .updateGameStatus(game.id, status);
-                      } on Exception catch (e) {
-                        if (context.mounted) {
-                          context.showLibraryErrorSnackBar(e);
-                        }
+            padding: EdgeInsets.fromLTRB(
+              16,
+              24,
+              16,
+              24 + MediaQuery.paddingOf(context).bottom,
+            ),
+            child: Column(
+              children: [
+                _TopInfo(
+                  game: game,
+                  status: status,
+                  totalPlaytime: details.totalPlaytime,
+                  onStatusChanged: (status) async {
+                    try {
+                      await ref
+                          .read(libraryRepositoryProvider)
+                          .updateGameStatus(game.id, status);
+                    } on Exception catch (e) {
+                      if (context.mounted) {
+                        context.showLibraryErrorSnackBar(e);
                       }
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  _GameInfoCard(
-                    summary: game.summary,
-                    genres: game.genres,
-                    developer: game.developer,
-                    publisher: game.publisher,
-                    platforms: game.platforms,
-                    estimatedPlaytimes: game.estimatedPlaytimes,
-                  ),
-                  const SizedBox(height: 16),
-                  notesAsync.when(
-                    data: (notes) => GameNotesCard(
-                      notes: notes,
-                      gameId: game.id,
-                    ),
-                    error: (error, stackTrace) => ErrorStateCard(
-                      title: appLoc.somethingWentWrong,
-                      description: appLoc.somethingWentWrongDescription,
-                      compact: true,
-                      onRetry: () => ref.invalidate(gameNotesProvider(game.id)),
-                    ),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                  ),
-                  const SizedBox(height: 16),
-                  PlaySessionsCard(
-                    playSessions: details.playSessions,
+                    }
+                  },
+                ),
+                const SizedBox(height: 16),
+                _GameInfoCard(
+                  summary: game.summary,
+                  genres: game.genres,
+                  developer: game.developer,
+                  publisher: game.publisher,
+                  platforms: game.platforms,
+                  estimatedPlaytimes: game.estimatedPlaytimes,
+                ),
+                const SizedBox(height: 16),
+                notesAsync.when(
+                  data: (notes) => GameNotesCard(
+                    notes: notes,
                     gameId: game.id,
                   ),
-                ],
-              ),
+                  error: (error, stackTrace) => ErrorStateCard(
+                    title: appLoc.somethingWentWrong,
+                    description: appLoc.somethingWentWrongDescription,
+                    compact: true,
+                    onRetry: () => ref.invalidate(gameNotesProvider(game.id)),
+                  ),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                ),
+                const SizedBox(height: 16),
+                PlaySessionsCard(
+                  playSessions: details.playSessions,
+                  gameId: game.id,
+                ),
+              ],
             ),
           );
         },
@@ -358,7 +361,7 @@ final class _GameInfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: theme.colorScheme.outline, width: 0.5),
       ),

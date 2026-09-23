@@ -55,6 +55,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         .firstOrNull;
 
     return SafeArea(
+      bottom: Theme.of(context).platform != TargetPlatform.iOS,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
@@ -80,6 +81,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SizedBox(height: 24),
             Expanded(
               child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.paddingOf(context).bottom,
+                ),
                 child: Column(
                   children: [
                     if (activeSession != null && activeGame != null) ...[
