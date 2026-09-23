@@ -7,6 +7,7 @@
 .buildlog/
 .history
 .env*
+.DS_Store
 
 # IntelliJ / Android Studio
 .idea/
