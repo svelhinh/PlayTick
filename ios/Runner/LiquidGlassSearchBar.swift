@@ -1,4 +1,5 @@
 import UIKit
+import Flutter
 
 final class LiquidGlassSearchBar: UIView {
   let searchBar = UISearchBar()
@@ -16,5 +17,21 @@ final class LiquidGlassSearchBar: UIView {
   override func layoutSubviews() {
     super.layoutSubviews()
     searchBar.frame = bounds
+  }
+}
+
+final class LiquidGlassSearchBarPlatformView: NSObject, FlutterPlatformView {
+  private let searchBar = LiquidGlassSearchBar()
+
+  func view() -> UIView { searchBar }
+}
+
+final class LiquidGlassSearchBarFactory: NSObject, FlutterPlatformViewFactory {
+  func create(
+    withFrame frame: CGRect,
+    viewIdentifier viewId: Int64,
+    arguments args: Any?
+  ) -> FlutterPlatformView {
+    LiquidGlassSearchBarPlatformView()
   }
 }
