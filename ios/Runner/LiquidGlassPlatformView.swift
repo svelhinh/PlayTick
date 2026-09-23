@@ -5,13 +5,13 @@ final class LiquidGlassPlatformView: UIView, UITabBarDelegate {
   private let tabBar = UITabBar()
   private let channel: FlutterMethodChannel
 
-  init(channel: FlutterMethodChannel) {
+  init(channel: FlutterMethodChannel, args: [AnyHashable: Any]) {
     self.channel = channel
     super.init(frame: .zero)
     backgroundColor = .clear
     tabBar.items = [
-      UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0),
-      UITabBarItem(title: "Library", image: UIImage(systemName: "books.vertical"), tag: 1),
+      UITabBarItem(title: args["home-label"] as? String ?? "Home", image: UIImage(systemName: "house"), tag: 0),
+      UITabBarItem(title: args["library-label"] as? String ?? "Library", image: UIImage(systemName: "books.vertical"), tag: 1),
     ]
     tabBar.selectedItem = tabBar.items?.first
     tabBar.delegate = self
@@ -35,8 +35,8 @@ final class LiquidGlassPlatformView: UIView, UITabBarDelegate {
 final class LiquidGlassPlatformViewImpl: NSObject, FlutterPlatformView {
   private let glassView: LiquidGlassPlatformView
 
-  init(channel: FlutterMethodChannel) {
-    glassView = LiquidGlassPlatformView(channel: channel)
+  init(channel: FlutterMethodChannel, args: [AnyHashable: Any]) {
+    glassView = LiquidGlassPlatformView(channel: channel, args: args)
     super.init()
   }
 
@@ -60,6 +60,11 @@ final class LiquidGlassPlatformViewFactory: NSObject, FlutterPlatformViewFactory
       name: "playtick-liquid-glass/\(viewId)",
       binaryMessenger: messenger
     )
-    return LiquidGlassPlatformViewImpl(channel: channel)
+    let params = args as? [AnyHashable: Any] ?? [:]
+    return LiquidGlassPlatformViewImpl(channel: channel, args: params)
+  }
+
+  func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
+    FlutterStandardMessageCodec.sharedInstance()
   }
 }

@@ -77,13 +77,16 @@ class AppShell extends ConsumerWidget {
                     height: 84,
                     child: UiKitView(
                       viewType: 'playtick-liquid-glass',
+                      creationParams: {
+                        'home-label': appLoc.navigationLabelHome,
+                        'library-label': appLoc.navigationLabelLibrary,
+                      },
+                      creationParamsCodec: const StandardMessageCodec(),
                       onPlatformViewCreated: (id) {
                         MethodChannel(
                           'playtick-liquid-glass/$id',
                         ).setMethodCallHandler(
-                          (
-                            call,
-                          ) async {
+                          (call) async {
                             if (call.method != 'selectIndex') {
                               return;
                             }
