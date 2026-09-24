@@ -84,6 +84,14 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: theme.platform == TargetPlatform.iOS
+            ? Colors.transparent
+            : null,
+        surfaceTintColor: theme.platform == TargetPlatform.iOS
+            ? Colors.transparent
+            : null,
+        elevation: theme.platform == TargetPlatform.iOS ? 0 : null,
+        scrolledUnderElevation: theme.platform == TargetPlatform.iOS ? 0 : null,
         leading: theme.platform == TargetPlatform.iOS
             ? Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 8),
