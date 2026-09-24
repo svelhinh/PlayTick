@@ -29,6 +29,6 @@ final class LiquidGlassBarFactory: NSObject, FlutterPlatformViewFactory {
     viewIdentifier viewId: Int64,
     arguments args: Any?
   ) -> FlutterPlatformView {
-    LiquidGlassBarPlatformView()
+    return LiquidGlassBarPlatformView()
   }
 }
