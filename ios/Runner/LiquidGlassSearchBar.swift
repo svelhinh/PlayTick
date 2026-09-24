@@ -72,6 +72,15 @@ final class LiquidGlassSearchBarPlatformView: NSObject, FlutterPlatformView, UIS
         result(nil)
         return
       }
+      if call.method == "clear" {
+        DispatchQueue.main.async { [self] in
+          searchBarView.searchBar.text = ""
+          searchBarView.searchBar.placeholder = placeholderMinifed
+          searchBarView.searchBar.resignFirstResponder()
+        }
+        result(nil)
+        return
+      }
       result(FlutterMethodNotImplemented)
     }
   }

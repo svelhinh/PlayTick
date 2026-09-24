@@ -269,6 +269,10 @@ double _collapsedSearchWidth(
   return painter.width + chrome;
 }
 
+void clearNativeLibrarySearch() {
+  unawaited(_SearchBarState.activeChannel?.invokeMethod('clear'));
+}
+
 final class _SearchBar extends ConsumerStatefulWidget {
   const _SearchBar();
 
