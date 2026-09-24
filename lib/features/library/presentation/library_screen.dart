@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -251,6 +252,23 @@ class LibraryScreen extends ConsumerWidget {
   }
 }
 
+double _collapsedSearchWidth(
+  BuildContext context,
+  String text, {
+  required bool includeClearButton,
+}) {
+  final painter = TextPainter(
+    text: TextSpan(
+      text: text,
+      style: const TextStyle(fontSize: 17),
+    ),
+    textDirection: Directionality.of(context),
+    maxLines: 1,
+  )..layout();
+  final chrome = includeClearButton ? 105.0 : 80.0;
+  return painter.width + chrome;
+}
+
 final class _SearchBar extends ConsumerStatefulWidget {
   const _SearchBar();
 
@@ -295,12 +313,24 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
 
     if (theme.platform == TargetPlatform.iOS) {
       final expandedWidth = MediaQuery.sizeOf(context).width - 48;
+      final query = ref.watch(librarySearchProvider);
+      final collapsedLabel = query.isEmpty
+          ? appLoc.librarySearchHintTextMinified
+          : query;
+      final collapsedWidth = min(
+        _collapsedSearchWidth(
+          context,
+          collapsedLabel,
+          includeClearButton: query.isNotEmpty,
+        ),
+        expandedWidth,
+      );
 
       return Align(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOut,
-          width: _editing ? expandedWidth : 170,
+          width: _editing ? expandedWidth : collapsedWidth,
           height: 56,
           child: UiKitView(
             viewType: 'playtick-liquid-glass-search',
