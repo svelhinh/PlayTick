@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0D2B0FB43062E3C70091493A /* LiquidGlassPlatformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2B0FB33062E3C70091493A /* LiquidGlassPlatformView.swift */; };
 		0D2B0FB7306417640091493A /* LiquidGlassSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2B0FB6306417640091493A /* LiquidGlassSearchBar.swift */; };
+		0D2B0FB930656CB50091493A /* LiquidGlassButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2B0FB830656CB50091493A /* LiquidGlassButton.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
@@ -46,6 +47,7 @@
 /* Begin PBXFileReference section */
 		0D2B0FB33062E3C70091493A /* LiquidGlassPlatformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassPlatformView.swift; sourceTree = "<group>"; };
 		0D2B0FB6306417640091493A /* LiquidGlassSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassSearchBar.swift; sourceTree = "<group>"; };
+		0D2B0FB830656CB50091493A /* LiquidGlassButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassButton.swift; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				0D2B0FB33062E3C70091493A /* LiquidGlassPlatformView.swift */,
 				0D2B0FB6306417640091493A /* LiquidGlassSearchBar.swift */,
+				0D2B0FB830656CB50091493A /* LiquidGlassButton.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				0D2B0FB930656CB50091493A /* LiquidGlassButton.swift in Sources */,
 				0D2B0FB7306417640091493A /* LiquidGlassSearchBar.swift in Sources */,
 				0D2B0FB43062E3C70091493A /* LiquidGlassPlatformView.swift in Sources */,
 				7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */,
