@@ -36,6 +36,25 @@ class GameDetailsScreen extends ConsumerStatefulWidget {
 class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
   LibraryGameDetails? _visibleDetails;
 
+  Future<void> _onDelete(BuildContext sheetContext, int gameIdInt) async {
+    final repository = ref.read(libraryRepositoryProvider);
+
+    if (sheetContext.mounted) {
+      Navigator.pop(sheetContext);
+    }
+
+    try {
+      await repository.removeGame(gameIdInt);
+      if (mounted && context.canPop()) {
+        popGameDetailsToLibrary(context);
+      }
+    } on Exception catch (e) {
+      if (mounted) {
+        context.showLibraryErrorSnackBar(e);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
@@ -68,12 +87,34 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
         actions: [
           if (details != null)
             if (theme.platform == TargetPlatform.iOS)
-              const Padding(
-                padding: EdgeInsets.only(right: 16),
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
                 child: SizedBox(
                   width: 44,
                   height: 44,
-                  child: UiKitView(viewType: 'playtick-liquid-glass-button'),
+                  child: UiKitView(
+                    viewType: 'playtick-liquid-glass-button',
+                    onPlatformViewCreated: (viewId) {
+                      MethodChannel(
+                        'playtick-liquid-glass-button/$viewId',
+                      ).setMethodCallHandler((call) async {
+                        if (!mounted) {
+                          return;
+                        }
+                        if (call.method == 'delete') {
+                          await showPlaytickSheet<DeleteGameSheet>(
+                            context: context,
+                            backgroundColor: theme.colorScheme.surface,
+                            builder: (sheetContext) => DeleteGameSheet(
+                              name: details.game.name,
+                              onDelete: () =>
+                                  _onDelete(sheetContext, gameIdInt),
+                            ),
+                          );
+                        }
+                      });
+                    },
+                  ),
                 ),
               )
             else
@@ -84,24 +125,7 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
                     backgroundColor: theme.colorScheme.surface,
                     builder: (sheetContext) => DeleteGameSheet(
                       name: details.game.name,
-                      onDelete: () async {
-                        final repository = ref.read(libraryRepositoryProvider);
-
-                        if (sheetContext.mounted) {
-                          Navigator.pop(sheetContext);
-                        }
-
-                        try {
-                          await repository.removeGame(gameIdInt);
-                          if (context.mounted && context.canPop()) {
-                            popGameDetailsToLibrary(context);
-                          }
-                        } on Exception catch (e) {
-                          if (context.mounted) {
-                            context.showLibraryErrorSnackBar(e);
-                          }
-                        }
-                      },
+                      onDelete: () => _onDelete(sheetContext, gameIdInt),
                     ),
                   );
                 },

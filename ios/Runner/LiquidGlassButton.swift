@@ -31,16 +31,43 @@ final class LiquidGlassButton: UIView {
 
 final class LiquidGlassButtonPlatformView: NSObject, FlutterPlatformView {
   private let glassButton = LiquidGlassButton()
+  private let channel: FlutterMethodChannel
+
+  init(channel: FlutterMethodChannel) {
+    self.channel = channel
+    super.init()
+    glassButton.button.addTarget(
+      self,
+      action: #selector(pressed),
+      for: .touchUpInside
+    )
+  }
+
+  @objc private func pressed() {
+    channel.invokeMethod("delete", arguments: nil)
+  }
 
   func view() -> UIView { glassButton }
 }
 
 final class LiquidGlassButtonFactory: NSObject, FlutterPlatformViewFactory {
+  private let messenger: FlutterBinaryMessenger
+
+  init(messenger: FlutterBinaryMessenger) {
+    self.messenger = messenger
+    super.init()
+  }
+
   func create(
     withFrame frame: CGRect,
     viewIdentifier viewId: Int64,
     arguments args: Any?
   ) -> FlutterPlatformView {
-    LiquidGlassButtonPlatformView()
+    let channel = FlutterMethodChannel(
+      name: "playtick-liquid-glass-button/\(viewId)",
+      binaryMessenger: messenger
+    )
+
+    return LiquidGlassButtonPlatformView(channel: channel)
   }
 }

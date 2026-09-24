@@ -22,7 +22,7 @@ import UIKit
     let searchFactory = LiquidGlassSearchBarFactory(messenger: registrar.messenger())
     registrar.register(searchFactory, withId: "playtick-liquid-glass-search");
 
-    let buttonFactory = LiquidGlassButtonFactory()
+    let buttonFactory = LiquidGlassButtonFactory(messenger: registrar.messenger())
     registrar.register(buttonFactory, withId: "playtick-liquid-glass-button");
   }
 }
