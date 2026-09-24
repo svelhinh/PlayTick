@@ -1,4 +1,5 @@
 import UIKit
+import Flutter
 
 final class LiquidGlassButton: UIView {
   let button = UIButton()
@@ -19,5 +20,21 @@ final class LiquidGlassButton: UIView {
   override func layoutSubviews() {
     super.layoutSubviews()
     button.frame = bounds
+  }
+}
+
+final class LiquidGlassButtonPlatformView: NSObject, FlutterPlatformView {
+  private let glassButton = LiquidGlassButton()
+
+  func view() -> UIView { glassButton }
+}
+
+final class LiquidGlassButtonFactory: NSObject, FlutterPlatformViewFactory {
+  func create(
+    withFrame frame: CGRect,
+    viewIdentifier viewId: Int64,
+    arguments args: Any?
+  ) -> FlutterPlatformView {
+    LiquidGlassButtonPlatformView()
   }
 }
