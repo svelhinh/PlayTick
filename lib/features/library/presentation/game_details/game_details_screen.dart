@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_shell.dart';
@@ -66,39 +67,49 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
       appBar: AppBar(
         actions: [
           if (details != null)
-            IconButton(
-              onPressed: () async {
-                await showPlaytickSheet<DeleteGameSheet>(
-                  context: context,
-                  backgroundColor: theme.colorScheme.surface,
-                  builder: (sheetContext) => DeleteGameSheet(
-                    name: details.game.name,
-                    onDelete: () async {
-                      final repository = ref.read(libraryRepositoryProvider);
+            if (theme.platform == TargetPlatform.iOS)
+              const Padding(
+                padding: EdgeInsets.only(right: 16),
+                child: SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: UiKitView(viewType: 'playtick-liquid-glass-button'),
+                ),
+              )
+            else
+              IconButton(
+                onPressed: () async {
+                  await showPlaytickSheet<DeleteGameSheet>(
+                    context: context,
+                    backgroundColor: theme.colorScheme.surface,
+                    builder: (sheetContext) => DeleteGameSheet(
+                      name: details.game.name,
+                      onDelete: () async {
+                        final repository = ref.read(libraryRepositoryProvider);
 
-                      if (sheetContext.mounted) {
-                        Navigator.pop(sheetContext);
-                      }
+                        if (sheetContext.mounted) {
+                          Navigator.pop(sheetContext);
+                        }
 
-                      try {
-                        await repository.removeGame(gameIdInt);
-                        if (context.mounted && context.canPop()) {
-                          popGameDetailsToLibrary(context);
+                        try {
+                          await repository.removeGame(gameIdInt);
+                          if (context.mounted && context.canPop()) {
+                            popGameDetailsToLibrary(context);
+                          }
+                        } on Exception catch (e) {
+                          if (context.mounted) {
+                            context.showLibraryErrorSnackBar(e);
+                          }
                         }
-                      } on Exception catch (e) {
-                        if (context.mounted) {
-                          context.showLibraryErrorSnackBar(e);
-                        }
-                      }
-                    },
-                  ),
-                );
-              },
-              icon: Icon(
-                Icons.delete,
-                color: theme.colorScheme.error,
+                      },
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.delete,
+                  color: theme.colorScheme.error,
+                ),
               ),
-            ),
         ],
       ),
       body: gameAsync.when(

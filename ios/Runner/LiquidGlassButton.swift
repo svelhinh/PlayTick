@@ -9,7 +9,13 @@ final class LiquidGlassButton: UIView {
     backgroundColor = .clear
     addSubview(button)
     if #available(iOS 26.0, *) {
-      button.configuration = .glass()
+        var config = UIButton.Configuration.glass()
+        config.image = UIImage(systemName: "trash")?
+            .withTintColor(.systemRed, renderingMode: .alwaysOriginal)
+        button.configuration = config
+    } else {
+        button.setImage(UIImage(systemName: "trash"), for: .normal)
+        button.tintColor = .systemRed
     }
   }
 
