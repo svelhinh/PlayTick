@@ -42,6 +42,7 @@
     "libraryFilterPlaying": "En cours",
     "libraryFilterCompleted": "Terminé",
     "libraryFilterDropped": "Abandonné",
+    "librarySearchHintTextMinified": "Rechercher",
     "librarySearchHintText": "Rechercher un jeu",
     "librarySearchResultsTitle": "Dans votre bibliothèque",
     "librarySearchNoResultsTitle": "Aucun jeu trouvé",

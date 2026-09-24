@@ -49,10 +49,19 @@ final class LiquidGlassSearchBar: UIView {
 final class LiquidGlassSearchBarPlatformView: NSObject, FlutterPlatformView, UISearchBarDelegate {
   private let searchBarView = LiquidGlassSearchBar()
   private let channel: FlutterMethodChannel
+  
+  private let placeholderMinifed: String
+  private let placeholder: String
 
-  init(channel: FlutterMethodChannel) {
+  init(channel: FlutterMethodChannel, args: [AnyHashable: Any]) {
     self.channel = channel
+    self.placeholderMinifed = args["placeholderMinifed"] as? String ?? ""
+    self.placeholder = args["placeholder"] as? String ?? ""
+
     super.init()
+
+    searchBarView.searchBar.placeholder = placeholderMinifed
+
     searchBarView.searchBar.delegate = self
     searchBarView.onClear = { [channel] in
       channel.invokeMethod("search", arguments: "")
@@ -77,10 +86,15 @@ final class LiquidGlassSearchBarPlatformView: NSObject, FlutterPlatformView, UIS
 
   func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
     channel.invokeMethod("editing", arguments: true)
+    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
+      guard searchBar.isFirstResponder else { return }
+      searchBar.placeholder = self.placeholder
+    }
   }
 
   func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
     DispatchQueue.main.async { [channel] in
+      searchBar.placeholder = self.placeholderMinifed
       channel.invokeMethod("editing", arguments: false)
     }
   }
@@ -105,6 +119,11 @@ final class LiquidGlassSearchBarFactory: NSObject, FlutterPlatformViewFactory {
       name: "playtick-liquid-glass-search/\(viewId)",
       binaryMessenger: messenger
     )
-    return LiquidGlassSearchBarPlatformView(channel: channel)
+    let params = args as? [AnyHashable: Any] ?? [:]
+    return LiquidGlassSearchBarPlatformView(channel: channel, args: params)
+  }
+
+  func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
+    FlutterStandardMessageCodec.sharedInstance()
   }
 }

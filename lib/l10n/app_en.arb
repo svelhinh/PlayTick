@@ -210,6 +210,11 @@
         "type": "text",
         "description": "The filter for dropped games in the library"
     },
+    "librarySearchHintTextMinified": "Search",
+    "@librarySearchHintTextMinified": {
+        "type": "text",
+        "description": "The hint text of the search bar in the library screen (minified)"
+    },
     "librarySearchHintText": "Search for a game",
     "@librarySearchHintText": {
         "type": "text",

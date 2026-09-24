@@ -141,6 +141,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get libraryFilterDropped => 'Dropped';
 
   @override
+  String get librarySearchHintTextMinified => 'Search';
+
+  @override
   String get librarySearchHintText => 'Search for a game';
 
   @override

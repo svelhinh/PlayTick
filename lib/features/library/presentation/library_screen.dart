@@ -300,7 +300,7 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOut,
-          width: _editing ? expandedWidth : 150,
+          width: _editing ? expandedWidth : 170,
           height: 56,
           child: UiKitView(
             viewType: 'playtick-liquid-glass-search',
@@ -322,6 +322,11 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
                 }
               });
             },
+            creationParams: {
+              'placeholderMinifed': appLoc.librarySearchHintTextMinified,
+              'placeholder': appLoc.librarySearchHintText,
+            },
+            creationParamsCodec: const StandardMessageCodec(),
           ),
         ),
       );

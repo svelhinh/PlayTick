@@ -350,6 +350,12 @@ abstract class AppLocalizations {
   /// **'Dropped'**
   String get libraryFilterDropped;
 
+  /// The hint text of the search bar in the library screen (minified)
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get librarySearchHintTextMinified;
+
   /// The hint text of the search bar in the library screen
   ///
   /// In en, this message translates to:
