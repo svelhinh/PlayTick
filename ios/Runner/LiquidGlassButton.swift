@@ -1,21 +1,18 @@
-import UIKit
-import Flutter
-
 final class LiquidGlassButton: UIView {
   let button = UIButton()
 
-  override init(frame: CGRect) {
-    super.init(frame: frame)
+  init(icon: String, tint: UIColor) {
+    super.init(frame: .zero)
     backgroundColor = .clear
     addSubview(button)
     if #available(iOS 26.0, *) {
-        var config = UIButton.Configuration.glass()
-        config.image = UIImage(systemName: "trash")?
-            .withTintColor(.systemRed, renderingMode: .alwaysOriginal)
-        button.configuration = config
+      var config = UIButton.Configuration.glass()
+      config.image = UIImage(systemName: icon)?
+        .withTintColor(tint, renderingMode: .alwaysOriginal)
+      button.configuration = config
     } else {
-        button.setImage(UIImage(systemName: "trash"), for: .normal)
-        button.tintColor = .systemRed
+      button.setImage(UIImage(systemName: icon), for: .normal)
+      button.tintColor = tint
     }
   }
 
@@ -30,10 +27,15 @@ final class LiquidGlassButton: UIView {
 }
 
 final class LiquidGlassButtonPlatformView: NSObject, FlutterPlatformView {
-  private let glassButton = LiquidGlassButton()
+  private let glassButton: LiquidGlassButton
   private let channel: FlutterMethodChannel
+  private let method: String
 
-  init(channel: FlutterMethodChannel) {
+  init(channel: FlutterMethodChannel, args: [AnyHashable: Any]) {
+    let icon = args["icon"] as? String ?? "trash"
+    let tint: UIColor = (args["tint"] as? String) == "label" ? .label : .systemRed
+    glassButton = LiquidGlassButton(icon: icon, tint: tint ?? .systemRed)
+    method = args["method"] as? String ?? "delete"
     self.channel = channel
     super.init()
     glassButton.button.addTarget(
@@ -44,7 +46,7 @@ final class LiquidGlassButtonPlatformView: NSObject, FlutterPlatformView {
   }
 
   @objc private func pressed() {
-    channel.invokeMethod("delete", arguments: nil)
+    channel.invokeMethod(method, arguments: nil)
   }
 
   func view() -> UIView { glassButton }
@@ -67,7 +69,11 @@ final class LiquidGlassButtonFactory: NSObject, FlutterPlatformViewFactory {
       name: "playtick-liquid-glass-button/\(viewId)",
       binaryMessenger: messenger
     )
+    let params = args as? [AnyHashable: Any] ?? [:]
+    return LiquidGlassButtonPlatformView(channel: channel, args: params)
+  }
 
-    return LiquidGlassButtonPlatformView(channel: channel)
+  func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
+    FlutterStandardMessageCodec.sharedInstance()
   }
 }

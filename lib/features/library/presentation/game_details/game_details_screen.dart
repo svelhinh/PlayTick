@@ -84,11 +84,39 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: theme.platform == TargetPlatform.iOS
+            ? Padding(
+                padding: const EdgeInsets.only(left: 16, bottom: 8),
+                child: SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: UiKitView(
+                    viewType: 'playtick-liquid-glass-button',
+                    creationParams: const {
+                      'icon': 'chevron.backward',
+                      'method': 'pop',
+                      'tint': 'label',
+                    },
+                    creationParamsCodec: const StandardMessageCodec(),
+                    onPlatformViewCreated: (viewId) {
+                      MethodChannel(
+                        'playtick-liquid-glass-button/$viewId',
+                      ).setMethodCallHandler((call) async {
+                        if (call.method == 'pop' && context.canPop()) {
+                          context.pop();
+                        }
+                      });
+                    },
+                  ),
+                ),
+              )
+            : null,
+        leadingWidth: theme.platform == TargetPlatform.iOS ? 60 : null,
         actions: [
           if (details != null)
             if (theme.platform == TargetPlatform.iOS)
               Padding(
-                padding: const EdgeInsets.only(right: 16),
+                padding: const EdgeInsets.only(right: 16, bottom: 8),
                 child: SizedBox(
                   width: 44,
                   height: 44,
@@ -114,6 +142,11 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
                         }
                       });
                     },
+                    creationParams: const {
+                      'icon': 'trash',
+                      'method': 'delete',
+                    },
+                    creationParamsCodec: const StandardMessageCodec(),
                   ),
                 ),
               )
