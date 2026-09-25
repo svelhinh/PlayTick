@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_shell.dart';
@@ -35,6 +38,25 @@ class GameDetailsScreen extends ConsumerStatefulWidget {
 class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
   LibraryGameDetails? _visibleDetails;
 
+  Future<void> _onDelete(BuildContext sheetContext, int gameIdInt) async {
+    final repository = ref.read(libraryRepositoryProvider);
+
+    if (sheetContext.mounted) {
+      Navigator.pop(sheetContext);
+    }
+
+    try {
+      await repository.removeGame(gameIdInt);
+      if (mounted && context.canPop()) {
+        popGameDetailsToLibrary(context);
+      }
+    } on Exception catch (e) {
+      if (mounted) {
+        context.showLibraryErrorSnackBar(e);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
@@ -63,124 +85,241 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
     final details = latestDetails ?? _visibleDetails;
 
     return Scaffold(
+      extendBodyBehindAppBar: theme.platform == TargetPlatform.iOS,
       appBar: AppBar(
-        actions: [
-          if (details != null)
-            IconButton(
-              onPressed: () async {
-                await showPlaytickSheet<DeleteGameSheet>(
-                  context: context,
-                  backgroundColor: theme.colorScheme.surface,
-                  builder: (sheetContext) => DeleteGameSheet(
-                    name: details.game.name,
-                    onDelete: () async {
-                      final repository = ref.read(libraryRepositoryProvider);
-
-                      if (sheetContext.mounted) {
-                        Navigator.pop(sheetContext);
-                      }
-
-                      try {
-                        await repository.removeGame(gameIdInt);
-                        if (context.mounted && context.canPop()) {
-                          popGameDetailsToLibrary(context);
+        backgroundColor: theme.platform == TargetPlatform.iOS
+            ? Colors.transparent
+            : null,
+        surfaceTintColor: theme.platform == TargetPlatform.iOS
+            ? Colors.transparent
+            : null,
+        elevation: theme.platform == TargetPlatform.iOS ? 0 : null,
+        scrolledUnderElevation: theme.platform == TargetPlatform.iOS ? 0 : null,
+        forceMaterialTransparency: theme.platform == TargetPlatform.iOS,
+        leading: theme.platform == TargetPlatform.iOS
+            ? Padding(
+                padding: const EdgeInsets.only(left: 16, bottom: 8),
+                child: SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: UiKitView(
+                    viewType: 'playtick-liquid-glass-button',
+                    creationParams: const {
+                      'icon': 'chevron.backward',
+                      'method': 'pop',
+                      'tint': 'label',
+                    },
+                    creationParamsCodec: const StandardMessageCodec(),
+                    onPlatformViewCreated: (viewId) {
+                      MethodChannel(
+                        'playtick-liquid-glass-button/$viewId',
+                      ).setMethodCallHandler((call) async {
+                        if (call.method == 'pop' && context.canPop()) {
+                          context.pop();
                         }
-                      } on Exception catch (e) {
-                        if (context.mounted) {
-                          context.showLibraryErrorSnackBar(e);
-                        }
-                      }
+                      });
                     },
                   ),
-                );
-              },
-              icon: Icon(
-                Icons.delete,
-                color: theme.colorScheme.error,
+                ),
+              )
+            : null,
+        leadingWidth: theme.platform == TargetPlatform.iOS ? 60 : null,
+        actions: [
+          if (details != null)
+            if (theme.platform == TargetPlatform.iOS)
+              Padding(
+                padding: const EdgeInsets.only(right: 16, bottom: 8),
+                child: SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: UiKitView(
+                    viewType: 'playtick-liquid-glass-button',
+                    onPlatformViewCreated: (viewId) {
+                      MethodChannel(
+                        'playtick-liquid-glass-button/$viewId',
+                      ).setMethodCallHandler((call) async {
+                        if (!mounted) {
+                          return;
+                        }
+                        if (call.method == 'delete') {
+                          await showPlaytickSheet<DeleteGameSheet>(
+                            context: context,
+                            backgroundColor: theme.colorScheme.surface,
+                            builder: (sheetContext) => DeleteGameSheet(
+                              name: details.game.name,
+                              onDelete: () =>
+                                  _onDelete(sheetContext, gameIdInt),
+                            ),
+                          );
+                        }
+                      });
+                    },
+                    creationParams: const {
+                      'icon': 'trash',
+                      'method': 'delete',
+                    },
+                    creationParamsCodec: const StandardMessageCodec(),
+                  ),
+                ),
+              )
+            else
+              IconButton(
+                onPressed: () async {
+                  await showPlaytickSheet<DeleteGameSheet>(
+                    context: context,
+                    backgroundColor: theme.colorScheme.surface,
+                    builder: (sheetContext) => DeleteGameSheet(
+                      name: details.game.name,
+                      onDelete: () => _onDelete(sheetContext, gameIdInt),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.delete,
+                  color: theme.colorScheme.error,
+                ),
               ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          gameAsync.when(
+            data: (_) {
+              if (details == null) {
+                return Center(
+                  child: ErrorStateCard(
+                    title: appLoc.gameDetailsNotFoundTitle,
+                    description: appLoc.gameDetailsNotFoundDescription,
+                  ),
+                );
+              }
+
+              final game = details.game;
+              final status = details.status;
+
+              return SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(
+                  16,
+                  theme.platform == TargetPlatform.iOS
+                      ? MediaQuery.paddingOf(context).top + kToolbarHeight + 24
+                      : 24,
+                  16,
+                  24 + MediaQuery.paddingOf(context).bottom,
+                ),
+                child: Column(
+                  children: [
+                    _TopInfo(
+                      game: game,
+                      status: status,
+                      totalPlaytime: details.totalPlaytime,
+                      onStatusChanged: (status) async {
+                        try {
+                          await ref
+                              .read(libraryRepositoryProvider)
+                              .updateGameStatus(game.id, status);
+                        } on Exception catch (e) {
+                          if (context.mounted) {
+                            context.showLibraryErrorSnackBar(e);
+                          }
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    _GameInfoCard(
+                      summary: game.summary,
+                      genres: game.genres,
+                      developer: game.developer,
+                      publisher: game.publisher,
+                      platforms: game.platforms,
+                      estimatedPlaytimes: game.estimatedPlaytimes,
+                    ),
+                    const SizedBox(height: 16),
+                    notesAsync.when(
+                      data: (notes) => GameNotesCard(
+                        notes: notes,
+                        gameId: game.id,
+                      ),
+                      error: (error, stackTrace) => ErrorStateCard(
+                        title: appLoc.somethingWentWrong,
+                        description: appLoc.somethingWentWrongDescription,
+                        compact: true,
+                        onRetry: () =>
+                            ref.invalidate(gameNotesProvider(game.id)),
+                      ),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                    ),
+                    const SizedBox(height: 16),
+                    PlaySessionsCard(
+                      playSessions: details.playSessions,
+                      gameId: game.id,
+                    ),
+                  ],
+                ),
+              );
+            },
+            error: (error, stackTrace) => Center(
+              child: ErrorStateCard(
+                title: appLoc.somethingWentWrong,
+                description: appLoc.somethingWentWrongDescription,
+                onRetry: () => ref.invalidate(libraryGameProvider(gameIdInt)),
+              ),
+            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+          ),
+          if (theme.platform == TargetPlatform.iOS)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: MediaQuery.paddingOf(context).top + kToolbarHeight + 48,
+              child: const IgnorePointer(child: _FadingBarBlur()),
             ),
         ],
       ),
-      body: gameAsync.when(
-        data: (_) {
-          if (details == null) {
-            return Center(
-              child: ErrorStateCard(
-                title: appLoc.gameDetailsNotFoundTitle,
-                description: appLoc.gameDetailsNotFoundDescription,
-              ),
-            );
-          }
+    );
+  }
+}
 
-          final game = details.game;
-          final status = details.status;
+final class _FadingBarBlur extends StatelessWidget {
+  const _FadingBarBlur();
 
-          return SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(
-              16,
-              24,
-              16,
-              24 + MediaQuery.paddingOf(context).bottom,
-            ),
-            child: Column(
-              children: [
-                _TopInfo(
-                  game: game,
-                  status: status,
-                  totalPlaytime: details.totalPlaytime,
-                  onStatusChanged: (status) async {
-                    try {
-                      await ref
-                          .read(libraryRepositoryProvider)
-                          .updateGameStatus(game.id, status);
-                    } on Exception catch (e) {
-                      if (context.mounted) {
-                        context.showLibraryErrorSnackBar(e);
-                      }
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                _GameInfoCard(
-                  summary: game.summary,
-                  genres: game.genres,
-                  developer: game.developer,
-                  publisher: game.publisher,
-                  platforms: game.platforms,
-                  estimatedPlaytimes: game.estimatedPlaytimes,
-                ),
-                const SizedBox(height: 16),
-                notesAsync.when(
-                  data: (notes) => GameNotesCard(
-                    notes: notes,
-                    gameId: game.id,
-                  ),
-                  error: (error, stackTrace) => ErrorStateCard(
-                    title: appLoc.somethingWentWrong,
-                    description: appLoc.somethingWentWrongDescription,
-                    compact: true,
-                    onRetry: () => ref.invalidate(gameNotesProvider(game.id)),
-                  ),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                ),
-                const SizedBox(height: 16),
-                PlaySessionsCard(
-                  playSessions: details.playSessions,
-                  gameId: game.id,
-                ),
-              ],
-            ),
-          );
+  @override
+  Widget build(BuildContext context) {
+    return ClipRect(
+      child: ShaderMask(
+        blendMode: BlendMode.dstIn,
+        shaderCallback: (bounds) {
+          return const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF000000),
+              Color(0xFF000000),
+              Color(0x00000000),
+            ],
+            stops: [0, 0.55, 1],
+          ).createShader(bounds);
         },
-        error: (error, stackTrace) => Center(
-          child: ErrorStateCard(
-            title: appLoc.somethingWentWrong,
-            description: appLoc.somethingWentWrongDescription,
-            onRetry: () => ref.invalidate(libraryGameProvider(gameIdInt)),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+          child: const SizedBox.expand(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xF2F9FAFC),
+                    Color(0x99F9FAFC),
+                    Color(0x00F9FAFC),
+                  ],
+                  stops: [0, 0.55, 1],
+                ),
+              ),
+            ),
           ),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );
   }
