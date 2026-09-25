@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:drift/native.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
 import 'package:playtick/app/router/app_router.dart';
+import 'package:playtick/app/router/app_shell.dart';
 import 'package:playtick/core/presentation/widgets/delete_dialog.dart';
 import 'package:playtick/core/presentation/widgets/error_state_card.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
@@ -116,12 +119,12 @@ void main() {
 
       await tester.tap(find.byType(NavigationDestination).at(0));
       await tester.pumpAndSettle();
-      expect(find.byType(GameDetailsScreen), findsNothing);
+      expect(find.byType(GameDetailsScreen, skipOffstage: false), findsNothing);
 
       await tester.tap(find.byType(NavigationDestination).at(1));
       await tester.pumpAndSettle();
       expect(find.byType(LibraryScreen), findsOneWidget);
-      expect(find.byType(GameDetailsScreen), findsNothing);
+      expect(find.byType(GameDetailsScreen, skipOffstage: false), findsNothing);
 
       await tester.tap(seeDetailsOnCard('Hollow Knight'));
       await tester.pumpAndSettle();
@@ -129,13 +132,74 @@ void main() {
 
       await tester.tap(find.byType(NavigationDestination).at(0));
       await tester.pumpAndSettle();
-      expect(find.byType(GameDetailsScreen), findsNothing);
+      expect(find.byType(GameDetailsScreen, skipOffstage: false), findsNothing);
 
       await tester.tap(find.byType(NavigationDestination).at(1));
       await tester.pumpAndSettle();
 
       expect(find.byType(LibraryScreen), findsOneWidget);
-      expect(find.byType(GameDetailsScreen), findsNothing);
+      expect(find.byType(GameDetailsScreen, skipOffstage: false), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'leaving details via the iOS tab bar removes them before Library is shown again',
+    (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+      try {
+        tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform_views,
+          (call) async => null,
+        );
+        addTearDown(
+          () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+            SystemChannels.platform_views,
+            null,
+          ),
+        );
+
+        Future<void> selectTab(int index) async {
+          final viewId = tester
+              .state<AppShellState>(find.byType(AppShell))
+              .platformViewId;
+          expect(viewId, isNotNull);
+
+          const codec = StandardMethodCodec();
+          await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+            'playtick-liquid-glass/$viewId',
+            codec.encodeMethodCall(MethodCall('selectIndex', index)),
+            (_) {},
+          );
+        }
+
+        await seedLibrary();
+        await pumpApp(tester);
+        await selectTab(1);
+        await tester.pumpAndSettle();
+
+        await tester.tap(seeDetailsOnCard('Hollow Knight'));
+        await tester.pumpAndSettle();
+        expect(find.byType(GameDetailsScreen), findsOneWidget);
+
+        await selectTab(0);
+        await tester.pump();
+        expect(
+          find.byType(GameDetailsScreen, skipOffstage: false),
+          findsNothing,
+        );
+
+        await selectTab(1);
+        await tester.pump();
+        expect(find.byType(LibraryScreen), findsOneWidget);
+        expect(
+          find.byType(GameDetailsScreen, skipOffstage: false),
+          findsNothing,
+        );
+        await tester.pumpAndSettle();
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
     },
   );
 

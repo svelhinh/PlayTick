@@ -22,33 +22,27 @@ void popGameDetailsToLibrary(BuildContext context) {
   }
 }
 
-void _leaveLibrary(
-  BuildContext context,
-  StatefulNavigationShell navigationShell,
-  int index,
-) {
-  final libraryCanPop = libraryNavigatorKey.currentState?.canPop() ?? false;
-  if (navigationShell.currentIndex == 1 && libraryCanPop) {
-    popGameDetailsToLibrary(context);
-  }
-
-  navigationShell.goBranch(index);
-}
-
-class AppShell extends ConsumerWidget {
+class AppShell extends ConsumerStatefulWidget {
   const AppShell({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
 
-  void _selectIndex(
-    BuildContext context,
-    WidgetRef ref,
-    StatefulNavigationShell navigationShell,
-    int index,
-  ) {
+  @override
+  ConsumerState<AppShell> createState() => AppShellState();
+}
+
+class AppShellState extends ConsumerState<AppShell> {
+  MethodChannel? _tabChannel;
+
+  @visibleForTesting
+  int? platformViewId;
+
+  void _selectIndex(int index) {
+    final navigationShell = widget.navigationShell;
+
     if (index != 1) {
       FocusManager.instance.primaryFocus?.unfocus();
-      _leaveLibrary(context, navigationShell, index);
+      _leaveLibrary(index);
       ref.read(librarySearchProvider.notifier).search('');
       clearNativeLibrarySearch();
       return;
@@ -57,8 +51,37 @@ class AppShell extends ConsumerWidget {
     navigationShell.goBranch(1, initialLocation: true);
   }
 
+  void _leaveLibrary(int index) {
+    final navigationShell = widget.navigationShell;
+    final libraryCanPop = libraryNavigatorKey.currentState?.canPop() ?? false;
+    if (navigationShell.currentIndex == 1 && libraryCanPop) {
+      popGameDetailsToLibrary(context);
+    }
+
+    navigationShell.goBranch(index);
+  }
+
+  void _bindTabChannel(int id) {
+    _tabChannel?.setMethodCallHandler(null);
+    platformViewId = id;
+    _tabChannel = MethodChannel('playtick-liquid-glass/$id')
+      ..setMethodCallHandler((call) async {
+        if (call.method != 'selectIndex' || !mounted) {
+          return;
+        }
+
+        _selectIndex(call.arguments as int);
+      });
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void dispose() {
+    _tabChannel?.setMethodCallHandler(null);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -84,33 +107,15 @@ class AppShell extends ConsumerWidget {
                         'library-label': appLoc.navigationLabelLibrary,
                       },
                       creationParamsCodec: const StandardMessageCodec(),
-                      onPlatformViewCreated: (id) {
-                        MethodChannel(
-                          'playtick-liquid-glass/$id',
-                        ).setMethodCallHandler(
-                          (call) async {
-                            if (call.method != 'selectIndex') {
-                              return;
-                            }
-
-                            _selectIndex(
-                              context,
-                              ref,
-                              navigationShell,
-                              call.arguments as int,
-                            );
-                          },
-                        );
-                      },
+                      onPlatformViewCreated: _bindTabChannel,
                     ),
                   ),
                 ),
               )
             else
               NavigationBar(
-                selectedIndex: navigationShell.currentIndex,
-                onDestinationSelected: (index) =>
-                    _selectIndex(context, ref, navigationShell, index),
+                selectedIndex: widget.navigationShell.currentIndex,
+                onDestinationSelected: _selectIndex,
                 destinations: [
                   NavigationDestination(
                     icon: const Icon(Icons.home_outlined),
@@ -126,7 +131,7 @@ class AppShell extends ConsumerWidget {
               ),
           ],
         ),
-        body: navigationShell,
+        body: widget.navigationShell,
       ),
     );
   }
