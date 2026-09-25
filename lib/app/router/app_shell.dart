@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/app_theme.dart';
+import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_search_notifier_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -43,6 +44,7 @@ class AppShellState extends ConsumerState<AppShell> {
       FocusManager.instance.primaryFocus?.unfocus();
       _leaveLibrary(index);
       ref.read(librarySearchProvider.notifier).search('');
+      clearNativeLibrarySearch();
       return;
     }
 

@@ -143,6 +143,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get libraryFilterDropped => 'Abandonné';
 
   @override
+  String get librarySearchHintTextMinified => 'Rechercher';
+
+  @override
   String get librarySearchHintText => 'Rechercher un jeu';
 
   @override
