@@ -4,9 +4,9 @@
 
 Your game library, your sessions, your playtime.
 
-**Android · Flutter · Riverpod · Drift / SQLite · IGDB · FR / EN**
+**Android · iOS · Flutter · Riverpod · Drift / SQLite · IGDB · FR / EN**
 
-PlayTick is an Android app for organizing your video game library and tracking the time you actually spend playing. Find a game, add it to your collection, choose its status, and record your sessions using a timer or manual entry.
+PlayTick is an Android and iOS app for organizing your video game library and tracking the time you actually spend playing. Find a game, add it to your collection, choose its status, and record your sessions using a timer or manual entry.
 
 This portfolio project implements a complete product flow: **pick a game → play → log a session → track your time**. Version 1 focuses on personal use, with no account required and user data stored on the device.
 
@@ -16,7 +16,13 @@ This portfolio project implements a complete product flow: **pick a game → pla
 | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | ![PlayTick home screen in English with an active play session](docs/screenshots/home-en.png) | ![Searching IGDB for Zelda games from the library](docs/screenshots/search-en.png) | ![Game details in English with metadata supplied by IGDB](docs/screenshots/game-details-en.png) |
 
-_Screenshots from Android v1, shown in English. The interface also supports French; see the localization section below._
+_Android, English._
+
+| Home                                                                                         | Library and native search                                                              | Game details                                                                                          |
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| ![PlayTick home on iPhone, English](docs/screenshots/home-ios-en.png)                        | ![iOS library with the native Liquid Glass search field](docs/screenshots/library-ios-en.png) | ![iOS game details with glass back and delete buttons](docs/screenshots/game-details-ios-en.png) |
+
+_iOS, English. The interface also supports French; see the localization section below._
 
 ## Features
 
@@ -28,7 +34,7 @@ _Screenshots from Android v1, shown in English. The interface also supports Fren
 - **Personal notes**: keep notes for each game and optional notes for individual sessions.
 - **French and English interface**: localized labels, messages, dates, and durations based on the supported device language.
 
-Version 1 targets **Android in light mode**. Its scope focuses on individual tracking: no accounts, cloud sync, console library imports, or social features. The Flutter project includes an iOS directory, but the v1 release targets Android.
+Version 1 targets **Android and iOS in light mode**. Its scope focuses on individual tracking: no accounts, cloud sync, console library imports, or social features. The domain, local library, and session rules are shared. On iOS 26, the tab bar, the library search field, and the game-details back and delete buttons use native Liquid Glass. The game-details top bar is a fading blur so the page scrolls underneath it. Earlier iOS versions keep the same behavior with standard controls. Android keeps the Material search field and icons.
 
 ## Product and technical decisions
 
@@ -38,7 +44,7 @@ A game's total playtime is calculated from its saved sessions. Editing or deleti
 
 ### A timer backed by a persisted timestamp
 
-The active session's start time (`startedAt`) is stored locally. Elapsed time is recalculated from the current time, allowing the session to be restored after the app is backgrounded or closed without a permanent Android service. When stopping a session, users can adjust its duration and add a note before saving.
+The active session's start time (`startedAt`) is stored locally. Elapsed time is recalculated from the current time, allowing the session to be restored after the app is backgrounded or closed without a permanent background service. When stopping a session, users can adjust its duration and add a note before saving.
 
 ### Personal data stored locally
 
@@ -48,7 +54,7 @@ Drift stores added games, their metadata, statuses, sessions, and notes in SQLit
 
 | Area                   | Technology                                           | Purpose                                                 |
 | ---------------------- | ---------------------------------------------------- | ------------------------------------------------------- |
-| Application            | Flutter / Dart                                       | Android interface and application logic                 |
+| Application            | Flutter / Dart                                       | Android and iOS interfaces and application logic        |
 | State and dependencies | Riverpod with code generation                        | Providers, asynchronous state, and repository injection |
 | Navigation             | GoRouter                                             | Home, library, and game detail routes                   |
 | Persistence            | Drift / SQLite                                       | Relational data, migrations, and reactive streams       |
@@ -113,8 +119,8 @@ Reference: [IGDB documentation — Game Localization](https://api-docs.igdb.com/
 ### Prerequisites
 
 - A Flutter SDK that includes **Dart ≥ 3.13.1 and < 4.0.0**, as required by `pubspec.yaml`. The development environment uses Flutter **3.47.2** and Dart **3.13.2**.
-- The Android SDK and a JDK compatible with the project's Gradle configuration (Java 17).
-- A running Android emulator or a physical device with USB debugging enabled.
+- For Android: the Android SDK, a JDK compatible with the project's Gradle configuration (Java 17), and an emulator or a device with USB debugging enabled.
+- For iOS: Xcode, with a simulator or device on iOS 15 or later. Liquid Glass requires iOS 26.
 - IGDB/Twitch credentials to search the game catalog.
 
 ### 1. Clone the repository and install dependencies
@@ -126,7 +132,7 @@ flutter doctor
 flutter pub get
 ```
 
-Resolve any Android setup issues reported by `flutter doctor` before launching the app.
+Resolve any Android or iOS setup issues reported by `flutter doctor` before launching the app.
 
 ### 2. Configure IGDB
 
