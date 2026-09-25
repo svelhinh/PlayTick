@@ -24,8 +24,5 @@ import UIKit
 
     let buttonFactory = LiquidGlassButtonFactory(messenger: registrar.messenger())
     registrar.register(buttonFactory, withId: "playtick-liquid-glass-button");
-
-    let barFactory = LiquidGlassBarFactory()
-    registrar.register(barFactory, withId: "playtick-liquid-glass-bar");
   }
 }
