@@ -26,8 +26,8 @@ void main() {
                 builder: (context) {
                   final appLoc = AppLocalizations.of(context)!;
                   return ErrorStateCard(
-                    title: appLoc.igdbSearchCardErrorTitle,
-                    description: appLoc.igdbSearchCardErrorDescription,
+                    title: appLoc.catalogSearchCardErrorTitle,
+                    description: appLoc.catalogSearchCardErrorDescription,
                     compact: true,
                     onRetry: () {},
                   );

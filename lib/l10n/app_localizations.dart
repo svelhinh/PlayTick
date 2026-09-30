@@ -377,26 +377,26 @@ abstract class AppLocalizations {
   /// The description of the no results card in the library screen for games not in your library
   ///
   /// In en, this message translates to:
-  /// **'No games match your search in your library or on IGDB.\n\nTry a different name or check the spelling.'**
+  /// **'No games match your search in your library or on the catalog.\n\nTry a different name or check the spelling.'**
   String get librarySearchNoResultsDescription;
 
-  /// The title of the IGDB search results in the library screen
+  /// The title of the catalog search results in the library screen
   ///
   /// In en, this message translates to:
-  /// **'IGDB results'**
-  String get igdbSearchResultsTitle;
+  /// **'Catalog results'**
+  String get catalogSearchResultsTitle;
 
-  /// The title of the error card in the IGDB search results
+  /// The title of the error card in the catalog search results
   ///
   /// In en, this message translates to:
   /// **'Unable to retrieve external results at the moment.'**
-  String get igdbSearchCardErrorTitle;
+  String get catalogSearchCardErrorTitle;
 
-  /// The description of the error card in the IGDB search results
+  /// The description of the error card in the catalog search results
   ///
   /// In en, this message translates to:
   /// **'Check your connection or try again later.'**
-  String get igdbSearchCardErrorDescription;
+  String get catalogSearchCardErrorDescription;
 
   /// The label of the select status sheet in the add game sheet
   ///

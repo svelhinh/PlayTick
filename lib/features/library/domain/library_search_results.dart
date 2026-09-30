@@ -4,28 +4,28 @@ import 'package:playtick/features/library/domain/library_game.dart';
 final class LibrarySearchResults {
   LibrarySearchResults({
     required this.libraryGames,
-    required this.igdbGames,
+    required this.catalogGames,
   });
 
   factory LibrarySearchResults.merge(
     String query,
     List<LibraryGame> libraryGames,
-    List<Game> igdbGames,
+    List<Game> catalogGames,
   ) {
     final searchQuery = query.toLowerCase().trim();
 
     if (searchQuery.isEmpty) {
       return LibrarySearchResults(
         libraryGames: [],
-        igdbGames: [],
+        catalogGames: [],
       );
     }
 
     final matchingLibraryGames = <LibraryGame>[];
     final libraryIds = {for (final game in libraryGames) game.gameId};
 
-    final matchingIgdbGames = [
-      for (final game in igdbGames)
+    final matchingCatalogGames = [
+      for (final game in catalogGames)
         if (!libraryIds.contains(game.id)) game,
     ];
 
@@ -37,10 +37,10 @@ final class LibrarySearchResults {
 
     return LibrarySearchResults(
       libraryGames: matchingLibraryGames,
-      igdbGames: matchingIgdbGames,
+      catalogGames: matchingCatalogGames,
     );
   }
 
   final List<LibraryGame> libraryGames;
-  final List<Game> igdbGames;
+  final List<Game> catalogGames;
 }

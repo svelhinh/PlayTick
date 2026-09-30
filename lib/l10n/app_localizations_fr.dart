@@ -156,17 +156,17 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get librarySearchNoResultsDescription =>
-      'Aucun jeu ne correspond à votre recherche dans votre bibliothèque ou sur IGDB.\n\nEssayez un autre nom ou vérifiez l\'orthographe.';
+      'Aucun jeu ne correspond à votre recherche dans votre bibliothèque ou sur le catalogue.\n\nEssayez un autre nom ou vérifiez l\'orthographe.';
 
   @override
-  String get igdbSearchResultsTitle => 'Résultats IGDB';
+  String get catalogSearchResultsTitle => 'Résultats du catalogue';
 
   @override
-  String get igdbSearchCardErrorTitle =>
+  String get catalogSearchCardErrorTitle =>
       'Impossible de récupérer les résultats externes pour le moment.';
 
   @override
-  String get igdbSearchCardErrorDescription =>
+  String get catalogSearchCardErrorDescription =>
       'Vérifiez votre connexion ou réessayez plus tard.';
 
   @override

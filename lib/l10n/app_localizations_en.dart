@@ -154,17 +154,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get librarySearchNoResultsDescription =>
-      'No games match your search in your library or on IGDB.\n\nTry a different name or check the spelling.';
+      'No games match your search in your library or on the catalog.\n\nTry a different name or check the spelling.';
 
   @override
-  String get igdbSearchResultsTitle => 'IGDB results';
+  String get catalogSearchResultsTitle => 'Catalog results';
 
   @override
-  String get igdbSearchCardErrorTitle =>
+  String get catalogSearchCardErrorTitle =>
       'Unable to retrieve external results at the moment.';
 
   @override
-  String get igdbSearchCardErrorDescription =>
+  String get catalogSearchCardErrorDescription =>
       'Check your connection or try again later.';
 
   @override
