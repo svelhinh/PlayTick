@@ -230,25 +230,25 @@
         "type": "text",
         "description": "The title of the no results card in the library screen for games not in your library"
     },
-    "librarySearchNoResultsDescription": "No games match your search in your library or on IGDB.\n\nTry a different name or check the spelling.",
+    "librarySearchNoResultsDescription": "No games match your search in your library or on the catalog.\n\nTry a different name or check the spelling.",
     "@librarySearchNoResultsDescription": {
         "type": "text",
         "description": "The description of the no results card in the library screen for games not in your library"
     },
-    "igdbSearchResultsTitle": "IGDB results",
-    "@igdbSearchResultsTitle": {
+    "catalogSearchResultsTitle": "Catalog results",
+    "@catalogSearchResultsTitle": {
         "type": "text",
-        "description": "The title of the IGDB search results in the library screen"
+        "description": "The title of the catalog search results in the library screen"
     },
-    "igdbSearchCardErrorTitle": "Unable to retrieve external results at the moment.",
-    "@igdbSearchCardErrorTitle": {
+    "catalogSearchCardErrorTitle": "Unable to retrieve external results at the moment.",
+    "@catalogSearchCardErrorTitle": {
         "type": "text",
-        "description": "The title of the error card in the IGDB search results"
+        "description": "The title of the error card in the catalog search results"
     },
-    "igdbSearchCardErrorDescription": "Check your connection or try again later.",
-    "@igdbSearchCardErrorDescription": {
+    "catalogSearchCardErrorDescription": "Check your connection or try again later.",
+    "@catalogSearchCardErrorDescription": {
         "type": "text",
-        "description": "The description of the error card in the IGDB search results"
+        "description": "The description of the error card in the catalog search results"
     },
     "addGameSheetSelectStatus": "Add as",
     "@addGameSheetSelectStatus": {

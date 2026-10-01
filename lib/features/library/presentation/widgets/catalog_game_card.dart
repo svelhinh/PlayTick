@@ -4,8 +4,8 @@ import 'package:playtick/features/library/presentation/extensions/game_subtitle_
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
-class IgdbGameCard extends StatelessWidget {
-  const IgdbGameCard({
+class CatalogGameCard extends StatelessWidget {
+  const CatalogGameCard({
     required this.game,
     super.key,
     this.onPressed,

@@ -19,7 +19,7 @@ import 'package:playtick/features/library/domain/library_search_repository.dart'
 import 'package:playtick/features/library/presentation/game_details/game_details_screen.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
-import 'package:playtick/features/library/presentation/widgets/igdb_game_card.dart';
+import 'package:playtick/features/library/presentation/widgets/catalog_game_card.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/features/library/providers/library_search_repository_provider.dart';
@@ -464,17 +464,17 @@ void main() {
         findsOneWidget,
       );
 
-      expect(find.text('IGDB results'), findsOneWidget);
+      expect(find.text('Catalog results'), findsOneWidget);
       expect(
         find.descendant(
-          of: find.byType(IgdbGameCard),
+          of: find.byType(CatalogGameCard),
           matching: find.text('Celeste'),
         ),
         findsOneWidget,
       );
       expect(
         find.descendant(
-          of: find.byType(IgdbGameCard),
+          of: find.byType(CatalogGameCard),
           matching: find.text('Hollow Knight'),
         ),
         findsNothing,
@@ -535,13 +535,13 @@ void main() {
       await openLibrary(tester);
       await searchFor(tester, 'hollow');
 
-      expect(find.byType(IgdbGameCard), findsOneWidget);
+      expect(find.byType(CatalogGameCard), findsOneWidget);
 
       await tester.tap(find.byIcon(Icons.close));
       await tester.pumpAndSettle();
 
       expect(find.widgetWithText(TextField, 'hollow'), findsNothing);
-      expect(find.byType(IgdbGameCard), findsNothing);
+      expect(find.byType(CatalogGameCard), findsNothing);
       expect(find.text('4 games'), findsOneWidget);
       expect(find.byType(ChoiceChip), findsWidgets);
     },
@@ -564,7 +564,7 @@ void main() {
         ),
         findsOneWidget,
       );
-      expect(find.byType(IgdbGameCard), findsNothing);
+      expect(find.byType(CatalogGameCard), findsNothing);
       expect(
         find.text('Unable to retrieve external results at the moment.'),
         findsOneWidget,
@@ -589,9 +589,9 @@ void main() {
         ),
         findsOneWidget,
       );
-      expect(find.byType(IgdbGameCard), findsNothing);
+      expect(find.byType(CatalogGameCard), findsNothing);
       expect(find.text('No games found'), findsOneWidget);
-      expect(find.text('IGDB results'), findsNothing);
+      expect(find.text('Catalog results'), findsNothing);
       expect(
         find.text('Unable to retrieve external results at the moment.'),
         findsNothing,
@@ -608,7 +608,7 @@ void main() {
       await searchFor(tester, 'zzzzzz');
 
       expect(find.text('No games found'), findsOneWidget);
-      expect(find.text('IGDB results'), findsNothing);
+      expect(find.text('Catalog results'), findsNothing);
     },
   );
 
@@ -626,7 +626,7 @@ void main() {
         find.text('Unable to retrieve external results at the moment.'),
         findsOneWidget,
       );
-      expect(find.byType(IgdbGameCard), findsNothing);
+      expect(find.byType(CatalogGameCard), findsNothing);
 
       await tester.tap(find.text('Retry'));
       await tester.pump();
@@ -639,7 +639,7 @@ void main() {
       );
       expect(
         find.descendant(
-          of: find.byType(IgdbGameCard),
+          of: find.byType(CatalogGameCard),
           matching: find.text('Celeste'),
         ),
         findsOneWidget,
@@ -656,7 +656,7 @@ void main() {
 
     await tester.tap(
       find.descendant(
-        of: find.byType(IgdbGameCard),
+        of: find.byType(CatalogGameCard),
         matching: find.text('Add'),
       ),
     );
@@ -671,7 +671,7 @@ void main() {
       await tester.tap(find.widgetWithText(FilledButton, 'Add').last);
       await tester.pumpAndSettle();
 
-      expect(find.byType(IgdbGameCard), findsNothing);
+      expect(find.byType(CatalogGameCard), findsNothing);
       expect(
         find.descendant(
           of: find.byType(LibraryGameCard),
@@ -700,7 +700,7 @@ void main() {
       await tester.tap(find.widgetWithText(FilledButton, 'Add').last);
       await tester.pumpAndSettle();
 
-      expect(find.byType(IgdbGameCard), findsNothing);
+      expect(find.byType(CatalogGameCard), findsNothing);
       expect(
         find.descendant(
           of: find.byType(LibraryGameCard),

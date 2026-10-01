@@ -22,7 +22,7 @@ void main() {
 
     expect(results.libraryGames, hasLength(1));
     expect(results.libraryGames.single.gameId, 1);
-    expect(results.igdbGames, isEmpty);
+    expect(results.catalogGames, isEmpty);
   });
 
   test('keeps a local match and an IGDB game with another id', () {
@@ -34,8 +34,8 @@ void main() {
 
     expect(results.libraryGames, hasLength(1));
     expect(results.libraryGames.single.gameId, 1);
-    expect(results.igdbGames, hasLength(1));
-    expect(results.igdbGames.single.id, 2);
+    expect(results.catalogGames, hasLength(1));
+    expect(results.catalogGames.single.id, 2);
   });
 
   test('returns nothing when the query is empty', () {
@@ -46,7 +46,7 @@ void main() {
     );
 
     expect(results.libraryGames, isEmpty);
-    expect(results.igdbGames, isEmpty);
+    expect(results.catalogGames, isEmpty);
   });
 
   test('matches local names case-insensitively', () {
@@ -58,7 +58,7 @@ void main() {
 
     expect(results.libraryGames, hasLength(1));
     expect(results.libraryGames.single.name, 'The Legend of Zelda');
-    expect(results.igdbGames, isEmpty);
+    expect(results.catalogGames, isEmpty);
   });
 
   test('excludes local games whose name does not contain the query', () {
@@ -69,8 +69,8 @@ void main() {
     );
 
     expect(results.libraryGames, isEmpty);
-    expect(results.igdbGames, hasLength(1));
-    expect(results.igdbGames.single.id, 2);
+    expect(results.catalogGames, hasLength(1));
+    expect(results.catalogGames.single.id, 2);
   });
 
   test(
@@ -83,9 +83,9 @@ void main() {
       );
 
       expect(results.libraryGames, isEmpty);
-      expect(results.igdbGames, hasLength(1));
-      expect(results.igdbGames.single.id, 2);
-      expect(results.igdbGames.single.name, 'Super Mario Odyssey');
+      expect(results.catalogGames, hasLength(1));
+      expect(results.catalogGames.single.id, 2);
+      expect(results.catalogGames.single.name, 'Super Mario Odyssey');
     },
   );
 }

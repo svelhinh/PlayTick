@@ -23,8 +23,8 @@ import 'package:playtick/features/library/presentation/providers/library_filter_
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_search_games_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_search_notifier_provider.dart';
+import 'package:playtick/features/library/presentation/widgets/catalog_game_card.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
-import 'package:playtick/features/library/presentation/widgets/igdb_game_card.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
@@ -40,7 +40,7 @@ class LibraryScreen extends ConsumerWidget {
     final filter = ref.watch(libraryFilterProvider);
     final search = ref.watch(librarySearchProvider);
     final debouncedSearch = ref.watch(debouncedLibrarySearchProvider);
-    final igdbGamesAsync = ref.watch(librarySearchGamesProvider);
+    final catalogGamesAsync = ref.watch(librarySearchGamesProvider);
 
     return Expanded(
       child: gamesAsync.when(
@@ -63,12 +63,12 @@ class LibraryScreen extends ConsumerWidget {
           }
 
           if (search.isNotEmpty) {
-            final igdbGames = igdbGamesAsync.value ?? [];
+            final catalogGames = catalogGamesAsync.value ?? [];
             final isDebouncing = search.trim() != debouncedSearch.trim();
             final searchResults = LibrarySearchResults.merge(
               search,
               games,
-              igdbGames,
+              catalogGames,
             );
 
             return Padding(
@@ -85,26 +85,28 @@ class LibraryScreen extends ConsumerWidget {
 
                   const SizedBox(height: 12),
 
-                  if (searchResults.igdbGames.isNotEmpty)
-                    _IgdbGamesList(games: searchResults.igdbGames)
+                  if (searchResults.catalogGames.isNotEmpty)
+                    _CatalogGamesList(games: searchResults.catalogGames)
                   else if (!isDebouncing &&
-                      (igdbGamesAsync.isLoading || igdbGamesAsync.hasError))
+                      (catalogGamesAsync.isLoading ||
+                          catalogGamesAsync.hasError))
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          appLoc.igdbSearchResultsTitle,
+                          appLoc.catalogSearchResultsTitle,
                           style: theme.textTheme.titleSmall,
                         ),
                         const SizedBox(height: 12),
-                        if (igdbGamesAsync.isLoading)
+                        if (catalogGamesAsync.isLoading)
                           const Center(
                             child: CircularProgressIndicator(),
                           )
                         else
                           ErrorStateCard(
-                            title: appLoc.igdbSearchCardErrorTitle,
-                            description: appLoc.igdbSearchCardErrorDescription,
+                            title: appLoc.catalogSearchCardErrorTitle,
+                            description:
+                                appLoc.catalogSearchCardErrorDescription,
                             onRetry: () => ref.invalidate(
                               librarySearchGamesProvider,
                             ),
@@ -549,8 +551,8 @@ final class _LibraryGamesList extends StatelessWidget {
   }
 }
 
-final class _IgdbGamesList extends ConsumerWidget {
-  const _IgdbGamesList({
+final class _CatalogGamesList extends ConsumerWidget {
+  const _CatalogGamesList({
     required this.games,
   });
 
@@ -565,7 +567,7 @@ final class _IgdbGamesList extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          appLoc.igdbSearchResultsTitle,
+          appLoc.catalogSearchResultsTitle,
           style: theme.textTheme.titleSmall,
         ),
         const SizedBox(height: 12),
@@ -579,7 +581,7 @@ final class _IgdbGamesList extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(
                 vertical: 12,
               ),
-              child: IgdbGameCard(
+              child: CatalogGameCard(
                 game: games[index],
                 onPressed: () async {
                   await showPlaytickSheet<void>(
