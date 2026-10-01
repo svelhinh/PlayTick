@@ -1,5 +1,7 @@
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
+import 'package:playtick/features/library/data/demo/demo_library_helper.dart';
+import 'package:playtick/features/library/data/drift_library_repository.dart';
 import 'package:playtick/features/library/data/igdb/igdb_credentials.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,13 +13,19 @@ String databaseNameFor(IgdbCredentials credentials) {
 
 @Riverpod(keepAlive: true)
 AppDatabase database(Ref ref) {
-  final database = AppDatabase(
-    driftDatabase(
-      name: databaseNameFor(IgdbCredentials.fromEnvironment()),
-    ),
+  final name = databaseNameFor(IgdbCredentials.fromEnvironment());
+  late final AppDatabase database;
+
+  database = AppDatabase(
+    driftDatabase(name: name),
+    onCreated: name == 'playtick_demo'
+        ? () => seedDemoLibrary(
+            DriftLibraryRepository(database),
+            now: DateTime.now(),
+          )
+        : null,
   );
 
   ref.onDispose(database.close);
-
   return database;
 }

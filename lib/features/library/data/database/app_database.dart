@@ -14,7 +14,9 @@ part 'app_database.g.dart';
   tables: [Games, UserGames, PlaySessions, ActivePlaySessions, GameNotes],
 )
 final class AppDatabase extends _$AppDatabase {
-  AppDatabase(super.e);
+  AppDatabase(super.e, {this.onCreated});
+
+  final Future<void> Function()? onCreated;
 
   @override
   int get schemaVersion => 5;
@@ -23,6 +25,7 @@ final class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (migrator) async {
       await migrator.createAll();
+      await onCreated?.call();
     },
     onUpgrade: (migrator, from, to) async {
       if (from < 2) {
