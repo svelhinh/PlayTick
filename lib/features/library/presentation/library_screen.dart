@@ -23,8 +23,8 @@ import 'package:playtick/features/library/presentation/providers/library_filter_
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_search_games_provider.dart';
 import 'package:playtick/features/library/presentation/providers/library_search_notifier_provider.dart';
-import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/features/library/presentation/widgets/catalog_game_card.dart';
+import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
