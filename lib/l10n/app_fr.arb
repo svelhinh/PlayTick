@@ -1,6 +1,7 @@
 {
     "@@locale": "fr",
     "appName": "PlayTick",
+    "demo": "Démo",
     "add": "Ajouter",
     "cancel": "Annuler",
     "retry": "Réessayer",

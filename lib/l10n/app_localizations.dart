@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'PlayTick'**
   String get appName;
 
+  /// The text of the demo badge
+  ///
+  /// In en, this message translates to:
+  /// **'Demo'**
+  String get demo;
+
   /// The text of the button to add an item
   ///
   /// In en, this message translates to:

@@ -13,6 +13,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appName => 'PlayTick';
 
   @override
+  String get demo => 'Demo';
+
+  @override
   String get add => 'Add';
 
   @override

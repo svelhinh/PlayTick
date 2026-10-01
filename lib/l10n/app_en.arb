@@ -5,6 +5,11 @@
         "type": "text",
         "description": "The name of the app"
     },
+    "demo": "Demo",
+    "@demo": {
+        "type": "text",
+        "description": "The text of the demo badge"
+    },
     "add": "Add",
     "@add": {
         "type": "text",

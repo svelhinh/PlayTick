@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
+import 'package:playtick/core/presentation/widgets/demo_badge.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/error_state_card.dart';
 import 'package:playtick/core/presentation/widgets/playtick_sheet.dart';
@@ -26,6 +27,7 @@ import 'package:playtick/features/library/presentation/providers/library_search_
 import 'package:playtick/features/library/presentation/widgets/catalog_game_card.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
+import 'package:playtick/features/library/providers/demo_mode_provider.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -190,6 +192,7 @@ class LibraryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final isDemo = ref.watch(demoModeProvider);
 
     return SafeArea(
       bottom: theme.platform != TargetPlatform.iOS,
@@ -220,14 +223,31 @@ class LibraryScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 24),
-                          Text(
-                            appLoc.libraryTitle,
-                            style: theme.textTheme.headlineLarge,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            appLoc.librarySubtitle,
-                            style: theme.textTheme.bodyMedium,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      appLoc.libraryTitle,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: theme.textTheme.headlineLarge,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      appLoc.librarySubtitle,
+                                      style: theme.textTheme.bodyMedium,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              if (isDemo) ...[
+                                const SizedBox(width: 8),
+                                const DemoBadge(),
+                              ],
+                            ],
                           ),
                           const SizedBox(height: 12),
                           if (theme.platform != TargetPlatform.iOS)

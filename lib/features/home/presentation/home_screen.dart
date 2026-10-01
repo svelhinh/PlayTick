@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
 import 'package:playtick/core/assets/app_assets.dart';
+import 'package:playtick/core/presentation/widgets/demo_badge.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/core/presentation/widgets/playtick_sheet.dart';
@@ -16,6 +17,7 @@ import 'package:playtick/features/library/presentation/extensions/library_except
 import 'package:playtick/features/library/presentation/extensions/playtime_localization.dart';
 import 'package:playtick/features/library/presentation/providers/library_games_provider.dart';
 import 'package:playtick/features/library/presentation/widgets/game_cover_image.dart';
+import 'package:playtick/features/library/providers/demo_mode_provider.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
@@ -54,6 +56,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         .where((game) => game.gameId == activeSession?.gameId)
         .firstOrNull;
 
+    final isDemo = ref.watch(demoModeProvider);
+
     return SafeArea(
       bottom: Theme.of(context).platform != TargetPlatform.iOS,
       child: Padding(
@@ -70,12 +74,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   height: 26,
                 ),
                 const SizedBox(width: 2),
-                Text(
-                  appLoc.appName.substring(1),
-                  style: theme.textTheme.headlineLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
+                Expanded(
+                  child: Text(
+                    appLoc.appName.substring(1),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.headlineLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
+                if (isDemo) ...[
+                  const SizedBox(width: 8),
+                  const DemoBadge(),
+                ],
               ],
             ),
             const SizedBox(height: 24),
