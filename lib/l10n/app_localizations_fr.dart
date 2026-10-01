@@ -13,6 +13,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appName => 'PlayTick';
 
   @override
+  String get demo => 'Démo';
+
+  @override
   String get add => 'Ajouter';
 
   @override
@@ -432,4 +435,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get gameNoteNotFoundException => 'Note de jeu introuvable.';
+
+  @override
+  String get demoSheetTitle => 'Mode démo';
+
+  @override
+  String get demoSheetDescription =>
+      'PlayTick utilise des données de démo locales car les identifiants IGDB ne sont pas configurés.\n\nVous pouvez explorer la bibliothèque, les sessions, les notes et les statistiques normalement.';
+
+  @override
+  String get demoSheetButton => 'Restaurer les données de démo';
 }

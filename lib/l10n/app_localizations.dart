@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'PlayTick'**
   String get appName;
 
+  /// The text of the demo badge
+  ///
+  /// In en, this message translates to:
+  /// **'Demo'**
+  String get demo;
+
   /// The text of the button to add an item
   ///
   /// In en, this message translates to:
@@ -865,6 +871,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Game note not found.'**
   String get gameNoteNotFoundException;
+
+  /// The title of the demo sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Demo mode'**
+  String get demoSheetTitle;
+
+  /// The description of the demo sheet
+  ///
+  /// In en, this message translates to:
+  /// **'PlayTick is using local demo data because IGDB credentials are not configured.\n\nYou can explore the library, sessions, notes and statistics normally.'**
+  String get demoSheetDescription;
+
+  /// The text of the button to restore the demo data
+  ///
+  /// In en, this message translates to:
+  /// **'Restore demo data'**
+  String get demoSheetButton;
 }
 
 class _AppLocalizationsDelegate

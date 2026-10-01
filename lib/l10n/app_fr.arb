@@ -1,6 +1,7 @@
 {
     "@@locale": "fr",
     "appName": "PlayTick",
+    "demo": "Démo",
     "add": "Ajouter",
     "cancel": "Annuler",
     "retry": "Réessayer",
@@ -127,5 +128,8 @@
     "duplicateActivePlaySessionException": "Session en cours déjà existante.",
     "activePlaySessionNotFoundException": "Session en cours introuvable.",
     "invalidGameNoteException": "Note de jeu invalide.",
-    "gameNoteNotFoundException": "Note de jeu introuvable."
+    "gameNoteNotFoundException": "Note de jeu introuvable.",
+    "demoSheetTitle": "Mode démo",
+    "demoSheetDescription": "PlayTick utilise des données de démo locales car les identifiants IGDB ne sont pas configurés.\n\nVous pouvez explorer la bibliothèque, les sessions, les notes et les statistiques normalement.",
+    "demoSheetButton": "Restaurer les données de démo"
 }

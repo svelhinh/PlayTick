@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/app_theme.dart';
+import 'package:playtick/core/presentation/widgets/demo_badge.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_search_notifier_provider.dart';
+import 'package:playtick/features/library/providers/demo_library_restorer_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
 final libraryNavigatorKey = GlobalKey<NavigatorState>(
@@ -131,7 +133,10 @@ class AppShellState extends ConsumerState<AppShell> {
               ),
           ],
         ),
-        body: widget.navigationShell,
+        body: DemoRestoreScope(
+          onRestore: () => ref.read(demoLibraryRestorerProvider).restore(),
+          child: widget.navigationShell,
+        ),
       ),
     );
   }

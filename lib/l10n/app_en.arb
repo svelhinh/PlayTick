@@ -5,6 +5,11 @@
         "type": "text",
         "description": "The name of the app"
     },
+    "demo": "Demo",
+    "@demo": {
+        "type": "text",
+        "description": "The text of the demo badge"
+    },
     "add": "Add",
     "@add": {
         "type": "text",
@@ -685,5 +690,20 @@
     "@gameNoteNotFoundException": {
         "type": "text",
         "description": "The error message when a game note is not found"
+    },
+    "demoSheetTitle": "Demo mode",
+    "@demoSheetTitle": {
+        "type": "text",
+        "description": "The title of the demo sheet"
+    },
+    "demoSheetDescription": "PlayTick is using local demo data because IGDB credentials are not configured.\n\nYou can explore the library, sessions, notes and statistics normally.",
+    "@demoSheetDescription": {
+        "type": "text",
+        "description": "The description of the demo sheet"
+    },
+    "demoSheetButton": "Restore demo data",
+    "@demoSheetButton": {
+        "type": "text",
+        "description": "The text of the button to restore the demo data"
     }
 }
