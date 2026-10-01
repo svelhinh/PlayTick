@@ -26,14 +26,13 @@ void main() {
 
     AppDatabase open() {
       late final AppDatabase database;
-      database = AppDatabase(
+      return database = AppDatabase(
         NativeDatabase(file),
         onCreated: () => seedDemoLibrary(
           DriftLibraryRepository(database, now: () => now),
           now: now,
         ),
       );
-      return database;
     }
 
     final created = open();
