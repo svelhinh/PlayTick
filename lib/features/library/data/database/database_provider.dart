@@ -1,6 +1,6 @@
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
-import 'package:playtick/features/library/data/demo/demo_library.dart';
+import 'package:playtick/features/library/data/demo/demo_library_helper.dart';
 import 'package:playtick/features/library/data/drift_library_repository.dart';
 import 'package:playtick/features/library/data/igdb/igdb_credentials.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

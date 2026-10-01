@@ -1,4 +1,6 @@
+import 'package:playtick/features/library/data/database/app_database.dart';
 import 'package:playtick/features/library/data/demo/library_demo_catalog.dart';
+import 'package:playtick/features/library/data/drift_library_repository.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_repository.dart';
 
@@ -32,5 +34,18 @@ Future<void> seedDemoLibrary(
   await repository.addGameNote(
     games[0].id,
     'This is a note for the first game',
+  );
+}
+
+Future<void> restoreDemoLibrary(
+  AppDatabase database, {
+  required DateTime now,
+}) async {
+  await database.delete(database.userGames).go();
+  await database.delete(database.games).go();
+
+  await seedDemoLibrary(
+    DriftLibraryRepository(database, now: () => now),
+    now: now,
   );
 }

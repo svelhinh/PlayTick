@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
-import 'package:playtick/features/library/data/demo/demo_library.dart';
+import 'package:playtick/features/library/data/demo/demo_library_helper.dart';
 import 'package:playtick/features/library/data/demo/library_demo_catalog.dart';
 import 'package:playtick/features/library/data/drift_library_repository.dart';
 

@@ -1,7 +1,7 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
-import 'package:playtick/features/library/data/demo/demo_library.dart';
+import 'package:playtick/features/library/data/demo/demo_library_helper.dart';
 import 'package:playtick/features/library/data/demo/library_demo_catalog.dart';
 import 'package:playtick/features/library/data/drift_library_repository.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
@@ -53,4 +53,37 @@ void main() {
       );
     },
   );
+
+  test('restoreDemoLibrary returns the seeded library and clears the active session', () async {
+    final database = AppDatabase(NativeDatabase.memory());
+    final now = DateTime(2026, 10, 1, 12);
+    final repository = DriftLibraryRepository(database, now: () => now);
+    addTearDown(database.close);
+
+    await seedDemoLibrary(repository, now: now);
+
+    final catalog = LibraryDemoCatalog.games;
+    await repository.updateGameStatus(catalog[1].id, GameStatus.wantToPlay);
+    await repository.startActivePlaySession(catalog[0].id);
+
+    final note = (await repository.watchGameNotes(catalog[0].id).first).single;
+    await repository.updateGameNote(note.id, 'Changed note');
+
+    await restoreDemoLibrary(database, now: now);
+
+    final games = await repository.watchLibraryGames().first;
+    expect(games, hasLength(5));
+
+    final completed = await repository.watchGame(catalog[1].id).first;
+    expect(completed!.status, GameStatus.completed);
+    expect(completed.playSessions.single.duration, const Duration(hours: 2));
+
+    final notes = await repository.watchGameNotes(catalog[0].id).first;
+    expect(notes.single.content, 'This is a note for the first game');
+    expect(await repository.watchActivePlaySession().first, isNull);
+    expect(
+      await repository.watchWeeklyPlaytime().first,
+      const Duration(hours: 6),
+    );
+  });
 }
