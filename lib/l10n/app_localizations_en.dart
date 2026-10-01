@@ -433,4 +433,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gameNoteNotFoundException => 'Game note not found.';
+
+  @override
+  String get demoSheetTitle => 'Demo mode';
+
+  @override
+  String get demoSheetDescription =>
+      'PlayTick is using local demo data because IGDB credentials are not configured.\n\nYou can explore the library, sessions, notes and statistics normally.';
+
+  @override
+  String get demoSheetButton => 'Restore demo data';
 }
