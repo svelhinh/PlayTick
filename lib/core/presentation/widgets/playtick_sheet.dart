@@ -8,6 +8,7 @@ Future<T?> showPlaytickSheet<T>({
   bool isScrollControlled = true,
   Color? backgroundColor,
 }) {
+  final safeBottom = MediaQuery.paddingOf(context).bottom;
   return showModalBottomSheet<T>(
     context: context,
     useRootNavigator: Theme.of(context).platform == TargetPlatform.iOS,
@@ -15,6 +16,16 @@ Future<T?> showPlaytickSheet<T>({
     showDragHandle: showDragHandle,
     useSafeArea: useSafeArea,
     backgroundColor: backgroundColor,
-    builder: (context) => builder(context),
+    builder: (sheetContext) {
+      final keyboardInset = MediaQuery.viewInsetsOf(sheetContext).bottom;
+      return Padding(
+        padding: EdgeInsets.only(bottom: keyboardInset > 0 ? 0 : safeBottom),
+        child: MediaQuery.removePadding(
+          context: sheetContext,
+          removeBottom: true,
+          child: builder(sheetContext),
+        ),
+      );
+    },
   );
 }

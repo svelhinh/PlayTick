@@ -705,5 +705,15 @@
     "@demoSheetButton": {
         "type": "text",
         "description": "The text of the button to restore the demo data"
+    },
+    "demoRestoreTitle": "Restore the demo data",
+    "@demoRestoreTitle": {
+        "type": "text",
+        "description": "The title of the confirmation dialog that restores demo data"
+    },
+    "demoRestoreDescription": "Are you sure you want to restore the demo data?\n\nThe current demo library, including sessions, notes, and the active session, will be replaced by the initial dataset. This action is irreversible.",
+    "@demoRestoreDescription": {
+        "type": "text",
+        "description": "The description of the confirmation dialog that restores demo data"
     }
 }

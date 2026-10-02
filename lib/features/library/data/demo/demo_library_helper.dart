@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
 import 'package:playtick/features/library/data/demo/library_demo_catalog.dart';
 import 'package:playtick/features/library/data/drift_library_repository.dart';
@@ -35,6 +36,17 @@ Future<void> seedDemoLibrary(
     games[0].id,
     'This is a note for the first game',
   );
+}
+
+Future<void> fillMissingDemoCovers(AppDatabase database) {
+  return Future.wait([
+    for (final game in LibraryDemoCatalog.games)
+      if (game.coverUrl != null)
+        (database.update(database.games)..where(
+              (row) => row.id.equals(game.id) & row.coverUrl.isNull(),
+            ))
+            .write(GamesCompanion(coverUrl: Value(game.coverUrl))),
+  ]);
 }
 
 Future<void> restoreDemoLibrary(

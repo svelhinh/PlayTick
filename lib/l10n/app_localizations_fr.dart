@@ -445,4 +445,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get demoSheetButton => 'Restaurer les données de démo';
+
+  @override
+  String get demoRestoreTitle => 'Restaurer les données de démo';
+
+  @override
+  String get demoRestoreDescription =>
+      'Voulez-vous vraiment restaurer les données de démo ?\n\nLa bibliothèque de démo actuelle, y compris les sessions, les notes et la session en cours, sera remplacée par le jeu de données initial. Cette action est irréversible.';
 }

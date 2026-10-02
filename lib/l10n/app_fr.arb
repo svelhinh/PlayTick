@@ -131,5 +131,7 @@
     "gameNoteNotFoundException": "Note de jeu introuvable.",
     "demoSheetTitle": "Mode démo",
     "demoSheetDescription": "PlayTick utilise des données de démo locales car les identifiants IGDB ne sont pas configurés.\n\nVous pouvez explorer la bibliothèque, les sessions, les notes et les statistiques normalement.",
-    "demoSheetButton": "Restaurer les données de démo"
+    "demoSheetButton": "Restaurer les données de démo",
+    "demoRestoreTitle": "Restaurer les données de démo",
+    "demoRestoreDescription": "Voulez-vous vraiment restaurer les données de démo ?\n\nLa bibliothèque de démo actuelle, y compris les sessions, les notes et la session en cours, sera remplacée par le jeu de données initial. Cette action est irréversible."
 }

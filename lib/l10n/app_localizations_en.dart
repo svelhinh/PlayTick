@@ -443,4 +443,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get demoSheetButton => 'Restore demo data';
+
+  @override
+  String get demoRestoreTitle => 'Restore the demo data';
+
+  @override
+  String get demoRestoreDescription =>
+      'Are you sure you want to restore the demo data?\n\nThe current demo library, including sessions, notes, and the active session, will be replaced by the initial dataset. This action is irreversible.';
 }

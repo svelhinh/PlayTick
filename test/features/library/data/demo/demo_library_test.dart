@@ -1,9 +1,11 @@
+import 'package:drift/drift.dart' hide isNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
 import 'package:playtick/features/library/data/demo/demo_library_helper.dart';
 import 'package:playtick/features/library/data/demo/library_demo_catalog.dart';
 import 'package:playtick/features/library/data/drift_library_repository.dart';
+import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 
 void main() {
@@ -35,6 +37,7 @@ void main() {
       final wantToPlay = await repository.watchGame(catalog[2].id).first;
 
       expect(playing!.status, GameStatus.playing);
+      expect(playing.game.coverUrl, catalog[0].coverUrl);
       expect(playing.playSessions.single.duration, const Duration(hours: 1));
       expect(completed!.playSessions.single.duration, const Duration(hours: 2));
       expect(
@@ -85,5 +88,36 @@ void main() {
       await repository.watchWeeklyPlaytime().first,
       const Duration(hours: 6),
     );
+  });
+
+  test('fillMissingDemoCovers sets a cover only when one is missing', () async {
+    final database = AppDatabase(NativeDatabase.memory());
+    final repository = DriftLibraryRepository(
+      database,
+      now: () => DateTime(2026, 10),
+    );
+    addTearDown(database.close);
+
+    final witcher = LibraryDemoCatalog.games.first;
+    await repository.addGame(Game(id: witcher.id, name: witcher.name));
+
+    await fillMissingDemoCovers(database);
+
+    final filled = await repository.watchGame(witcher.id).first;
+    expect(filled!.game.coverUrl, witcher.coverUrl);
+
+    await (database.update(database.games)..where(
+          (row) => row.id.equals(witcher.id),
+        ))
+        .write(
+          const GamesCompanion(
+            coverUrl: Value('https://example.com/custom.jpg'),
+          ),
+        );
+
+    await fillMissingDemoCovers(database);
+
+    final kept = await repository.watchGame(witcher.id).first;
+    expect(kept!.game.coverUrl, 'https://example.com/custom.jpg');
   });
 }
