@@ -31,12 +31,18 @@ import 'package:playtick/features/library/providers/demo_mode_provider.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/l10n/app_localizations.dart';
 
+const _iosTabBarHeight = 84.0;
+const _iosSearchHeight = 56.0;
+
 class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
 
   Widget _buildGamesList(BuildContext context, WidgetRef ref) {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final listBottomPadding = theme.platform == TargetPlatform.iOS
+        ? _iosTabBarHeight + _iosSearchHeight
+        : 0.0;
 
     final gamesAsync = ref.watch(libraryGamesProvider);
     final filter = ref.watch(libraryFilterProvider);
@@ -76,6 +82,7 @@ class LibraryScreen extends ConsumerWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: ListView(
+                padding: EdgeInsets.only(bottom: listBottomPadding),
                 children: [
                   if (searchResults.libraryGames.isNotEmpty) ...[
                     const SizedBox(height: 12),
@@ -136,6 +143,7 @@ class LibraryScreen extends ConsumerWidget {
                     .toList();
 
           return ListView(
+            padding: EdgeInsets.only(bottom: listBottomPadding),
             children: [
               const SizedBox(height: 12),
               if (search.isEmpty) ...[
@@ -261,7 +269,7 @@ class LibraryScreen extends ConsumerWidget {
               ),
               if (theme.platform == TargetPlatform.iOS)
                 Positioned(
-                  bottom: keyboardOpen ? 8 : 84,
+                  bottom: keyboardOpen ? 8 : _iosTabBarHeight,
                   left: 24,
                   right: 24,
                   child: const _SearchBar(),
@@ -357,7 +365,7 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOut,
           width: _editing ? expandedWidth : collapsedWidth,
-          height: 56,
+          height: _iosSearchHeight,
           child: UiKitView(
             viewType: 'playtick-liquid-glass-search',
             onPlatformViewCreated: (viewId) {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:playtick/app/app.dart';
+import 'package:playtick/app/app_theme.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/error_state_card.dart';
 import 'package:playtick/features/home/presentation/providers/weekly_playtime_provider.dart';
@@ -14,6 +15,7 @@ import 'package:playtick/features/library/domain/estimated_playtimes.dart';
 import 'package:playtick/features/library/domain/game.dart';
 import 'package:playtick/features/library/domain/game_status.dart';
 import 'package:playtick/features/library/domain/library_exception.dart';
+import 'package:playtick/features/library/domain/library_game.dart';
 import 'package:playtick/features/library/domain/library_repository.dart';
 import 'package:playtick/features/library/domain/library_search_repository.dart';
 import 'package:playtick/features/library/presentation/game_details/game_details_screen.dart';
@@ -23,6 +25,7 @@ import 'package:playtick/features/library/presentation/widgets/catalog_game_card
 import 'package:playtick/features/library/presentation/widgets/library_game_card.dart';
 import 'package:playtick/features/library/providers/library_repository_provider.dart';
 import 'package:playtick/features/library/providers/library_search_repository_provider.dart';
+import 'package:playtick/l10n/app_localizations.dart';
 
 class _FakeSearchRepository implements LibrarySearchRepository {
   List<Game> games = [];
@@ -739,4 +742,41 @@ void main() {
       expect(find.text('Add as'), findsOneWidget);
     },
   );
+
+  testWidgets('iOS library list clears the floating search', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          libraryGamesProvider.overrideWith(
+            (ref) => Stream.value(const [
+              LibraryGame(
+                gameId: 1,
+                name: 'Portal 2',
+                status: GameStatus.playing,
+              ),
+            ]),
+          ),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.light.copyWith(platform: TargetPlatform.iOS),
+          home: const Scaffold(body: LibraryScreen()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      tester
+          .widgetList<ListView>(
+            find.ancestor(
+              of: find.text('Portal 2'),
+              matching: find.byType(ListView),
+            ),
+          )
+          .map((list) => list.padding),
+      contains(const EdgeInsets.only(bottom: 84 + 56)),
+    );
+  });
 }
