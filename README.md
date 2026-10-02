@@ -48,7 +48,7 @@ The active session's start time (`startedAt`) is stored locally. Elapsed time is
 
 ### Personal data stored locally
 
-Drift stores added games, their metadata, statuses, sessions, and notes in SQLite. Browsing and managing the library therefore does not depend on an IGDB response. Searching for new games requires a connection; cover images are loaded from remote URLs and have no dedicated offline storage.
+Drift stores added games, their metadata, statuses, sessions, and notes in SQLite. Browsing and managing the library therefore does not depend on an IGDB response. With IGDB configured, searching for new games requires a connection. Cover images from IGDB are loaded from remote URLs and have no dedicated offline storage. Demo Mode, described in [Getting started](#getting-started), uses a local catalog instead.
 
 ## Tech stack and architecture
 
@@ -121,18 +121,32 @@ Reference: [IGDB documentation — Game Localization](https://api-docs.igdb.com/
 - A Flutter SDK that includes **Dart ≥ 3.13.1 and < 4.0.0**, as required by `pubspec.yaml`. The development environment uses Flutter **3.47.2** and Dart **3.13.2**.
 - For Android: the Android SDK, a JDK compatible with the project's Gradle configuration (Java 17), and an emulator or a device with USB debugging enabled.
 - For iOS: Xcode, with a simulator or device on iOS 15 or later. Liquid Glass requires iOS 26.
-- IGDB/Twitch credentials to search the game catalog.
+- IGDB/Twitch credentials are optional. Without them, the app starts in Demo Mode. They are required only to search the live IGDB catalog.
 
-### 1. Clone the repository and install dependencies
+### 1. Clone the repository and run the app
 
 ```sh
 git clone https://github.com/svelhinh/playtick.git
 cd playtick
 flutter doctor
 flutter pub get
+flutter devices
+flutter run
+flutter test
 ```
 
-Resolve any Android or iOS setup issues reported by `flutter doctor` before launching the app.
+Resolve any Android or iOS setup issues reported by `flutter doctor` before launching the app. If multiple devices are available, append `-d <device-id>` to `flutter run`.
+
+Generated localizations and Drift code are already in the repository, so a clone does not need `flutter gen-l10n` or `build_runner` before the first launch or before `flutter test`.
+
+`flutter run` without `--dart-define-from-file` compiles no IGDB credentials, so the app opens in **Demo Mode**:
+
+- Search and add games from a local catalog bundled with the app. No IGDB request is made.
+- Library data is stored in a separate SQLite file, `playtick_demo`. The normal library file, `playtick`, is left untouched.
+- The initial dataset — sample games, sessions, and a note, with no active session — is written only when `playtick_demo` is first created. Emptying the library does not seed it again.
+- A **Demo** badge on Home and Library opens a sheet that explains the mode. **Restore demo data** asks for confirmation, then replaces the demo library with that initial dataset, including any active session.
+
+`flutter test` does not need IGDB credentials either. See [Tests and checks](#tests-and-checks).
 
 ### 2. Configure IGDB
 
@@ -149,18 +163,13 @@ The `.env` file is ignored by Git. Its values are injected at compile time using
 
 This setup supports running the portfolio project locally. Values embedded in a mobile app can be extracted from its binary: public distribution with shared credentials requires moving IGDB authentication to a server. That service is outside the scope of v1.
 
-### 3. Generate code and run the app
+To use the live catalog instead of Demo Mode:
 
 ```sh
-flutter gen-l10n
-dart run build_runner build --delete-conflicting-outputs
-flutter devices
 flutter run --dart-define-from-file=.env
 ```
 
-If multiple devices are available, append `-d <device-id>` to the last command. After changing `.env`, stop and restart the app with this command to inject the updated configuration.
-
-Without IGDB credentials, `flutter run` still opens the app and lets you use existing local data. Remote search and adding games from the catalog require the configuration above.
+Both values must be set. The app then uses the IGDB catalog and the `playtick` database, and it does not show the Demo badge. After changing `.env`, stop and restart the app with this command so the updated values are compiled in.
 
 ## Tests and checks
 
@@ -169,7 +178,7 @@ flutter analyze
 flutter test
 ```
 
-The test suite covers weekly playtime calculations, persistence and migrations, session rules, IGDB responses and errors, regional values and fallbacks, genre localization, and key screens and navigation. Tests use test dependencies and do not require real IGDB credentials.
+The test suite covers weekly playtime calculations, persistence and migrations, session rules, IGDB responses and errors, regional values and fallbacks, genre localization, Demo Mode, and key screens and navigation. Tests use test dependencies and do not require real IGDB credentials.
 
 After editing ARB files, run `flutter gen-l10n` again. After changing Drift tables or annotated providers, rerun `build_runner`.
 
