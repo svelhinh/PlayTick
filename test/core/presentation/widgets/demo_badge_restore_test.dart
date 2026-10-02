@@ -68,6 +68,16 @@ void main() {
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Restore the demo data'), findsOneWidget);
+      expect(
+        find.text(
+          'Are you sure you want to restore the demo data?\n\n'
+          'The current demo library, including sessions, notes, and the '
+          'active session, will be replaced by the initial dataset. '
+          'This action is irreversible.',
+        ),
+        findsOneWidget,
+      );
       await tester.tap(find.text('Cancel'), warnIfMissed: false);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));

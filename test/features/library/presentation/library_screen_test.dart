@@ -573,11 +573,11 @@ void main() {
   );
 
   testWidgets(
-    'Library search shows an empty IGDB state without hiding local matches',
+    'Library search hides the empty state when the match is already in the library',
     (tester) async {
       final libraryRepository = container.read(libraryRepositoryProvider);
       await addGamesToLibrary(libraryRepository);
-      searchRepository.games = [];
+      searchRepository.games = [Game(id: 200, name: 'Hollow Knight')];
 
       await openLibrary(tester);
       await searchFor(tester, 'hollow');
@@ -590,7 +590,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.byType(CatalogGameCard), findsNothing);
-      expect(find.text('No games found'), findsOneWidget);
+      expect(find.text('No games found'), findsNothing);
       expect(find.text('Catalog results'), findsNothing);
       expect(
         find.text('Unable to retrieve external results at the moment.'),

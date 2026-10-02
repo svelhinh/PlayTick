@@ -889,6 +889,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore demo data'**
   String get demoSheetButton;
+
+  /// The title of the confirmation dialog that restores demo data
+  ///
+  /// In en, this message translates to:
+  /// **'Restore the demo data'**
+  String get demoRestoreTitle;
+
+  /// The description of the confirmation dialog that restores demo data
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to restore the demo data?\n\nThe current demo library, including sessions, notes, and the active session, will be replaced by the initial dataset. This action is irreversible.'**
+  String get demoRestoreDescription;
 }
 
 class _AppLocalizationsDelegate

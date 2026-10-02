@@ -116,7 +116,7 @@ class LibraryScreen extends ConsumerWidget {
                           ),
                       ],
                     )
-                  else if (!isDebouncing)
+                  else if (!isDebouncing && searchResults.libraryGames.isEmpty)
                     EmptyStateCard(
                       icon: Icons.search_off_outlined,
                       title: appLoc.librarySearchNoResultsTitle,

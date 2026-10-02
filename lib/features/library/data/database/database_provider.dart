@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:playtick/features/library/data/database/app_database.dart';
 import 'package:playtick/features/library/data/demo/demo_library_helper.dart';
@@ -25,6 +27,10 @@ AppDatabase database(Ref ref) {
           )
         : null,
   );
+
+  if (name == 'playtick_demo') {
+    unawaited(fillMissingDemoCovers(database));
+  }
 
   ref.onDispose(database.close);
   return database;

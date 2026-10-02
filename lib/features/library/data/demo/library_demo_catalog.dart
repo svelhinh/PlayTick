@@ -8,6 +8,8 @@ final class LibraryDemoCatalog {
     Game(
       id: -1,
       name: 'The Witcher 3: Wild Hunt',
+      coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_cover_big/coaarl.jpg',
       summary: 'The Witcher 3: Wild Hunt is a game about a witcher who is trying to find his daughter.',
       releaseDate: DateTime(2015, 5, 19),
       platforms: ['windows', 'linux', 'macos'],
@@ -23,6 +25,8 @@ final class LibraryDemoCatalog {
     Game(
       id: -2,
       name: 'Super Mario Odyssey',
+      coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_cover_big/co1mxf.jpg',
       summary: 'Mario embarks on a new journey through mysterious worlds.',
       releaseDate: DateTime(2017, 10, 27),
       platforms: ['nintendo switch'],
@@ -38,6 +42,8 @@ final class LibraryDemoCatalog {
     Game(
       id: -3,
       name: 'League of Legends',
+      coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_cover_big/coc99o.jpg',
       summary: 'A fast-paced competitive MOBA with unique champions.',
       releaseDate: DateTime(2009, 10, 27),
       platforms: ['windows', 'macos'],
@@ -53,6 +59,8 @@ final class LibraryDemoCatalog {
     Game(
       id: -4,
       name: 'Portal 2',
+      coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_cover_big/co1rs4.jpg',
       summary: 'A first-person puzzle game with innovative portal mechanics.',
       releaseDate: DateTime(2011, 4, 19),
       platforms: ['windows', 'macos', 'linux'],
@@ -68,6 +76,8 @@ final class LibraryDemoCatalog {
     Game(
       id: -5,
       name: 'Dark Souls',
+      coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_cover_big/co1x78.jpg',
       summary: 'A challenging action RPG set in a dark fantasy world.',
       releaseDate: DateTime(2011, 9, 22),
       platforms: ['windows', 'ps3', 'xbox 360'],
@@ -83,6 +93,8 @@ final class LibraryDemoCatalog {
     Game(
       id: -6,
       name: "Sid Meier's Civilization VI",
+      coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_cover_big/coaaqr.jpg',
       summary:
           'Strategy game where you build an empire to stand the test of time.',
       releaseDate: DateTime(2016, 10, 21),
@@ -99,6 +111,8 @@ final class LibraryDemoCatalog {
     Game(
       id: -7,
       name: 'Tetris Effect',
+      coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_cover_big/co2kfy.jpg',
       summary: 'A reinvention of the classic puzzle game, now with music and beautiful visuals.',
       releaseDate: DateTime(2018, 11, 9),
       platforms: ['windows', 'ps4', 'ps5', 'xbox one'],
@@ -114,6 +128,8 @@ final class LibraryDemoCatalog {
     Game(
       id: -8,
       name: 'Street Fighter V',
+      coverUrl:
+          'https://images.igdb.com/igdb/image/upload/t_cover_big/co1pka.jpg',
       summary: 'A competitive fighting game with global tournaments.',
       releaseDate: DateTime(2016, 2, 16),
       platforms: ['windows', 'ps4', 'ps5'],

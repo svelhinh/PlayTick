@@ -61,8 +61,8 @@ class DemoBadge extends StatelessWidget {
                           final confirmed = await showDialog<bool>(
                             context: sheetContext,
                             builder: (context) => DeleteConfirmationDialog(
-                              title: appLoc.demoSheetTitle,
-                              description: appLoc.demoSheetDescription,
+                              title: appLoc.demoRestoreTitle,
+                              description: appLoc.demoRestoreDescription,
                               deleteButtonText: appLoc.demoSheetButton,
                             ),
                           );
