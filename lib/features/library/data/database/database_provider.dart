@@ -19,7 +19,13 @@ AppDatabase database(Ref ref) {
   late final AppDatabase database;
 
   database = AppDatabase(
-    driftDatabase(name: name),
+    driftDatabase(
+      name: name,
+      web: DriftWebOptions(
+        sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+        driftWorker: Uri.parse('drift_worker.js'),
+      ),
+    ),
     onCreated: name == 'playtick_demo'
         ? () => seedDemoLibrary(
             DriftLibraryRepository(database),
