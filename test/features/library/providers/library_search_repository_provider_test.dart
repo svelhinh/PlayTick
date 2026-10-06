@@ -41,6 +41,18 @@ void main() {
     expect((repository as IgdbClient).preferredRegionIdentifier, 'EU');
   });
 
+  test('uses the demo catalog on the web even when IGDB credentials are configured', () {
+    final repository = librarySearchRepositoryFor(
+      credentials: const IgdbCredentials(
+        clientId: 'client',
+        clientSecret: 'secret',
+      ),
+      isWeb: true,
+    );
+
+    expect(repository, isA<DemoClient>());
+  });
+
   test(
     'the provider selects the demo catalog without compile-time credentials',
     () {

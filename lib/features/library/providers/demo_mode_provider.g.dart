@@ -47,4 +47,4 @@ final class DemoModeProvider extends $FunctionalProvider<bool, bool, bool>
   }
 }
 
-String _$demoModeHash() => r'189de0d557dc88e2d26089d16e99bc76ebb6e962';
+String _$demoModeHash() => r'ffc7333bb9c5cabb21ee7e58b9d506fc6f42df86';

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:playtick/features/library/data/igdb/igdb_credentials.dart';
 import 'package:playtick/features/library/data/igdb/igdb_game_dto.dart';
@@ -23,7 +24,7 @@ final class IgdbClient implements LibrarySearchRepository {
   final String? preferredRegionIdentifier;
 
   Future<String> fetchToken() async {
-    if (!credentials.isConfigured) {
+    if (!credentials.isConfigured || kIsWeb) {
       throw const IgdbCredentialsNotConfiguredException();
     }
 
