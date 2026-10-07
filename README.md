@@ -10,7 +10,7 @@ PlayTick is an Android and iOS app for organizing your video game library and tr
 
 This portfolio project implements a complete product flow: **pick a game → play → log a session → track your time**. Version 1 focuses on personal use, with no account required and user data stored on the device.
 
-**[Try the demo](https://svelhinh.github.io/PlayTick/)** — the same Demo Mode in the browser. Library data stays in that browser, and no IGDB credentials are used.
+**[Try the demo](https://svelhinh.github.io/PlayTick/).** The same Demo Mode in the browser. Library data stays in that browser, and no IGDB credentials are used.
 
 ## Preview
 
@@ -28,7 +28,7 @@ _iOS, English. The interface also supports French; see the localization section 
 
 ## Features
 
-- **Personal library**: add games from IGDB, prevent duplicates, and filter by status — Want to play, Playing, Completed, or Dropped.
+- **Personal library**: add games from IGDB, prevent duplicates, and filter by status: Want to play, Playing, Completed, or Dropped.
 - **Integrated search**: browse local library matches and IGDB results on the same screen, with a 300 ms debounce for remote searches.
 - **Session tracking**: run one timer at a time, adjust the duration before saving, add sessions manually, and edit or delete previous sessions.
 - **Dashboard**: see recorded playtime for the current week, the number of games in progress, and quick access to the session timer.
@@ -114,7 +114,7 @@ A **European regional variant does not guarantee a French translation**. Availab
 
 A French interface can therefore display an English game description. **This is an intentional architectural decision**: preserve catalog data without inventing translations or hiding useful information. External data mapping belongs to the `data` layer, while interface localization belongs to presentation.
 
-Reference: [IGDB documentation — Game Localization](https://api-docs.igdb.com/#game-localization).
+Reference: [IGDB documentation: Game Localization](https://api-docs.igdb.com/#game-localization).
 
 ## Getting started
 
@@ -145,7 +145,7 @@ Generated localizations and Drift code are already in the repository, so a clone
 
 - Search and add games from a local catalog bundled with the app. No IGDB request is made.
 - Library data is stored in a separate SQLite file, `playtick_demo`. The normal library file, `playtick`, is left untouched.
-- The initial dataset — sample games, sessions, and a note, with no active session — is written only when `playtick_demo` is first created. Emptying the library does not seed it again.
+- The initial dataset (sample games, sessions, and a note, with no active session) is written only when `playtick_demo` is first created. Emptying the library does not seed it again.
 - A **Demo** badge on Home and Library opens a sheet that explains the mode. **Restore demo data** asks for confirmation, then replaces the demo library with that initial dataset, including any active session.
 
 `flutter test` does not need IGDB credentials either. See [Tests and checks](#tests-and-checks).
