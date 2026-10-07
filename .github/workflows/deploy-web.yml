@@ -2,7 +2,7 @@ name: Deploy web demo
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "feat/gp-49-demo-mode-web"]
   workflow_dispatch:
 
 permissions:
