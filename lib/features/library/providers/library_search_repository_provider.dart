@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:playtick/features/library/data/demo/demo_client.dart';
 import 'package:playtick/features/library/data/igdb/igdb_client.dart';
@@ -13,8 +12,9 @@ LibrarySearchRepository librarySearchRepositoryFor({
   required IgdbCredentials credentials,
   http.Client? httpClient,
   String? preferredRegionIdentifier,
+  bool isWeb = false,
 }) {
-  if (!credentials.isConfigured) {
+  if (!credentials.isConfigured || isWeb) {
     return DemoClient();
   }
 
@@ -35,8 +35,8 @@ LibrarySearchRepository librarySearchRepositoryFor({
 @Riverpod(keepAlive: true)
 LibrarySearchRepository librarySearchRepository(Ref ref) {
   final credentials = IgdbCredentials.fromEnvironment();
-  if (!credentials.isConfigured) {
-    return librarySearchRepositoryFor(credentials: credentials);
+  if (!credentials.isConfigured || kIsWeb) {
+    return librarySearchRepositoryFor(credentials: credentials, isWeb: kIsWeb);
   }
 
   final client = http.Client();
@@ -47,5 +47,6 @@ LibrarySearchRepository librarySearchRepository(Ref ref) {
     httpClient: client,
     preferredRegionIdentifier:
         PlatformDispatcher.instance.locale.languageCode == 'fr' ? 'EU' : null,
+    isWeb: kIsWeb,
   );
 }

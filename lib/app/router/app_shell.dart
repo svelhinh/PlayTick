@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/app_theme.dart';
+import 'package:playtick/core/presentation/native_ios_chrome.dart';
 import 'package:playtick/core/presentation/widgets/demo_badge.dart';
 import 'package:playtick/features/library/presentation/library_screen.dart';
 import 'package:playtick/features/library/presentation/providers/library_search_notifier_provider.dart';
@@ -90,11 +92,14 @@ class AppShellState extends ConsumerState<AppShell> {
       value: AppTheme.systemOverlayStyle,
       child: Scaffold(
         backgroundColor: AppTheme.background,
-        extendBody: Theme.of(context).platform == TargetPlatform.iOS,
+        extendBody: usesNativeIosViews(
+          Theme.of(context).platform,
+          isWeb: kIsWeb,
+        ),
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (Theme.of(context).platform == TargetPlatform.iOS)
+            if (usesNativeIosViews(Theme.of(context).platform, isWeb: kIsWeb))
               SizedBox(
                 height: 84,
                 child: Align(

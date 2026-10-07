@@ -48,4 +48,4 @@ final class DatabaseProvider
   }
 }
 
-String _$databaseHash() => r'a2c40e04203bf9dda76a926b13d448e6c5ea38d6';
+String _$databaseHash() => r'3deb19ea7f0691e89b50009b5e43c8bd7f4635f9';

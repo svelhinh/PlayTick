@@ -1,10 +1,12 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_shell.dart';
+import 'package:playtick/core/presentation/native_ios_chrome.dart';
 import 'package:playtick/core/presentation/widgets/error_state_card.dart';
 import 'package:playtick/core/presentation/widgets/icon_circle.dart';
 import 'package:playtick/core/presentation/widgets/playtick_sheet.dart';
@@ -85,18 +87,22 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
     final details = latestDetails ?? _visibleDetails;
 
     return Scaffold(
-      extendBodyBehindAppBar: theme.platform == TargetPlatform.iOS,
+      extendBodyBehindAppBar: usesNativeIosViews(theme.platform, isWeb: kIsWeb),
       appBar: AppBar(
-        backgroundColor: theme.platform == TargetPlatform.iOS
+        backgroundColor: usesNativeIosViews(theme.platform, isWeb: kIsWeb)
             ? Colors.transparent
             : null,
-        surfaceTintColor: theme.platform == TargetPlatform.iOS
+        surfaceTintColor: usesNativeIosViews(theme.platform, isWeb: kIsWeb)
             ? Colors.transparent
             : null,
-        elevation: theme.platform == TargetPlatform.iOS ? 0 : null,
-        scrolledUnderElevation: theme.platform == TargetPlatform.iOS ? 0 : null,
-        forceMaterialTransparency: theme.platform == TargetPlatform.iOS,
-        leading: theme.platform == TargetPlatform.iOS
+        elevation: usesNativeIosViews(theme.platform, isWeb: kIsWeb) ? 0 : null,
+        scrolledUnderElevation:
+            usesNativeIosViews(theme.platform, isWeb: kIsWeb) ? 0 : null,
+        forceMaterialTransparency: usesNativeIosViews(
+          theme.platform,
+          isWeb: kIsWeb,
+        ),
+        leading: usesNativeIosViews(theme.platform, isWeb: kIsWeb)
             ? Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 8),
                 child: SizedBox(
@@ -123,10 +129,12 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
                 ),
               )
             : null,
-        leadingWidth: theme.platform == TargetPlatform.iOS ? 60 : null,
+        leadingWidth: usesNativeIosViews(theme.platform, isWeb: kIsWeb)
+            ? 60
+            : null,
         actions: [
           if (details != null)
-            if (theme.platform == TargetPlatform.iOS)
+            if (usesNativeIosViews(theme.platform, isWeb: kIsWeb))
               Padding(
                 padding: const EdgeInsets.only(right: 16, bottom: 8),
                 child: SizedBox(
@@ -200,7 +208,7 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
               return SingleChildScrollView(
                 padding: EdgeInsets.fromLTRB(
                   16,
-                  theme.platform == TargetPlatform.iOS
+                  usesNativeIosViews(theme.platform, isWeb: kIsWeb)
                       ? MediaQuery.paddingOf(context).top + kToolbarHeight + 24
                       : 24,
                   16,
@@ -267,7 +275,7 @@ class _GameDetailsScreenState extends ConsumerState<GameDetailsScreen> {
             ),
             loading: () => const Center(child: CircularProgressIndicator()),
           ),
-          if (theme.platform == TargetPlatform.iOS)
+          if (usesNativeIosViews(theme.platform, isWeb: kIsWeb))
             Positioned(
               top: 0,
               left: 0,
