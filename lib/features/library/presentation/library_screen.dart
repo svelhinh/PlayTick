@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:playtick/app/router/app_router.dart';
+import 'package:playtick/core/presentation/native_ios_chrome.dart';
 import 'package:playtick/core/presentation/widgets/demo_badge.dart';
 import 'package:playtick/core/presentation/widgets/empty_state_card.dart';
 import 'package:playtick/core/presentation/widgets/error_state_card.dart';
@@ -40,7 +42,7 @@ class LibraryScreen extends ConsumerWidget {
   Widget _buildGamesList(BuildContext context, WidgetRef ref) {
     final appLoc = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final listBottomPadding = theme.platform == TargetPlatform.iOS
+    final listBottomPadding = usesNativeIosViews(theme.platform, isWeb: kIsWeb)
         ? _iosTabBarHeight + _iosSearchHeight
         : 0.0;
 
@@ -203,7 +205,7 @@ class LibraryScreen extends ConsumerWidget {
     final isDemo = ref.watch(demoModeProvider);
 
     return SafeArea(
-      bottom: theme.platform != TargetPlatform.iOS,
+      bottom: !usesNativeIosViews(theme.platform, isWeb: kIsWeb),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final available =
@@ -258,7 +260,10 @@ class LibraryScreen extends ConsumerWidget {
                             ],
                           ),
                           const SizedBox(height: 12),
-                          if (theme.platform != TargetPlatform.iOS)
+                          if (!usesNativeIosViews(
+                            theme.platform,
+                            isWeb: kIsWeb,
+                          ))
                             const _SearchBar(),
                         ],
                       ),
@@ -267,7 +272,7 @@ class LibraryScreen extends ConsumerWidget {
                   ],
                 ),
               ),
-              if (theme.platform == TargetPlatform.iOS)
+              if (usesNativeIosViews(theme.platform, isWeb: kIsWeb))
                 Positioned(
                   bottom: keyboardOpen ? 8 : _iosTabBarHeight,
                   left: 24,
@@ -345,7 +350,7 @@ class _SearchBarState extends ConsumerState<_SearchBar> {
       }
     });
 
-    if (theme.platform == TargetPlatform.iOS) {
+    if (usesNativeIosViews(theme.platform, isWeb: kIsWeb)) {
       final expandedWidth = MediaQuery.sizeOf(context).width - 48;
       final query = ref.watch(librarySearchProvider);
       final collapsedLabel = query.isEmpty
