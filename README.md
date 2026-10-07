@@ -10,6 +10,8 @@ PlayTick is an Android and iOS app for organizing your video game library and tr
 
 This portfolio project implements a complete product flow: **pick a game → play → log a session → track your time**. Version 1 focuses on personal use, with no account required and user data stored on the device.
 
+**[Try the demo](https://svelhinh.github.io/PlayTick/)** — the same Demo Mode in the browser. Library data stays in that browser, and no IGDB credentials are used.
+
 ## Preview
 
 | Home and session timer                                                                       | IGDB search                                                                        | Game details                                                                                    |
